@@ -1,41 +1,62 @@
-// KooBus — splash screen ya kwanza.
-// Hii ndiyo app ya KooBus inapoanza: inaonyesha nembo, jina la app,
-// na ujumbe mfupi kabla ya kuenda kwenye login (hatua ya baadaye).
+// KooBus — splash screen na msingi wa app.
+//
+// Hii ndiyo app ya KooBus inapoanza: inaonyesha nembo kwa muda mfupi,
+// kisha inasoma session (kama mtu aliwahi kuingia) na inaenda
+// ukurasa unaofaa: home kama session ipo, login kama haipo.
 
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:koobus/controllers/auth_controller.dart';
+import 'package:koobus/core/storage/secure_session_service.dart';
+import 'package:koobus/core/storage/session_service.dart';
 import 'package:koobus/features/auth/screens/login_screen.dart';
+import 'package:koobus/features/parent/screens/parent_home_screen.dart';
 
 // main() ni function ya kuanzia. Flutter inaita mara moja tu
 // inapoanza programu kwenye simu.
 void main() {
-  runApp(const KooBusApp());
+  // runApp haipaswi kutumia async/await moja kwa moja — hivyo tunatengeneza
+  // sessionService hapa kisha tunampa KooBusApp. Kama unahitaji kusoma
+  // hifadhi kabla ya app kuanza, tunaweza kusubiri hapa (tutaongeza baadae).
+  final SessionService sessionService = SecureSessionService();
+
+  runApp(KooBusApp(sessionService: sessionService));
 }
 
 // KooBusApp ni "root widget" — mchuzi wa app nzima.
-// Stateless = haibadiliki yenyewe (splash haibadiliki).
+// Inapokea sessionService ili kujenga AuthController (dependency injection):
+// hii inaturuhusu kubadilisha hifadhi (halisi -> ya majaribio) kwa urahisi.
 class KooBusApp extends StatelessWidget {
-  const KooBusApp({super.key});
+  const KooBusApp({super.key, required this.sessionService});
+
+  final SessionService sessionService;
 
   @override
   Widget build(BuildContext context) {
-    // MaterialApp hutoa Material Design: theme, fonts, navigation.
-    // themeColor ni rangi kuu ya KooBus (bluu ya kuaminika).
-    return MaterialApp(
-      title: 'KooBus',
-      debugShowCheckedModeBanner: false, // ondoa banner ya "DEBUG"
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
+    // Provider<AuthController> inaweka AuthController kwenye "mti" wa widgets.
+    // Wowote wanaohitaji hali ya kuingia wanaweza kuisoma kwa
+    // context.watch<AuthController>() au context.read<AuthController>().
+    return ChangeNotifierProvider<AuthController>(
+      // create = jenga controller mara moja tu (app nzima).
+      create: (_) => AuthController(sessionService),
+      child: MaterialApp(
+        title: 'KooBus',
+        debugShowCheckedModeBanner: false, // ondoa banner ya "DEBUG"
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          useMaterial3: true,
+        ),
+        home: const SplashScreen(),
       ),
-      home: const SplashScreen(),
     );
   }
 }
 
 // SplashScreen ndiyo page ya kwanza itakayoonekana.
 // StatefulWidget tunatumia kwa sababu splash ina "state" ndogo:
-// inaonyeshwa kwa muda, kisha inaondoka (hii hatua ya baadaye).
+// inasoma session kisha inaondoka.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -47,18 +68,40 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // initState = "kitendo cha kwanza kinachotokea widget hii
-    // inapoanza" (mara moja tu). Hapa tunapanga safari: baada ya
-    // sekunde 2, ondoa splash na onyesha login (pushReplacement =
-    // badala ya kurudi nyuma kwa splash).
-    Future.delayed(const Duration(seconds: 2), () {
-      // mounted = "je, widget bado ipo?" Kama imeondoka (mfano
-      // mtumiaji alifunga app), usifanye kitu — hii inazuia kosa.
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
+    // initState inaitwa WAKATI widget inajengwa (build phase).
+    // Kama tunaita kitendo cha asynchronous hapa moja kwa moja na
+    // kinatuma notification (notifyListeners), Flutter inakataa:
+    // "huwezi kumwambia widget ijengwe upya wakati bado tunaijenga".
+    //
+    // Suluhisho: tunasubiri FRAME YA KWANZA imalize (addPostFrameCallback)
+    // ndipo tuendelee na kusoma session. Hii inahakikisha tuko nje ya
+    // build phase.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _bootstrap();
     });
+  }
+
+  Future<void> _bootstrap() async {
+    // 1. Soma session (hii inachukua muda kidogo — inasoma keystore)
+    final auth = context.read<AuthController>();
+    await auth.restoreSession();
+
+    // 2. Subiri sekunde 2 za kuonyesha nembo (splash branding).
+    //    Kama restoreSession ilichukua zaidi ya sekunde 2, hii itasubiri
+    //    zilizobaki tu — haina kusubiri mara mbili.
+    await Future.delayed(const Duration(seconds: 2));
+
+    // mounted = "je, widget bado ipo?" Kama imeondoka (mfano
+    // mtumiaji alifunga app), usifanye kitu — hii inazuia kosa.
+    if (!mounted) return;
+
+    // 3. Nenda ukurasa unaofaa: home kama session ipo, login kama haipo.
+    final next = auth.status == AuthStatus.loggedIn
+        ? const ParentHomeScreen()
+        : const LoginScreen();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => next),
+    );
   }
 
   @override

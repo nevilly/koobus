@@ -5,7 +5,11 @@
 
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:koobus/controllers/auth_controller.dart';
 import 'package:koobus/core/utils/validators.dart';
+import 'package:koobus/features/parent/screens/parent_home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -46,16 +50,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() => _submitting = true);
 
-    // NOTE: Hakuna API bado. Hii ni "simulasi" fupi ilionyesha hali
-    // ya "loading". Hatutaki app ionyeshe mafanikio ya kubuni —
-    // hivyo tunajulisha wazi kwamba server haijaunganishwa.
-    Future.delayed(const Duration(milliseconds: 500), () {
+    // NOTE: Hakuna API bado. Tunatumia token ya MAJARIBIO (DEV ONLY)
+    // ili kuonyesha session inafanya kazi. Token halisi itatoka kwenye
+    // API (Phase 7). Hii inajulisha wazi kwa mtumiaji.
+    const devToken = 'DEV-TOKEN-DO-NOT-USE-IN-PRODUCTION';
+
+    Future.delayed(const Duration(milliseconds: 500), () async {
       if (!mounted) return; // widget imeondoka? usifanye kitu
-      setState(() => _submitting = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Server bado haijaunganishwa (hatua ya Phase 6).'),
-        ),
+      await context.read<AuthController>().signIn(
+            token: devToken,
+            phone: _phoneController.text.trim(),
+          );
+      if (!mounted) return;
+
+      // Sasa tuko ndani — nenda home kwa kuiondoa login kwenye stack
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const ParentHomeScreen()),
       );
     });
   }
