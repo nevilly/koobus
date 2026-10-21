@@ -4,6 +4,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'package:koobus/features/auth/screens/login_screen.dart';
+
 // main() ni function ya kuanzia. Flutter inaita mara moja tu
 // inapoanza programu kwenye simu.
 void main() {
@@ -42,6 +44,23 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // initState = "kitendo cha kwanza kinachotokea widget hii
+    // inapoanza" (mara moja tu). Hapa tunapanga safari: baada ya
+    // sekunde 2, ondoa splash na onyesha login (pushReplacement =
+    // badala ya kurudi nyuma kwa splash).
+    Future.delayed(const Duration(seconds: 2), () {
+      // mounted = "je, widget bado ipo?" Kama imeondoka (mfano
+      // mtumiaji alifunga app), usifanye kitu — hii inazuia kosa.
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Scaffold = muundo wa page: AppBar juu, body kwenye, n.k.

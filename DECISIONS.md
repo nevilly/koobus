@@ -39,6 +39,22 @@ Format: date, decision, reason, files affected.
 - **Files:** `android/app/build.gradle.kts`
 - **Revisit when:** Flutter upgrades change `flutter.ndkVersion`.
 
+## 2026-10-21 — First UI: KooBus splash screen
+
+- **Decision:** Replaced the Flutter counter demo in `lib/main.dart` with a
+  KooBus splash screen (blue gradient, bus icon, Swahili tagline
+  "Usalama wa safari ya shule"). Kept `StatefulWidget` for the splash.
+- **Reason:** Phase 1.2 requires one visible UI change so the beginner can see
+  how `main()`, `runApp()`, `MaterialApp`, `Scaffold` and widgets fit together
+  before adding business logic. Swahili text first because the target market
+  is Tanzania.
+- **Files:** `lib/main.dart`, `test/widget_test.dart`
+- **Verified by:** `flutter analyze` (no issues) and `flutter test`
+  (1 test passed). Note: this is *code written + test passed*, NOT yet
+  *run on a physical device* — that is blocked on the NDK download.
+
 ## Known bugs / unfinished
 
-- (none recorded yet)
+- NDK 28.2.13676358 is still downloading (~37 KB/s, ETA ~5 h). Until it is
+  installed, `flutter build apk` / `flutter run` to an Android device will
+  fail. Work in progress in the background with curl resume+retry.
