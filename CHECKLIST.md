@@ -61,28 +61,28 @@
 
 ## 1.1 Prepare the computer
 
-- [ ] Check Flutter installation.
-- [ ] Check Dart version.
-- [ ] Run `flutter doctor`.
-- [ ] Resolve Android SDK and license problems.
-- [ ] Confirm a physical Android device or emulator is available.
-- [ ] Confirm USB debugging if using a physical phone.
-- [ ] Run `flutter devices`.
-- [ ] Confirm Git is installed.
-- [ ] Learn the basic terminal commands needed to navigate the project.
+- [x] Check Flutter installation.
+- [x] Check Dart version.
+- [x] Run `flutter doctor`.
+- [x] Resolve Android SDK and license problems.
+- [x] Confirm a physical Android device or emulator is available.
+- [x] Confirm USB debugging if using a physical phone.
+- [x] Run `flutter devices`.
+- [x] Confirm Git is installed.
+- [x] Learn the basic terminal commands needed to navigate the project.
 
 ## 1.2 Create the project
 
-- [ ] Create a new Flutter project named `koobus`.
-- [ ] Open the project in the code editor.
-- [ ] Understand `pubspec.yaml`.
-- [ ] Understand `lib/main.dart`.
-- [ ] Run the default app.
-- [ ] Make one visible UI change.
-- [ ] Run the app again and verify the change.
-- [ ] Create the initial Git repository.
-- [ ] Create a `.gitignore` appropriate for Flutter.
-- [ ] Make the first commit.
+- [x] Create a new Flutter project named `koobus`.
+- [x] Open the project in the code editor.
+- [x] Understand `pubspec.yaml`.
+- [x] Understand `lib/main.dart`.
+- [ ] Run the default app.  ← BLOCKED: NDK download
+- [x] Make one visible UI change.
+- [ ] Run the app again and verify the change.  ← BLOCKED: NDK download
+- [x] Create the initial Git repository.
+- [x] Create a `.gitignore` appropriate for Flutter.
+- [x] Make the first commit.
 
 **Deliverable:** A clean Flutter project that builds and runs.
 
@@ -92,38 +92,38 @@
 
 ## 2.1 Dart foundations
 
-- [ ] Understand variables and data types.
-- [ ] Understand `String`, `int`, `double` and `bool`.
-- [ ] Understand nullable and non-nullable values.
-- [ ] Learn lists and maps.
-- [ ] Learn `if`, `else`, loops and functions.
-- [ ] Understand classes, constructors and objects.
-- [ ] Understand named parameters.
-- [ ] Understand `Future` and `async/await`.
-- [ ] Understand exceptions and error handling.
-- [ ] Understand JSON decoding and encoding.
+- [ ] Understand variables and data types.  ← recap lesson pending
+- [ ] Understand `String`, `int`, `double` and `bool`.  ← recap lesson pending
+- [x] Understand nullable and non-nullable values.
+- [x] Learn lists and maps.
+- [x] Learn `if`, `else`, loops and functions.
+- [x] Understand classes, constructors and objects.
+- [x] Understand named parameters.
+- [x] Understand `Future` and `async/await`.
+- [x] Understand exceptions and error handling.
+- [x] Understand JSON decoding and encoding.
 
 ## 2.2 Flutter foundations
 
-- [ ] Understand `main()` and `runApp()`.
-- [ ] Understand `MaterialApp` and `Scaffold`.
-- [ ] Learn `Row`, `Column`, `Stack`, `Container`, `Padding` and `Expanded`.
+- [x] Understand `main()` and `runApp()`.
+- [x] Understand `MaterialApp` and `Scaffold`.
+- [ ] Learn `Row`, `Column`, `Stack`, `Container`, `Padding` and `Expanded`.  ← Stack/Expanded bado
 - [ ] Learn `ListView` and scrolling layouts.
-- [ ] Learn `TextField` and form validation.
-- [ ] Understand `StatelessWidget` versus `StatefulWidget`.
-- [ ] Learn navigation between screens.
+- [x] Learn `TextField` and form validation.
+- [x] Understand `StatelessWidget` versus `StatefulWidget`.
+- [x] Learn navigation between screens.
 - [ ] Learn reusable widgets.
-- [ ] Understand loading, empty, error and success states.
-- [ ] Learn how to read Flutter error messages.
+- [ ] Understand loading, empty, error and success states.  ← loading ✓, empty/error bado
+- [x] Learn how to read Flutter error messages.
 
 ## 2.3 State management
 
-- [ ] Understand what application state means.
-- [ ] Learn `ChangeNotifier`.
-- [ ] Learn `Provider`.
-- [ ] Understand how controllers notify screens.
-- [ ] Learn how to dispose controllers and subscriptions.
-- [ ] Keep business logic outside screen widgets.
+- [x] Understand what application state means.
+- [x] Learn `ChangeNotifier`.
+- [x] Learn `Provider`.
+- [x] Understand how controllers notify screens.
+- [ ] Learn how to dispose controllers and subscriptions.  ← baada ya kuwa na stream/subscription
+- [x] Keep business logic outside screen widgets.
 
 **Deliverable:** A small KooBus interface with navigation and forms.
 
@@ -133,31 +133,34 @@
 
 ## 3.1 Establish the agreed `lib/` structure
 
-- [ ] Create `app/` for app configuration and navigation.
-- [ ] Create `core/` for shared networking, constants, utilities and widgets.
-- [ ] Create `models/` for agreed data structures.
-- [ ] Create `services/` for API, GPS, local storage and notifications.
-- [ ] Create `controllers/` for shared application state where appropriate.
-- [ ] Create `features/auth/`.
-- [ ] Create `features/parent/`.
-- [ ] Create `features/driver/`.
-- [ ] Create `features/routes/` and `features/trips/` when needed.
-- [ ] Create `features/notifications/` when needed.
-- [ ] Create `features/settings/` when needed.
-- [ ] Document the responsibility of each folder.
+- [x] Create `app/` for app configuration and navigation.
+- [x] Create `core/` for shared networking, constants, utilities and widgets.
+- [x] Create `models/` for agreed data structures.
+- [x] Create `services/` for API, GPS, local storage and notifications.
+- [x] Create `controllers/` for shared application state where appropriate.
+- [x] Create `features/auth/`.
+- [x] Create `features/parent/`.
+- [x] Create `features/driver/`.
+- [x] Create `features/routes/` and `features/trips/` when needed.
+- [x] Create `features/notifications/` when needed.
+- [x] Create `features/settings/` when needed.
+- [x] Document the responsibility of each folder.  → `docs/ARCHITECTURE.md`
 
 ## 3.2 Architecture rules
 
-- [ ] Screens handle presentation and user interactions.
-- [ ] Controllers coordinate application logic and state.
-- [ ] Services handle external systems such as GPS and HTTP requests.
-- [ ] Models define data structure and serialization.
-- [ ] Flutter communicates with PHP through an API client.
-- [ ] PHP handles authorization, validation and business rules.
-- [ ] PHP communicates with MySQL.
-- [ ] No Flutter screen communicates directly with MySQL.
-- [ ] No in-memory Dart stream is treated as communication between separate phones.
-- [ ] Avoid duplicate implementations of the same service.
+- [x] Screens handle presentation and user interactions.
+- [x] Controllers coordinate application logic and state.
+- [x] Services handle external systems such as GPS and HTTP requests.
+- [x] Models define data structure and serialization.
+- [x] Flutter communicates with PHP through an API client.
+- [x] PHP handles authorization, validation and business rules.
+- [x] PHP communicates with MySQL.
+- [x] No Flutter screen communicates directly with MySQL.
+- [x] No in-memory Dart stream is treated as communication between separate phones.
+- [x] Avoid duplicate implementations of the same service.
+
+> Hizi zote zimeandikwa na kukubaliwa kwenye `docs/ARCHITECTURE.md`
+> (sehemu ya 5 "Non-negotiable rules"). Utekelezaji wa API/MySQL ni Phase 6+.
 
 **Deliverable:** A documented architecture and an initial folder structure.
 

@@ -72,10 +72,49 @@ Format: date, decision, reason, files affected.
   (validators unit tests + widget tests). Note: still NOT run on a physical
   device — blocked on NDK download.
 
+## 2026-10-21 — Session persistence (stay logged in) + logout
+
+- **Decision:** Added `provider` + `flutter_secure_storage`. Session is stored
+  as JSON (token + phone) via `SecureSessionService` (Android Keystore /
+  iOS Keychain), behind an abstract `SessionService`. `AuthController`
+  (ChangeNotifier) owns auth state (`unknown`/`loggedOut`/`loggedIn`) and is
+  provided app-wide with `ChangeNotifierProvider`. Splash restores the
+  session and routes to home if a valid one exists, else to login.
+  `InMemorySessionService` exists for tests only.
+- **Reason:** Requirement: a user who logs in stays logged in after closing
+  the app unless they explicitly logged out. `flutter_secure_storage` was
+  chosen over `shared_preferences` because a session token is a secret —
+  shared_preferences writes plaintext XML readable with file access;
+  secure storage uses hardware-backed Keystore encryption. The abstract
+  interface lets us swap in the real API token later (Phase 7) without
+  touching controllers or screens.
+- **Login token is clearly labelled DEV** (`DEV-TOKEN-DO-NOT-USE-IN-PRODUCTION`)
+  because there is no backend yet (Phase 6/7). This is development-only and
+  must be replaced by a real API-issued token before any real use.
+- **Fix learned:** calling `notifyListeners()` while the widget tree is still
+  building (e.g. directly in `initState`) throws
+  `setState() or markNeedsBuild() called during build`. Splash therefore
+  defers `_bootstrap()` with `addPostFrameCallback`. Also removed a redundant
+  first `notifyListeners()` in `restoreSession` (state already starts at
+  `unknown`).
+- **Files:** `pubspec.yaml`, `lib/core/storage/session_service.dart`,
+  `lib/core/storage/secure_session_service.dart`,
+  `lib/controllers/auth_controller.dart`, `lib/main.dart`,
+  `lib/features/auth/screens/login_screen.dart`,
+  `lib/features/parent/screens/parent_home_screen.dart`, `test/widget_test.dart`
+- **Verified by:** `flutter analyze` clean; `flutter test` → 9 tests passed,
+  including the two critical scenarios: (1) login → restart app → still
+  logged in; (2) login → logout → restart app → login required. Still NOT run
+  on a physical device — blocked on NDK download.
+
 ## Known bugs / unfinished
 
 - NDK 28.2.13676358 is still downloading (~49 KB/s via curl with resume+retry).
   Until it is installed, `flutter build apk` / `flutter run` to an Android
   device will fail. `flutter analyze` and `flutter test` work without it.
-- Login screen is UI-only: pressing "Ingia" shows a message that the server is
-  not connected. Real authentication arrives in Phase 7.
+- Login screen signs in with a clearly-labelled DEV token. Real authentication
+  (API-issued token, password check on server, token expiry) is Phase 7.
+- Windows Developer Mode must be enabled for plugin builds (symlink support).
+  The user was asked to enable it via Settings → Developer Mode.
+- Parent home screen is a placeholder (amber DEVELOPMENT card). Real children,
+  bus and map arrive in Phase 5/9.
