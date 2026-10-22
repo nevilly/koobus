@@ -148,7 +148,7 @@ Format: date, decision, reason, files affected.
   `lib/core/widgets/dev_badge.dart`, `test/parent_shell_test.dart`,
   `test/widget_test.dart`.
 - **Verified by:** `flutter analyze` clean; `flutter test` → 19 tests passed.
-  Not yet seen on a physical device (NDK download).
+  Later confirmed on a physical device (see next entry).
 
 ## 2026-10-22 — Matron (bus attendant) is a first-class operational role
 
@@ -180,12 +180,44 @@ Format: date, decision, reason, files affected.
 - **Files:** `lib/features/parent/dev/parent_demo_data.dart`,
   `lib/core/widgets/dev_badge.dart`, all parent tabs.
 
+## 2026-10-23 — First APK built and tested on a real phone (V2333)
+
+- **Decision:** Build debug APKs with `flutter build apk --debug`; install with
+  `adb install -r build\app\outputs\flutter-apk\app-debug.apk`.
+- **Reason:** Phase 4 milestone: prove the app runs on real hardware before any
+  backend work. `flutter run` is used while iterating (hot reload), `build apk`
+  for a shareable file.
+- **NDK saga (what went wrong, and the fix):** the 2.12 GB NDK download stalled
+  twice. The lesson: **killing a PowerShell parent does not kill its child
+  `curl.exe`** — an orphaned curl kept appending to the same `rem2` part file
+  while a second download wrote to it, producing a wrong-size part. Fix: check
+  `Get-CimInstance Win32_Process -Filter "Name='curl.exe'"` before assuming a
+  download stopped, then verify **every** part size against its byte range
+  before merging with `copy /b`. Final archive verified at exactly
+  `748,118,221` bytes with 8103 zip entries before extraction.
+- **First-build facts (useful for the future):** Gradle 9.3.1 distribution is
+  695 MB (`.gradle` total 1.63 GB); NDK 2.12 GB. The first `assembleDebug` took
+  **840.7 s** because Gradle auto-installed Android SDK Platform 36 + 35 and
+  CMake 3.22.1. Later builds reuse them.
+- **Files added to the SDK (by Gradle automatically):** `platforms/android-36`,
+  `platforms/android-35`, `cmake/3.22.1`.
+- **Verified by:** on device `10HE93F0RR001GL` (V2333, Android 16/API 36):
+  splash → login → DEV login works; all 5 tabs (Nyumbani, Watoto, Historia,
+  Taarifa [badge 2], Wasifu) render; `Historia yake` opens the per-child
+  timeline with matron names; back returns correctly. APK is 151.8 MB (debug).
+  Flutter logs confirm Impeller/OpenGLES renderer. Not yet verified: logout
+  button (its position could not be located reliably through `uiautomator`
+  dumps — needs a manual check), and nothing has been tested against a real
+  server (none exists until Phase 6/7).
+
 ## Known bugs / unfinished
 
-- NDK 28.2.13676358 install is in progress with a resumable single-connection
-  download (the network here is intermittent). Until it is installed,
-  `flutter build apk` / `flutter run` on an Android device will fail.
-  `flutter analyze` and `flutter test` work without it.
+- NDK 28.2.13676358 is **installed** (2.12 GB) and `flutter build apk --debug`
+  succeeds; the first APK was installed and opened on V2333 on 2026-10-23.
+  `flutter analyze` and `flutter test` also work.
+- Logout button on Wasifu could not be located by automated UI dumps (scroll
+  position/grid navigation issue, not a confirmed bug). Must be checked by hand
+  before Phase 4 is signed off.
 - Login screen signs in with a clearly-labelled DEV token. Real authentication
   (API-issued token, password check on server, token expiry) is Phase 7.
 - Windows Developer Mode is now ON (registry

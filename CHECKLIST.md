@@ -77,9 +77,9 @@
 - [x] Open the project in the code editor.
 - [x] Understand `pubspec.yaml`.
 - [x] Understand `lib/main.dart`.
-- [ ] Run the default app.  ← BLOCKED: NDK download
+- [x] Run the default app.  ← done 2026-10-23 on V2333 after NDK install
 - [x] Make one visible UI change.
-- [ ] Run the app again and verify the change.  ← BLOCKED: NDK download
+- [x] Run the app again and verify the change.  ← done 2026-10-23 on V2333
 - [x] Create the initial Git repository.
 - [x] Create a `.gitignore` appropriate for Flutter.
 - [x] Make the first commit.
@@ -200,6 +200,11 @@
 - [ ] Offline and server-error states.
 
 Use clearly labelled development fixtures while building UI, but do not confuse sample data with live production information.
+
+**Device milestone (2026-10-23):** first `flutter build apk --debug` succeeded and
+was installed on V2333 (`10HE93F0RR001GL`). Verified by hand on the phone:
+splash → login → DEV login → all 5 tabs → `Historia yake` per child → back.
+Wasifu logout button still needs a manual check.
 
 **Deliverable:** Navigable UI for the initial Parent and Driver experiences.
 
