@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:koobus/core/storage/secure_session_service.dart';
 import 'package:koobus/core/widgets/app_button.dart';
+import 'package:koobus/features/parent/screens/tabs/profile_tab.dart';
 import 'package:koobus/main.dart';
 
 void main() {
@@ -85,10 +86,26 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Karibu, 0712345678'), findsOneWidget);
 
-    // Toka: bonyeza ikoni ya logout kwenye AppBar kisha thibitisha
-    await tester.tap(find.byIcon(Icons.logout));
+    // Toka: nenda Wasifu, bonyeza kitufe cha Toka, thibitisha
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Wasifu'),
+      ),
+    );
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, 'Toka'));
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('logout_button')),
+      300,
+      scrollable: find.descendant(
+        of: find.byType(ProfileTab),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('logout_button')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ndiyo, toka'));
     await tester.pumpAndSettle();
 
     // Sasa yuko login tena

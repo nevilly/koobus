@@ -12,7 +12,7 @@ import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/utils/validators.dart';
 import 'package:koobus/core/widgets/app_button.dart';
-import 'package:koobus/features/parent/screens/parent_home_screen.dart';
+import 'package:koobus/features/parent/screens/parent_shell.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Sasa tuko ndani — nenda home kwa kuiondoa login kwenye stack
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const ParentHomeScreen()),
+        MaterialPageRoute(builder: (_) => const ParentShell()),
       );
     });
   }

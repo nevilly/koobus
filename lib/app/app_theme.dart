@@ -190,6 +190,26 @@ class AppTheme {
         color: AppColors.primary,
       ),
 
+      // ---- Bottom navigation ----
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: AppColors.surface,
+        indicatorColor: AppColors.primary.withValues(alpha: 0.12),
+        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return TextStyle(
+            fontSize: 11,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            color: selected ? AppColors.primary : AppColors.textSecondary,
+          );
+        }),
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return IconThemeData(
+            color: selected ? AppColors.primary : AppColors.textSecondary,
+          );
+        }),
+      ),
+
       // ---- Mistari ----
       dividerTheme: const DividerThemeData(
         color: AppColors.border,

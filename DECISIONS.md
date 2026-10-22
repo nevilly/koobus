@@ -131,14 +131,65 @@ Format: date, decision, reason, files affected.
   (theme colors, button height 52, input radius 12, button loading state,
   ErrorView retry). Not yet seen on a device (NDK blocked).
 
+## 2026-10-22 — Parent bottom navigation: 5 tabs (Phase 4.2)
+
+- **Decision:** The parent experience is a shell (`ParentShell`) with 5 tabs:
+  Nyumbani, Watoto, Historia, Taarifa, Wasifu, using Material 3
+  `NavigationBar` + `IndexedStack`.
+- **Reason:** 5 is the maximum recommended number of bottom-navigation
+  destinations. The five tabs answer the parent's daily questions: Where is the
+  bus? Where are my children? What happened today? Did anything need my
+  attention? What are my details and who may collect my children? Settings,
+  language and logout live inside Wasifu instead of taking a sixth tab.
+- **Child history** opens from Watoto (per child) and is summarised in
+  Historia — boarding/alighting time, place and the supervising matron.
+- **Files:** `lib/features/parent/screens/parent_shell.dart`, `tabs/*`,
+  `child_history_screen.dart`, `widgets/trip_event_tile.dart`,
+  `lib/core/widgets/dev_badge.dart`, `test/parent_shell_test.dart`,
+  `test/widget_test.dart`.
+- **Verified by:** `flutter analyze` clean; `flutter test` → 19 tests passed.
+  Not yet seen on a physical device (NDK download).
+
+## 2026-10-22 — Matron (bus attendant) is a first-class operational role
+
+- **Decision:** Model the person who supervises children on the bus ("matron")
+  separately from the driver. Boarding/alighting events will record who
+  recorded them (`trip_events.recorded_by`) and a trip will link its crew
+  (driver + matron).
+- **Reason:** The driver is on the road and cannot safely confirm every child's
+  boarding. Parents asked specifically to know *which matron* was supervising.
+  A trip needs at least a driver (vehicle control) and a matron (child safety).
+- **Consequence:** The Phase 5 ER design must include matron/attendant in
+  `users.role` plus a trip-crew link. Until then the UI shows this as clearly
+  labelled DEV data.
+- **Files:** `lib/features/parent/dev/parent_demo_data.dart` (fields `matron`,
+  `DemoTripEvent.matron`); `CHECKLIST.md` Phase 5.
+
+## 2026-10-22 — Parent UI uses labelled DEV fixtures until the API exists
+
+- **Decision:** All parent UI sample data comes from
+  `lib/features/parent/dev/parent_demo_data.dart` (`DemoChild`,
+  `DemoTripEvent`, `DemoGuardian`, `DemoAlert`). Every screen showing it also
+  shows the "MFANO (DEV)" badge and says which phase will provide real data.
+- **Reason:** Phase 4 is UI/UX; the database and API do not exist yet. We need
+  realistic layouts to test scrolling, long school names and multiple children.
+  The badge prevents anyone mistaking the data for live tracking.
+- **Consequence:** Phase 5 replaces the `Demo*` classes with real models;
+  Phase 6/7 replaces constants with API calls through controllers. No
+  production screen may read `parent_demo_data.dart`.
+- **Files:** `lib/features/parent/dev/parent_demo_data.dart`,
+  `lib/core/widgets/dev_badge.dart`, all parent tabs.
+
 ## Known bugs / unfinished
 
-- NDK 28.2.13676358 is still downloading (~49 KB/s via curl with resume+retry).
-  Until it is installed, `flutter build apk` / `flutter run` to an Android
-  device will fail. `flutter analyze` and `flutter test` work without it.
+- NDK 28.2.13676358 install is in progress with a resumable single-connection
+  download (the network here is intermittent). Until it is installed,
+  `flutter build apk` / `flutter run` on an Android device will fail.
+  `flutter analyze` and `flutter test` work without it.
 - Login screen signs in with a clearly-labelled DEV token. Real authentication
   (API-issued token, password check on server, token expiry) is Phase 7.
-- Windows Developer Mode must be enabled for plugin builds (symlink support).
-  The user was asked to enable it via Settings → Developer Mode.
-- Parent home screen is a placeholder (amber DEVELOPMENT card). Real children,
-  bus and map arrive in Phase 5/9.
+- Windows Developer Mode is now ON (registry
+  `AllowDevelopmentWithoutDevLicense = 1`); plugin builds (symlinks) work.
+- Parent screens use labelled DEV fixtures. Real children, bus, GPS and map
+  arrive in Phase 5/9; push notifications in Phase 10. No production screen may
+  read `parent_demo_data.dart`.

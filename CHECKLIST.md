@@ -107,13 +107,13 @@
 
 - [x] Understand `main()` and `runApp()`.
 - [x] Understand `MaterialApp` and `Scaffold`.
-- [ ] Learn `Row`, `Column`, `Stack`, `Container`, `Padding` and `Expanded`.  ← Stack/Expanded bado
-- [ ] Learn `ListView` and scrolling layouts.
+- [x] Learn `Row`, `Column`, `Stack`, `Container`, `Padding` and `Expanded`.
+- [x] Learn `ListView` and scrolling layouts.
 - [x] Learn `TextField` and form validation.
 - [x] Understand `StatelessWidget` versus `StatefulWidget`.
 - [x] Learn navigation between screens.
-- [ ] Learn reusable widgets.
-- [ ] Understand loading, empty, error and success states.  ← loading ✓, empty/error bado
+- [x] Learn reusable widgets.
+- [ ] Understand loading, empty, error and success states.  (loading + error done; empty/success pending)
 - [x] Learn how to read Flutter error messages.
 
 ## 2.3 State management
@@ -183,19 +183,19 @@
 
 ## 4.2 Build screens
 
-- [ ] Splash/loading screen.
-- [ ] Login screen.
+- [x] Splash/loading screen.
+- [x] Login screen.
 - [ ] Password recovery screen if supported by the chosen authentication method.
-- [ ] Parent home screen.
-- [ ] Child details screen.
-- [ ] Bus tracking screen.
-- [ ] Trip history screen.
-- [ ] Parent profile screen.
+- [x] Parent home screen.
+- [x] Child details screen.
+- [ ] Bus tracking screen.  ← ramani ya mfano ipo; GPS halisi ni Phase 9
+- [x] Trip history screen.
+- [x] Parent profile screen.
 - [ ] Driver home screen.
 - [ ] Assigned route screen.
 - [ ] Active trip screen.
-- [ ] Notifications screen.
-- [ ] Settings screen.
+- [x] Notifications screen.
+- [ ] Settings screen.  ← sehemu ya Mipangilio ipo ndani ya Wasifu; screen kamili bado
 - [ ] Unauthorized-access screen.
 - [ ] Offline and server-error states.
 
