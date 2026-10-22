@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:koobus/core/storage/secure_session_service.dart';
+import 'package:koobus/core/widgets/app_button.dart';
 import 'package:koobus/main.dart';
 
 void main() {
@@ -52,7 +53,7 @@ void main() {
     // Ingia: weka namba na nenosiri
     await tester.enterText(find.byType(TextFormField).at(0), '0712345678');
     await tester.enterText(find.byType(TextFormField).at(1), '123456');
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Ingia'));
+    await tester.tap(find.widgetWithText(AppButton, 'Ingia'));
     await tester.pumpAndSettle();
 
     // Sasa yuko home
@@ -80,7 +81,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextFormField).at(0), '0712345678');
     await tester.enterText(find.byType(TextFormField).at(1), '123456');
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Ingia'));
+    await tester.tap(find.widgetWithText(AppButton, 'Ingia'));
     await tester.pumpAndSettle();
     expect(find.text('Karibu, 0712345678'), findsOneWidget);
 

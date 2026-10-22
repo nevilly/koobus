@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:koobus/controllers/auth_controller.dart';
+import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/features/auth/screens/login_screen.dart';
 
 class ParentHomeScreen extends StatelessWidget {
@@ -71,7 +72,7 @@ class ParentHomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.directions_bus_filled,
-                  size: 72, color: Colors.blue),
+                  size: 72, color: AppColors.primary),
               const SizedBox(height: 16),
               Text(
                 'Karibu, $phone',

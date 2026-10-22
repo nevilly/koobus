@@ -170,16 +170,16 @@
 
 ## 4.1 Define the design system
 
-- [ ] Choose primary, secondary, background and status colors.
-- [ ] Define text styles and font sizes.
-- [ ] Define spacing and screen margins.
-- [ ] Define standard button styles.
-- [ ] Define input field styles.
-- [ ] Define cards, dialogs and loading indicators.
-- [ ] Define reusable error and empty-state components.
-- [ ] Make the interface usable on different Android screen sizes.
-- [ ] Provide readable Swahili messages.
-- [ ] Ensure important actions are easy to identify.
+- [x] Choose primary, secondary, background and status colors.
+- [x] Define text styles and font sizes.
+- [x] Define spacing and screen margins.
+- [x] Define standard button styles.
+- [x] Define input field styles.
+- [x] Define cards, dialogs and loading indicators.
+- [x] Define reusable error and empty-state components.
+- [ ] Make the interface usable on different Android screen sizes.  ← baada ya UI halisi + jaribio la simu
+- [x] Provide readable Swahili messages.
+- [x] Ensure important actions are easy to identify.
 
 ## 4.2 Build screens
 

@@ -107,6 +107,30 @@ Format: date, decision, reason, files affected.
   logged in; (2) login → logout → restart app → login required. Still NOT run
   on a physical device — blocked on NDK download.
 
+## 2026-10-22 — Design system centralized in theme (Phase 4.1)
+
+- **Decision:** All colors live in `lib/core/constants/app_colors.dart`, all
+  spacing/radii in `lib/core/constants/app_spacing.dart`, and all widget
+  styling in `lib/app/app_theme.dart` (`AppTheme.light`). Screens use theme
+  values and the shared `AppButton`, `AppLoader`, `ErrorView` widgets instead
+  of hard-coded `Colors.*`, `EdgeInsets.all(24)` or per-screen button styles.
+- **Reason:** Consistency and one-place change. A hard-coded color on each
+  screen drifts: this project already had `Colors.blue` in splash, login and
+  home. The theme also encodes behaviour (button height 52, disabled while
+  loading) once, so it is tested once.
+- **Palette:** primary `#1565C0`, primaryDark `#0D47A1` (splash gradient),
+  accent `#FFB300` (school-bus amber), background `#F5F7FA`, status colors
+  success/warning/danger. Light theme only for now; dark theme is not MVP.
+- **Files:** `lib/core/constants/app_colors.dart`,
+  `lib/core/constants/app_spacing.dart`, `lib/app/app_theme.dart`,
+  `lib/core/widgets/app_button.dart`, `app_loader.dart`, `error_view.dart`,
+  `lib/main.dart`, `lib/features/auth/screens/login_screen.dart`,
+  `lib/features/parent/screens/parent_home_screen.dart`,
+  `test/design_system_test.dart`
+- **Verified by:** `flutter analyze` clean; `flutter test` → 15 tests passed
+  (theme colors, button height 52, input radius 12, button loading state,
+  ErrorView retry). Not yet seen on a device (NDK blocked).
+
 ## Known bugs / unfinished
 
 - NDK 28.2.13676358 is still downloading (~49 KB/s via curl with resume+retry).

@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:koobus/controllers/auth_controller.dart';
+import 'package:koobus/core/constants/app_colors.dart';
+import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/utils/validators.dart';
+import 'package:koobus/core/widgets/app_button.dart';
 import 'package:koobus/features/parent/screens/parent_home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -78,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: SingleChildScrollView(
             // inaruhusu kurasa kusogeza chini kama keyboard inafunika
-            padding: const EdgeInsets.all(24),
+            padding: AppSpacing.page,
             child: Form(
               key: _formKey,
               child: Column(
@@ -88,21 +91,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Icon(
                     Icons.directions_bus_filled,
                     size: 72,
-                    color: Colors.blue,
+                    color: AppColors.primary,
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
                     'Karibu KooBus',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
                     'Ingia ili kuona safari za watoto wako',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: AppSpacing.xl),
 
                   // TextFormField = TextField yenye muunganisho na Form
                   // (hivyo validate() inaweza kuizungumzia).
@@ -115,10 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       labelText: 'Namba ya simu',
                       hintText: 'Mfano: 0712345678',
                       prefixIcon: Icon(Icons.phone),
-                      border: OutlineInputBorder(),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword, // true = nukta ••••
@@ -126,7 +128,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: InputDecoration(
                       labelText: 'Nenosiri',
                       prefixIcon: const Icon(Icons.lock),
-                      border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(_obscurePassword
                             ? Icons.visibility_off
@@ -139,20 +140,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    height: 48,
-                    child: ElevatedButton(
-                      onPressed: _submitting ? null : _submit,
-                      // onSubmitting = true, kitufe "hazimwi" (disabled)
-                      child: _submitting
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Text('Ingia', style: TextStyle(fontSize: 16)),
-                    ),
+                  const SizedBox(height: AppSpacing.lg),
+
+                  // AppButton = kitufe chetu cha kawaida. Inajua loading
+                  // yenyewe: inaonyesha spinner na inajizuia kwa kubonyeza
+                  // mara mbili. Haihitaji SizedBox(height: 48) tena —
+                  // urefu unatoka kwenye theme.
+                  AppButton(
+                    label: 'Ingia',
+                    loading: _submitting,
+                    onPressed: _submit,
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+
+                  // Onyo la wazi: kuingia huku si halisi.
+                  Text(
+                    'Hali ya MAJARIBIO (DEV): server halisi bado haijajengwa. '
+                    'Kuingia huku kunahifadhi session ya majaribio pekee.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: AppColors.warning),
                   ),
                 ],
               ),

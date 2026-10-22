@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:koobus/controllers/auth_controller.dart';
 import 'package:koobus/core/storage/secure_session_service.dart';
 import 'package:koobus/core/storage/session_service.dart';
+import 'package:koobus/app/app_theme.dart';
+import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/features/auth/screens/login_screen.dart';
 import 'package:koobus/features/parent/screens/parent_home_screen.dart';
 
@@ -44,10 +46,7 @@ class KooBusApp extends StatelessWidget {
       child: MaterialApp(
         title: 'KooBus',
         debugShowCheckedModeBanner: false, // ondoa banner ya "DEBUG"
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          useMaterial3: true,
-        ),
+        theme: AppTheme.light,
         home: const SplashScreen(),
       ),
     );
@@ -115,7 +114,7 @@ class _SplashScreenState extends State<SplashScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.blue, Colors.blueAccent],
+            colors: [AppColors.primary, AppColors.primaryDark],
           ),
         ),
         // Center = inaweka kitu kwenye katikati ya screen
