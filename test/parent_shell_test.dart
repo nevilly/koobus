@@ -7,8 +7,13 @@ import 'package:provider/provider.dart';
 
 import 'package:koobus/app/app_theme.dart';
 import 'package:koobus/controllers/auth_controller.dart';
+import 'package:koobus/controllers/language_controller.dart';
+import 'package:koobus/core/storage/language_service.dart';
 import 'package:koobus/core/storage/secure_session_service.dart';
 import 'package:koobus/core/storage/session_service.dart';
+import 'package:koobus/l10n/app_localizations.dart';
+import 'package:koobus/l10n/app_localizations_sw.dart';
+import 'package:koobus/l10n/app_localizations_en.dart';
 import 'package:koobus/features/parent/screens/parent_shell.dart';
 import 'package:koobus/features/parent/screens/tabs/home_tab.dart';
 import 'package:koobus/features/parent/screens/tabs/profile_tab.dart';
@@ -25,10 +30,20 @@ Future<AuthController> _loggedInAuth() async {
 }
 
 Widget _wrap(AuthController auth) {
-  return ChangeNotifierProvider<AuthController>.value(
-    value: auth,
+  return MultiProvider(
+    providers: [
+      ChangeNotifierProvider<AuthController>.value(value: auth),
+      ChangeNotifierProvider<LanguageController>(
+        create: (_) => LanguageController(InMemoryLanguageService()),
+      ),
+    ],
     child: MaterialApp(
       theme: AppTheme.light,
+      // ParentShell inaonyesha maneno kutoka kamusi (AppLocalizations),
+      // hivyo test inahitaji delegates na locale — ndiyo hali halisi ya app.
+      locale: const Locale('sw'),
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
       home: const ParentShell(),
     ),
   );
@@ -90,7 +105,7 @@ void main() {
     expect(find.textContaining('Alipanda basi'), findsWidgets);
 
     // Rudi kwenye shell
-    await tester.pageBack();
+    await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     expect(find.text('Watoto wako'), findsOneWidget);
   });

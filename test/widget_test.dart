@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:koobus/core/storage/secure_session_service.dart';
+import 'package:koobus/core/storage/language_service.dart';
 import 'package:koobus/core/widgets/app_button.dart';
 import 'package:koobus/features/parent/screens/tabs/profile_tab.dart';
 import 'package:koobus/main.dart';
@@ -15,7 +16,7 @@ void main() {
   testWidgets('Splash inaonyesha jina la KooBus kwanza',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-      KooBusApp(sessionService: InMemorySessionService()),
+      KooBusApp(sessionService: InMemorySessionService(), languageService: InMemoryLanguageService()),
     );
 
     expect(find.text('KooBus'), findsOneWidget);
@@ -30,7 +31,7 @@ void main() {
 
   testWidgets('Mtu hajawa kuingia -> anaona login', (tester) async {
     await tester.pumpWidget(
-      KooBusApp(sessionService: InMemorySessionService()),
+      KooBusApp(sessionService: InMemorySessionService(), languageService: InMemoryLanguageService()),
     );
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
@@ -46,7 +47,7 @@ void main() {
     final sharedStorage = InMemorySessionService();
 
     // ---- APP YA KWANZA ----
-    await tester.pumpWidget(KooBusApp(sessionService: sharedStorage));
+    await tester.pumpWidget(KooBusApp(sessionService: sharedStorage, languageService: InMemoryLanguageService()));
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
     expect(find.text('Karibu KooBus'), findsOneWidget); // login
@@ -63,7 +64,7 @@ void main() {
     // ---- APP YA PILI (baada ya kufunga na kufungua tena) ----
     // Tunajenga widget tree mpya kabisa (kama simu imezimwa na kuwasha),
     // lakini tunatumia hifadhi YENYELE — session inapaswa kusomeka.
-    await tester.pumpWidget(KooBusApp(sessionService: sharedStorage));
+    await tester.pumpWidget(KooBusApp(sessionService: sharedStorage, languageService: InMemoryLanguageService()));
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
 
@@ -77,7 +78,7 @@ void main() {
     final sharedStorage = InMemorySessionService();
 
     // Ingia
-    await tester.pumpWidget(KooBusApp(sessionService: sharedStorage));
+    await tester.pumpWidget(KooBusApp(sessionService: sharedStorage, languageService: InMemoryLanguageService()));
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextFormField).at(0), '0712345678');
@@ -112,7 +113,7 @@ void main() {
     expect(find.text('Karibu KooBus'), findsOneWidget);
 
     // App ya pili (baada ya kufunga): session imefutwa -> login tena
-    await tester.pumpWidget(KooBusApp(sessionService: sharedStorage));
+    await tester.pumpWidget(KooBusApp(sessionService: sharedStorage, languageService: InMemoryLanguageService()));
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
     expect(find.text('Karibu KooBus'), findsOneWidget); // login, si home

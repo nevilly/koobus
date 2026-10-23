@@ -10,12 +10,14 @@ import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/widgets/dev_badge.dart';
 import 'package:koobus/features/parent/dev/parent_demo_data.dart';
 import 'package:koobus/features/parent/screens/child_history_screen.dart';
+import 'package:koobus/l10n/app_localizations.dart';
 
 class ChildrenTab extends StatelessWidget {
   const ChildrenTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     // ListView = orodha inayosogeza (scroll). Tunatumia `children:` kwa
@@ -31,10 +33,10 @@ class ChildrenTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Watoto wako', style: textTheme.titleLarge),
+                  Text(l10n.childrenTitle, style: textTheme.titleLarge),
                   const SizedBox(height: 2),
                   Text(
-                    'Gusa mtoto kuona historia ya kupanda na kushuka.',
+                    l10n.childrenSubtitle,
                     style: textTheme.bodySmall,
                   ),
                 ],
@@ -49,8 +51,7 @@ class ChildrenTab extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
         ],
         Text(
-          'Watoto wanaweza kuwa shule tofauti — kila mmoja ana shule, '
-          'darasa na matron wake.',
+          l10n.childrenMultipleSchoolsNotice,
           style: textTheme.bodySmall,
         ),
       ],
@@ -65,6 +66,7 @@ class _ChildCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
@@ -102,7 +104,7 @@ class _ChildCard extends StatelessWidget {
                       children: [
                         Text(child.name, style: textTheme.titleMedium),
                         Text(
-                          '${child.school} · ${child.className}',
+                          l10n.childSchoolClass(child.school, child.className),
                           style: textTheme.bodySmall,
                         ),
                       ],
@@ -118,12 +120,15 @@ class _ChildCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               _InfoLine(
                 icon: Icons.supervisor_account_outlined,
-                text: 'Matron: ${child.matron}',
+                text: l10n.busMatron(child.matron),
               ),
               const SizedBox(height: AppSpacing.sm),
               _InfoLine(
                 icon: Icons.schedule,
-                text: '${child.events.first.action} — ${child.events.first.time}',
+                text: l10n.eventTitle(
+                  child.events.first.action.label(l10n),
+                  child.events.first.time,
+                ),
               ),
               const SizedBox(height: AppSpacing.sm),
               Align(
@@ -137,7 +142,7 @@ class _ChildCard extends StatelessWidget {
                     );
                   },
                   icon: const Icon(Icons.history, size: 18),
-                  label: const Text('Historia yake'),
+                  label: Text(l10n.childrenHistoryButton),
                 ),
               ),
             ],
@@ -162,6 +167,8 @@ class _ChildStatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     final color = switch (status) {
       DemoChildStatus.onboard => AppColors.primary,
       DemoChildStatus.atSchool || DemoChildStatus.atHome => AppColors.success,
@@ -175,7 +182,7 @@ class _ChildStatusChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
-        status.label,
+        status.label(l10n),
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w700,

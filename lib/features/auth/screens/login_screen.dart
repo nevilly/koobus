@@ -12,6 +12,7 @@ import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/utils/validators.dart';
 import 'package:koobus/core/widgets/app_button.dart';
+import 'package:koobus/l10n/app_localizations.dart';
 import 'package:koobus/features/parent/screens/parent_shell.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -75,6 +76,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // l10n = maneno ya lugha iliyochaguliwa.
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       body: SafeArea(
         // Safeapa inazuia UI kuingia kwenye "notch" ya simu
@@ -95,13 +99,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Text(
-                    'Karibu KooBus',
+                    l10n.loginTitle,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Ingia ili kuona safari za watoto wako',
+                    l10n.loginSubtitle,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
@@ -113,20 +117,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
                     // validator inarudisha error message au null
-                    validator: Validators.phone,
-                    decoration: const InputDecoration(
-                      labelText: 'Namba ya simu',
+                    validator: Validators.phone(l10n),
+                    decoration: InputDecoration(
+                      labelText: l10n.loginPhoneLabel,
                       hintText: 'Mfano: 0712345678',
-                      prefixIcon: Icon(Icons.phone),
+                      prefixIcon: const Icon(Icons.phone),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword, // true = nukta ••••
-                    validator: Validators.password,
+                    validator: Validators.password(l10n),
                     decoration: InputDecoration(
-                      labelText: 'Nenosiri',
+                      labelText: l10n.loginPasswordLabel,
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(_obscurePassword
@@ -147,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // mara mbili. Haihitaji SizedBox(height: 48) tena —
                   // urefu unatoka kwenye theme.
                   AppButton(
-                    label: 'Ingia',
+                    label: l10n.loginSubmit,
                     loading: _submitting,
                     onPressed: _submit,
                   ),
@@ -155,8 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Onyo la wazi: kuingia huku si halisi.
                   Text(
-                    'Hali ya MAJARIBIO (DEV): server halisi bado haijajengwa. '
-                    'Kuingia huku kunahifadhi session ya majaribio pekee.',
+                    l10n.loginDevNotice,
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme

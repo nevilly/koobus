@@ -9,6 +9,7 @@ import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/widgets/dev_badge.dart';
 import 'package:koobus/features/parent/dev/parent_demo_data.dart';
 import 'package:koobus/features/parent/widgets/trip_event_tile.dart';
+import 'package:koobus/l10n/app_localizations.dart';
 
 class ChildHistoryScreen extends StatelessWidget {
   const ChildHistoryScreen({super.key, required this.child});
@@ -17,10 +18,11 @@ class ChildHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Historia ya ${child.name}')),
+      appBar: AppBar(title: Text(l10n.childHistoryTitle(child.name))),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.md),
         children: [
@@ -39,31 +41,34 @@ class ChildHistoryScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  Text('${child.school} · ${child.className}',
+                  Text(
+                    l10n.childSchoolClass(child.school, child.className),
+                    style: textTheme.bodySmall,
+                  ),
+                  Text(l10n.childRouteLabel(child.route),
                       style: textTheme.bodySmall),
-                  Text('Njia: ${child.route}', style: textTheme.bodySmall),
-                  Text('Matron: ${child.matron}', style: textTheme.bodySmall),
+                  Text(l10n.busMatron(child.matron),
+                      style: textTheme.bodySmall),
                 ],
               ),
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text('Shughuli za hivi karibuni', style: textTheme.titleMedium),
+          Text(l10n.childRecentActivity, style: textTheme.titleMedium),
           const SizedBox(height: AppSpacing.sm),
           // Orodha ya matukio — kila tukio lina tarehe, saa, mahali na matron.
           for (final event in child.events) TripEventTile(event: event),
           const SizedBox(height: AppSpacing.md),
-          const Row(
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.info_outline,
+              const Icon(Icons.info_outline,
                   size: 16, color: AppColors.textSecondary),
-              SizedBox(width: 6),
+              const SizedBox(width: 6),
               Expanded(
                 child: Text(
-                  'Taarifa hizi ni za MFANO (DEV). Historia halisi itatoka '
-                  'kwenye database kupitia API (Phase 6/7).',
-                  style: TextStyle(
+                  l10n.childHistoryDevNotice,
+                  style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
                   ),

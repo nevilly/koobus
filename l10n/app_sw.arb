@@ -1,0 +1,485 @@
+{
+  "@@locale": "sw",
+
+  "appName": "KooBus",
+  "@appName": {
+    "description": "Jina la app. Halitafsiriwi."
+  },
+
+  "appTagline": "Usalama wa safari ya shule",
+  "@appTagline": {
+    "description": "Mstari wa chini ya jina kwenye splash screen."
+  },
+
+  "actionCancel": "Bado",
+  "@actionCancel": {
+    "description": "Kitufe cha kufunga dialog bila kufanya kitu."
+  },
+
+  "actionRetry": "Jaribu tena",
+  "@actionRetry": {
+    "description": "Kitufe kwenye ErrorView ili kujaribu oparesheni tena."
+  },
+
+  "errorTitle": "Imeshindikana",
+  "@errorTitle": {
+    "description": "Kichwa cha kawaida cha kosa kwenye ErrorView."
+  },
+
+  "devBadgeLabel": "MFANO (DEV)",
+  "@devBadgeLabel": {
+    "description": "Beji inayoonyesha data ni ya mfano, si ya server halisi."
+  },
+
+  "loginTitle": "Karibu KooBus",
+  "@loginTitle": {
+    "description": "Kichwa cha screen ya kuingia."
+  },
+
+  "loginSubtitle": "Ingia ili kuona safari za watoto wako",
+  "@loginSubtitle": {
+    "description": "Maelezo chini ya kichwa cha login."
+  },
+
+  "loginPhoneLabel": "Namba ya simu",
+  "@loginPhoneLabel": {
+    "description": "Lebo ya field ya namba ya simu."
+  },
+
+  "loginPasswordLabel": "Nenosiri",
+  "@loginPasswordLabel": {
+    "description": "Lebo ya field ya nenosiri."
+  },
+
+  "loginSubmit": "Ingia",
+  "@loginSubmit": {
+    "description": "Kitufe cha kuingia."
+  },
+
+  "loginDevNotice": "Hali ya MAJARIBIO (DEV): server halisi bado haijajengwa. Kuingia huku kunahifadhi session ya majaribio pekee.",
+  "@loginDevNotice": {
+    "description": "Taarifa kwenye login ikikumbusha kuwa hakuna server bado."
+  },
+
+  "validationPhoneRequired": "Tafadhali weka namba ya simu",
+  "@validationPhoneRequired": {
+    "description": "Hitilafu ikiwa field ya simu ipo wazi."
+  },
+
+  "validationPhoneInvalid": "Namba si sahihi. Mfano: 0712345678",
+  "@validationPhoneInvalid": {
+    "description": "Hitilafu ikiwa namba ya simu si sahihi."
+  },
+
+  "validationPasswordRequired": "Tafadhali weka nenosiri",
+  "@validationPasswordRequired": {
+    "description": "Hitilafu ikiwa field ya nenosiri ipo wazi."
+  },
+
+  "validationPasswordTooShort": "Nenosiri liwe na herufi 6 au zaidi",
+  "@validationPasswordTooShort": {
+    "description": "Hitilafu ikiwa nenosiri ni fupi mno."
+  },
+
+  "navHome": "Nyumbani",
+  "@navHome": {
+    "description": "Tab ya kwanza: muhtasari wa leo."
+  },
+
+  "navChildren": "Watoto",
+  "@navChildren": {
+    "description": "Tab ya pili: orodha ya watoto."
+  },
+
+  "navHistory": "Historia",
+  "@navHistory": {
+    "description": "Tab ya tatu: historia ya safari."
+  },
+
+  "navAlerts": "Taarifa",
+  "@navAlerts": {
+    "description": "Tab ya nne: taarifa/alerts."
+  },
+
+  "navProfile": "Wasifu",
+  "@navProfile": {
+    "description": "Tab ya tano: wasifu wa mzazi."
+  },
+
+  "tabPosition": "Tab {index} of {total}",
+  "@tabPosition": {
+    "description": "Maelezo ya screen reader kwa tab ya sasa.",
+    "placeholders": {
+      "index": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "historyTitle": "Historia",
+  "@historyTitle": {
+    "description": "Kichwa cha screen ya historia."
+  },
+
+  "historySubtitle": "Kila kupanda na kushuka kunahifadhiwa saa na matron.",
+  "@historySubtitle": {
+    "description": "Maelezo chini ya kichwa cha historia."
+  },
+
+  "logoutButton": "Toka kwenye akaunti",
+  "@logoutButton": {
+    "description": "Kitufe cha kutoka kwenye akaunti."
+  },
+
+  "logoutDialogTitle": "Toka?",
+  "@logoutDialogTitle": {
+    "description": "Kichwa cha dialog ya kuthibitisha kutoka."
+  },
+
+  "logoutDialogBody": "Ukitoka, utahitaji kuingia tena kwenye kifaa hiki.",
+  "@logoutDialogBody": {
+    "description": "Maelezo kwenye dialog ya kutoka."
+  },
+
+  "logoutConfirm": "Ndiyo, toka",
+  "@logoutConfirm": {
+    "description": "Kitufe cha kuthibitisha kutoka."
+  },
+
+  "logoutFootnote": "Ukitoka, session itafutwa kwenye kifaa hiki na utahitaji kuingia tena.",
+  "@logoutFootnote": {
+    "description": "Maelezo madogo chini ya kitufe cha kutoka."
+  },
+
+  "profileTitle": "Wasifu",
+  "@profileTitle": {
+    "description": "Kichwa cha tab ya wasifu."
+  },
+
+  "settingsLanguage": "Lugha",
+  "@settingsLanguage": {
+    "description": "Lebo ya mipangilio ya lugha."
+  },
+
+  "settingsNotifications": "Taarifa za push",
+  "@settingsNotifications": {
+    "description": "Lebo ya mipangilio ya taarifa za push."
+  },
+
+  "settingsNotificationsSubtitle": "Zitakuja Phase 10",
+  "@settingsNotificationsSubtitle": {
+    "description": "Maelezo kuwa push notifications bado hazijajengwa."
+  },
+
+  "languageSwahili": "Kiswahili",
+  "@languageSwahili": {
+    "description": "Jina la lugha ya Kiswahili. Halitafsiriwi."
+  },
+
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "Jina la lugha ya Kiingereza. Halitafsiriwi."
+  },
+
+  "languageChanged": "Lugha imebadilishwa",
+  "@languageChanged": {
+    "description": "Ujumbo mfupi unaothibitisha lugha imebadilishwa."
+  },
+
+  "welcomeUser": "Karibu, {phone}",
+  "@welcomeUser": {
+    "description": "Salamu kwenye Nyumbani.",
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+
+  "homeTodayStatus": "Hali ya safari leo",
+  "@homeTodayStatus": {
+    "description": "Maelezo chini ya salamu kwenye Nyumbani."
+  },
+
+  "homeMapNotice": "Ramani halisi itakuja Phase 9 — hakuna GPS bado.",
+  "@homeMapNotice": {
+    "description": "Maandishi juu ya 'ramani' ya mfano."
+  },
+
+  "homePhaseNotice": "Ramani, GPS na muda halisi wa kufika vitakuja Phase 9. Taarifa zote hapa ni za MFANO (DEV).",
+  "@homePhaseNotice": {
+    "description": "Maelezo ya chini kwenye Nyumbani."
+  },
+
+  "etaMinutes": "Dakika {minutes}",
+  "@etaMinutes": {
+    "description": "Muda uliobaki hadi basi kufika (ETA).",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+
+  "etaDistanceFrom": "~{km} km kutoka {place}",
+  "@etaDistanceFrom": {
+    "description": "Umbali kutoka mahali fulani. `place` ni jina halisi.",
+    "placeholders": {
+      "km": { "type": "String" },
+      "place": { "type": "String" }
+    }
+  },
+
+  "busCardTitle": "Basi {plate}",
+  "@busCardTitle": {
+    "description": "Namba ya basi; `plate` ni jina halisi.",
+    "placeholders": {
+      "plate": { "type": "String" }
+    }
+  },
+
+  "busDriver": "Dereva: {name}",
+  "@busDriver": {
+    "description": "Jina la dereva; `name` ni jina halisi.",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "busMatron": "Matron: {name}",
+  "@busMatron": {
+    "description": "Jina la matron; `name` ni jina halisi.",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "busRouteLabel": "Njia {name}",
+  "@busRouteLabel": {
+    "description": "Lebo ya njia; `name` ni jina halisi la njia.",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "busCallDriverNotice": "Kumpigia dereva simu kutafunguliwa Phase 9.",
+  "@busCallDriverNotice": {
+    "description": "Maelezo kuwa kupiga simu dereva bado hakujajengwa."
+  },
+
+  "capacityTitle": "Wanafunzi kwenye basi",
+  "@capacityTitle": {
+    "description": "Kichwa cha kadi ya uwezo wa basi."
+  },
+
+  "capacityCount": "{onboard} / {capacity}",
+  "@capacityCount": {
+    "description": "Idadi iliyopo / uwezo kamili.",
+    "placeholders": {
+      "onboard": { "type": "int" },
+      "capacity": { "type": "int" }
+    }
+  },
+
+  "childrenTitle": "Watoto wako",
+  "@childrenTitle": {
+    "description": "Kichwa cha tab ya Watoto."
+  },
+
+  "childrenSubtitle": "Gusa mtoto kuona historia ya kupanda na kushuka.",
+  "@childrenSubtitle": {
+    "description": "Maelezo chini ya kichwa cha Watoto."
+  },
+
+  "childrenMultipleSchoolsNotice": "Watoto wanaweza kuwa shule tofauti — kila mmoja ana shule, darasa na matron wake.",
+  "@childrenMultipleSchoolsNotice": {
+    "description": "Maelezo ya chini kwenye tab ya Watoto."
+  },
+
+  "childrenHistoryButton": "Historia yake",
+  "@childrenHistoryButton": {
+    "description": "Kitufe cha kufungua historia ya mtoto mmoja."
+  },
+
+  "childSchoolClass": "{school} · {className}",
+  "@childSchoolClass": {
+    "description": "Shule na darasa, zimetenganishwa kwa nukta.",
+    "placeholders": {
+      "school": { "type": "String" },
+      "className": { "type": "String" }
+    }
+  },
+
+  "childHistoryTitle": "Historia ya {name}",
+  "@childHistoryTitle": {
+    "description": "Kichwa cha screen ya historia; `name` ni jina halisi.",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "childRouteLabel": "Njia: {route}",
+  "@childRouteLabel": {
+    "description": "Lebo ya njia; `route` ni jina halisi la njia.",
+    "placeholders": {
+      "route": { "type": "String" }
+    }
+  },
+
+  "childRecentActivity": "Shughuli za hivi karibuni",
+  "@childRecentActivity": {
+    "description": "Kichwa cha orodha ya matukio kwenye historia ya mtoto."
+  },
+
+  "childHistoryDevNotice": "Taarifa hizi ni za MFANO (DEV). Historia halisi itatoka kwenye database kupitia API (Phase 6/7).",
+  "@childHistoryDevNotice": {
+    "description": "Onyo la DEV kwenye historia ya mtoto."
+  },
+
+  "historyTabTitle": "Historia ya safari",
+  "@historyTabTitle": {
+    "description": "Kichwa cha tab ya Historia."
+  },
+
+  "historyFilterNotice": "Vichujio vya tarehe/shule na historia kamili ni Phase 9.",
+  "@historyFilterNotice": {
+    "description": "Maelezo ya chini kwenye tab ya Historia."
+  },
+
+  "alertsTabTitle": "Taarifa",
+  "@alertsTabTitle": {
+    "description": "Kichwa cha tab ya Taarifa."
+  },
+
+  "alertsSubtitle": "Taarifa za basi, kupanda, kufika na kuchelewa.",
+  "@alertsSubtitle": {
+    "description": "Maelezo chini ya kichwa cha Taarifa."
+  },
+
+  "alertsPushNotice": "Push notifications halisi (FCM) ni Phase 10.",
+  "@alertsPushNotice": {
+    "description": "Maelezo ya chini kwenye tab ya Taarifa."
+  },
+
+  "statusWaitingBus": "Anasubiri basi",
+  "@statusWaitingBus": {
+    "description": "Hali ya mtoto: hasa kupanda."
+  },
+
+  "statusOnTheWay": "Yupo njiani",
+  "@statusOnTheWay": {
+    "description": "Hali ya mtoto: yupo kwenye basi."
+  },
+
+  "statusAtSchool": "Yuko shuleni",
+  "@statusAtSchool": {
+    "description": "Hali ya mtoto: amefika shule."
+  },
+
+  "statusAtHome": "Yuko nyumbani",
+  "@statusAtHome": {
+    "description": "Hali ya mtoto: amefika nyumbani."
+  },
+
+  "eventBoarded": "Alipanda basi",
+  "@eventBoarded": {
+    "description": "Tukio: mtoto alipanda basi."
+  },
+
+  "eventArrivedSchool": "Alifika shule",
+  "@eventArrivedSchool": {
+    "description": "Tukio: mtoto alifika shule."
+  },
+
+  "eventAlighted": "Alishuka",
+  "@eventAlighted": {
+    "description": "Tukio: mtoto alishuka kwenye basi."
+  },
+
+  "dayToday": "Leo",
+  "@dayToday": {
+    "description": "Siku ya tukio: leo."
+  },
+
+  "dayYesterday": "Jana",
+  "@dayYesterday": {
+    "description": "Siku ya tukio: jana."
+  },
+
+  "eventTitle": "{action} — {time}",
+  "@eventTitle": {
+    "description": "Kichwa cha kadi ya tukio: kitendo na saa.",
+    "placeholders": {
+      "action": { "type": "String" },
+      "time": { "type": "String" }
+    }
+  },
+
+  "eventSubtitle": "{day} · {place}\nMatron: {matron}",
+  "@eventSubtitle": {
+    "description": "Maelezo ya kadi ya tukio: siku, mahali, matron.",
+    "placeholders": {
+      "day": { "type": "String" },
+      "place": { "type": "String" },
+      "matron": { "type": "String" }
+    }
+  },
+
+  "profileAccountTypeParent": "Mzazi",
+  "@profileAccountTypeParent": {
+    "description": "Aina ya akaunti kwenye wasifu."
+  },
+
+  "profileAccountType": "Aina ya akaunti",
+  "@profileAccountType": {
+    "description": "Lebo ya aina ya akaunti."
+  },
+
+  "profileParentSection": "Taarifa za mzazi",
+  "@profileParentSection": {
+    "description": "Kichwa cha sehemu ya taarifa za mzazi."
+  },
+
+  "profileFullName": "Jina",
+  "@profileFullName": {
+    "description": "Lebo ya jina kamili."
+  },
+
+  "profileRoleSummary": "Mzazi · {phone}",
+  "@profileRoleSummary": {
+    "description": "Muhtasari chini ya jina la mzazi.",
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+
+  "profileGuardiansSection": "Waliounganishwa kuchukua watoto",
+  "@profileGuardiansSection": {
+    "description": "Kichwa cha sehemu ya walioidhinishwa."
+  },
+
+  "profileGuardianApproved": "Ameidhinishwa kumchukua mtoto",
+  "@profileGuardianApproved": {
+    "description": "Maelezo ya alama ya uthibitisho kwa mlezi."
+  },
+
+  "profileGuardiansNotice": "Wewe pekee unaweza kuongeza au kuondoa watu hawa. Usimamizi halisi ni Phase 8.",
+  "@profileGuardiansNotice": {
+    "description": "Maelezo ya chini kwenye sehemu ya walioidhinishwa."
+  },
+
+  "profileChildrenSection": "Watoto na shule",
+  "@profileChildrenSection": {
+    "description": "Kichwa cha sehemu ya watoto na shule."
+  },
+
+  "profileChildrenNotice": "Watoto wanaweza kuwa shule tofauti. Kila mtoto ana matron na njia yake.",
+  "@profileChildrenNotice": {
+    "description": "Maelezo ya chini kwenye sehemu ya watoto."
+  },
+
+  "profileSettingsSection": "Mipangilio",
+  "@profileSettingsSection": {
+    "description": "Kichwa cha sehemu ya mipangilio."
+  },
+
+  "languageDialogTitle": "Chagua lugha",
+  "@languageDialogTitle": {
+    "description": "Kichwa cha dialog ya kuchagua lugha."
+  }
+}

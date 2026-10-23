@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/constants/app_spacing.dart';
+import 'package:koobus/l10n/app_localizations.dart';
 
 class DevBadge extends StatelessWidget {
   const DevBadge({super.key});
@@ -24,14 +25,15 @@ class DevBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
         border: Border.all(color: AppColors.warning.withValues(alpha: 0.5)),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.science_outlined, size: 13, color: AppColors.warning),
-          SizedBox(width: 4),
+          const Icon(Icons.science_outlined,
+              size: 13, color: AppColors.warning),
+          const SizedBox(width: 4),
           Text(
-            'MFANO (DEV)',
-            style: TextStyle(
+            AppLocalizations.of(context).devBadgeLabel,
+            style: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w700,
               color: AppColors.warning,

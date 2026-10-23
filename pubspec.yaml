@@ -37,6 +37,12 @@ dependencies:
   provider: ^6.1.5+1
   flutter_secure_storage: ^11.2.0
 
+  # Lugha: flutter_localizations (SDK) + intl hutoa vipengele vya lugha,
+  # tafsiri na uundaji wa faili za .arb.
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -53,6 +59,11 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+
+  # Kizazi cha code ya lugha: hutumia l10n/app_sw.arb (msingi) na l10n/app_en.arb.
+  # Matokeo yake huenda lib/l10n/ na huwa DART CODE halisi, si faili za kutafsiri
+  # wakati wa kukimbia. Hivyo app haisomi .arb kwenye simu.
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

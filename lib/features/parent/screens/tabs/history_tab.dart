@@ -6,12 +6,14 @@ import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/widgets/dev_badge.dart';
 import 'package:koobus/features/parent/dev/parent_demo_data.dart';
 import 'package:koobus/features/parent/widgets/trip_event_tile.dart';
+import 'package:koobus/l10n/app_localizations.dart';
 
 class HistoryTab extends StatelessWidget {
   const HistoryTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     return ListView(
@@ -24,10 +26,10 @@ class HistoryTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Historia ya safari', style: textTheme.titleLarge),
+                  Text(l10n.historyTabTitle, style: textTheme.titleLarge),
                   const SizedBox(height: 2),
                   Text(
-                    'Kila kupanda na kushuka kunahifadhiwa saa na matron.',
+                    l10n.historySubtitle,
                     style: textTheme.bodySmall,
                   ),
                 ],
@@ -44,7 +46,7 @@ class HistoryTab extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
         ],
         Text(
-          'Vichujio vya tarehe/shule na historia kamili ni Phase 9.',
+          l10n.historyFilterNotice,
           style: textTheme.bodySmall,
         ),
       ],

@@ -13,14 +13,17 @@ import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/widgets/dev_badge.dart';
 import 'package:koobus/features/parent/dev/parent_demo_data.dart';
+import 'package:koobus/l10n/app_localizations.dart';
 
 class ParentHomeTab extends StatelessWidget {
   const ParentHomeTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final auth = context.watch<AuthController>();
-    final phone = auth.session?.phone ?? 'mzazi';
+    // "mzazi" ni neno la akiba ikiwa hakuna simu — hivyo linatafsiriwa.
+    final phone = auth.session?.phone ?? l10n.profileAccountTypeParent;
     final child = demoChildren.first;
     final textTheme = Theme.of(context).textTheme;
 
@@ -41,9 +44,9 @@ class ParentHomeTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Karibu, $phone', style: textTheme.titleLarge),
+                  Text(l10n.welcomeUser(phone), style: textTheme.titleLarge),
                   const SizedBox(height: 2),
-                  Text('Hali ya safari leo', style: textTheme.bodySmall),
+                  Text(l10n.homeTodayStatus, style: textTheme.bodySmall),
                 ],
               ),
             ),
@@ -58,8 +61,7 @@ class ParentHomeTab extends StatelessWidget {
         const _CapacityCard(),
         const SizedBox(height: AppSpacing.lg),
         Text(
-          'Ramani, GPS na muda halisi wa kufika vitakuja Phase 9. '
-          'Taarifa zote hapa ni za MFANO (DEV).',
+          l10n.homePhaseNotice,
           textAlign: TextAlign.center,
           style: textTheme.bodySmall,
         ),
@@ -75,6 +77,7 @@ class _LiveTripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
@@ -118,7 +121,7 @@ class _LiveTripCard extends StatelessWidget {
                   right: AppSpacing.sm,
                   bottom: AppSpacing.sm,
                   child: Text(
-                    'Ramani halisi itakuja Phase 9 — hakuna GPS bado.',
+                    l10n.homeMapNotice,
                     style: textTheme.bodySmall?.copyWith(
                       color: Colors.white70,
                       fontSize: 11,
@@ -138,12 +141,12 @@ class _LiveTripCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Dakika 5',
+                        l10n.etaMinutes(5),
                         style: textTheme.headlineSmall
                             ?.copyWith(color: AppColors.primary),
                       ),
                       Text(
-                        '~2.4 km kutoka Mbezi Beach',
+                        l10n.etaDistanceFrom('2.4', 'Mbezi Beach'),
                         style: textTheme.bodySmall,
                       ),
                     ],
@@ -178,6 +181,8 @@ class _StatusPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     // Rangi inatokana na hali: njiani = bluu, shuleni = kijani, n.k.
     final color = switch (status) {
       DemoChildStatus.onboard => AppColors.primary,
@@ -201,7 +206,7 @@ class _StatusPill extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            status.label,
+            status.label(l10n),
             style: const TextStyle(
               color: Colors.white,
               fontSize: 12,
@@ -219,6 +224,7 @@ class _BusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
@@ -238,10 +244,14 @@ class _BusCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Basi T 123 ABC', style: textTheme.titleMedium),
-                      Text('Dereva: Mwl. Hassan', style: textTheme.bodySmall),
-                      Text('Matron: Bi. Neema', style: textTheme.bodySmall),
-                      Text('Njia A — Mbezi Beach', style: textTheme.bodySmall),
+                      Text(l10n.busCardTitle('T 123 ABC'),
+                          style: textTheme.titleMedium),
+                      Text(l10n.busDriver('Mwl. Hassan'),
+                          style: textTheme.bodySmall),
+                      Text(l10n.busMatron('Bi. Neema'),
+                          style: textTheme.bodySmall),
+                      Text(l10n.busRouteLabel('A — Mbezi Beach'),
+                          style: textTheme.bodySmall),
                     ],
                   ),
                 ),
@@ -255,7 +265,7 @@ class _BusCard extends StatelessWidget {
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
-                    'Kumpigia dereva simu kutafunguliwa Phase 9.',
+                    l10n.busCallDriverNotice,
                     style: textTheme.bodySmall,
                   ),
                 ),
@@ -273,6 +283,7 @@ class _CapacityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
@@ -283,10 +294,10 @@ class _CapacityCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text('Wanafunzi kwenye basi',
+                  child: Text(l10n.capacityTitle,
                       style: textTheme.titleMedium),
                 ),
-                Text('15 / 20', style: textTheme.bodySmall),
+                Text(l10n.capacityCount(15, 20), style: textTheme.bodySmall),
               ],
             ),
             const SizedBox(height: AppSpacing.sm),

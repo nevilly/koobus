@@ -1,0 +1,17 @@
+# Mipangilio ya kizazi cha code ya lugha (flutter gen-l10n).
+#
+# Kiswahili (sw) ni lugha ya MSINGI: faili l10n/app_sw.arb ndiyo kamusi kuu.
+# Kila kitu kinachoonekana kwenye UI kinatakiwa kiwe na key hapa.
+arb-dir: l10n
+
+# Faili ya lugha ya msingi (bila suffix ya locale).
+template-arb-file: app_sw.arb
+
+# Faili zinazotengenezwa. Hizi ni code, si za kuhariri kwa mkono.
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+output-dir: lib/l10n
+
+# Kizazi cha moja kwa moja: kila build hutengeneza upya code (hakuna
+# ku-sync kwa mkono). Weka `false` ikiwa unataka kuzalisha kwa `flutter gen-l10n` tu.
+nullable-getter: false

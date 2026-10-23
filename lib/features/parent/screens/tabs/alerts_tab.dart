@@ -9,12 +9,14 @@ import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/widgets/dev_badge.dart';
 import 'package:koobus/features/parent/dev/parent_demo_data.dart';
+import 'package:koobus/l10n/app_localizations.dart';
 
 class AlertsTab extends StatelessWidget {
   const AlertsTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     return ListView(
@@ -27,10 +29,11 @@ class AlertsTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Taarifa', style: textTheme.titleLarge),
+                  // Kichwa hiki ni sawa na jina la tab; linatoka kamusi.
+                  Text(l10n.alertsTabTitle, style: textTheme.titleLarge),
                   const SizedBox(height: 2),
                   Text(
-                    'Taarifa za basi, kupanda, kufika na kuchelewa.',
+                    l10n.alertsSubtitle,
                     style: textTheme.bodySmall,
                   ),
                 ],
@@ -40,10 +43,12 @@ class AlertsTab extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.md),
+        // NOTE: sentensi za taarifa (title/message/time) bado ni za MFANO
+        // kwa Kiswahili — zitakuja kutoka server (templates) Phase 10.
         for (final alert in demoAlerts) _AlertCard(alert: alert),
         const SizedBox(height: AppSpacing.md),
         Text(
-          'Push notifications halisi (FCM) ni Phase 10.',
+          l10n.alertsPushNotice,
           textAlign: TextAlign.center,
           style: textTheme.bodySmall,
         ),

@@ -11,6 +11,7 @@ import 'package:koobus/app/app_theme.dart';
 import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/widgets/app_button.dart';
+import 'package:koobus/l10n/app_localizations.dart';
 import 'package:koobus/core/widgets/error_view.dart';
 
 void main() {
@@ -90,6 +91,9 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.light,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('sw'),
           home: Scaffold(
             body: ErrorView(
               message: 'Hakuna internet. Angalia data yako kisha ujaribu tena.',

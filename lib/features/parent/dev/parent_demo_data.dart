@@ -7,6 +7,29 @@
 //
 // Phase 5: tutabadilisha haya na models halisi (Child, School, Trip...).
 // Phase 6/7: yatakuja kutoka API.
+//
+// ===========================================================================
+// KANUNI YA LUGHA KWENYE DATA YA MFANO (muhimu!)
+// ===========================================================================
+// Data ya mfano ina aina MBILI za maneno:
+//
+//  (A) MAJINA/MAHALI — hayatafsiriwi KAMWE: "Amina Juma", "Mbezi Beach",
+//      "Bi. Neema", "Shule ya Msingi Mlimani". Hivi ni majina halisi ya
+//      watu na sehemu; hata baada ya Phase 7 yatakuja kutoka database
+//      kama yalivyo. Kuyatafsiri ingekuwa kosa (mfano "Mbezi Beach" si
+//      "Mbezi Beach" kwa Kiingereza).
+//
+//  (B) LEBU/HALI/VITENDO — hivi LAZIMA vitafsiriwe: "Anasubiri basi",
+//      "Alipanda basi", "Leo", "Basi", "Matron". Hivi si majina; ni
+//      maneno ambayo mtumiaji anayesoma Kiingereza anahitaji kuyaelewa.
+//
+// Hivyo: hali (status) na vitendo (action) HAZIHIFADHIWI kama String.
+// Tunazihifadhi kama ENUM, na screen inageuza enum -> maneno kwa
+// kutumia l10n. Hii inazuia hitilafu kama kutafuta neno la Kiswahili
+// ("panda") kwenye String ili kujua ni kupanda au kushuka.
+// ---------------------------------------------------------------------------
+
+import 'package:koobus/l10n/app_localizations.dart';
 
 /// Hali ya mtoto kwa sasa (kwenye safari).
 enum DemoChildStatus {
@@ -17,12 +40,55 @@ enum DemoChildStatus {
 }
 
 extension DemoChildStatusLabel on DemoChildStatus {
-  /// Maandishi kwa mtumiaji — Kiswahili rahisi.
-  String get label => switch (this) {
-        DemoChildStatus.waiting => 'Anasubiri basi',
-        DemoChildStatus.onboard => 'Yupo njiani',
-        DemoChildStatus.atSchool => 'Yuko shuleni',
-        DemoChildStatus.atHome => 'Yuko nyumbani',
+  /// Maandishi kwa mtumiaji kwa lugha iliyochaguliwa.
+  ///
+  /// NOTE: ilikuwa `String get label` (Kiswahili pekee). Sasa ni method
+  /// inayopokea kamusi — hivyo hali hiyo hiyo inaonekana kwa Kiswahili
+  /// au Kiingereza bila kubadilisha data yenyewe.
+  String label(AppLocalizations l10n) => switch (this) {
+        DemoChildStatus.waiting => l10n.statusWaitingBus,
+        DemoChildStatus.onboard => l10n.statusOnTheWay,
+        DemoChildStatus.atSchool => l10n.statusAtSchool,
+        DemoChildStatus.atHome => l10n.statusAtHome,
+      };
+}
+
+/// Kitendo kilichotokea kwenye safari (kupanda/kufika/kushuka).
+///
+/// KWA NINI ENUM? TripEventTile iliamua alama ya kadi (kupanda vs kushuka)
+/// kwa kutafuta neno "panda" ndani ya String ya Kiswahili. Ikiwa lugha
+/// inabadilika kuwa Kiingereza, utafutaji huo ungevunjika na kadi zote
+/// zingeonekana kama "kushuka". Enum inatoa jibu MOJA kwa lugha zote.
+enum DemoTripAction {
+  boarded,
+  arrivedAtSchool,
+  alighted,
+}
+
+extension DemoTripActionLabel on DemoTripAction {
+  String label(AppLocalizations l10n) => switch (this) {
+        DemoTripAction.boarded => l10n.eventBoarded,
+        DemoTripAction.arrivedAtSchool => l10n.eventArrivedSchool,
+        DemoTripAction.alighted => l10n.eventAlighted,
+      };
+
+  /// Alama ya kadi: kupanda = kuingia, vingine = kutoka.
+  /// Hii inategemea MAANA ya kitendo, si maneno yake.
+  bool get isBoarding => this == DemoTripAction.boarded;
+}
+
+/// Siku ya tukio — "Leo" / "Jana".
+///
+/// Tena: enum, si String. "Leo" ni neno la kutafsiriwa, si tarehe.
+enum DemoTripDay {
+  today,
+  yesterday,
+}
+
+extension DemoTripDayLabel on DemoTripDay {
+  String label(AppLocalizations l10n) => switch (this) {
+        DemoTripDay.today => l10n.dayToday,
+        DemoTripDay.yesterday => l10n.dayYesterday,
       };
 }
 
@@ -40,8 +106,13 @@ class DemoChild {
   });
 
   final String id;
+
+  /// Jina la mtoto — JINA HALISI, halitafsiriwi.
   final String name;
+
+  /// Jina la shule — JINA HALISI, halitafsiriwi.
   final String school;
+
   final String className;
 
   /// Njia ya basi (mfano: "Njia A — Mbezi Beach").
@@ -49,6 +120,7 @@ class DemoChild {
 
   /// Matron (mlezi wa basi) anayemsimamia mtoto kwenye safari.
   /// Hii ni muhimu: si dereva pekee anayehusika na usalama wa watoto.
+  /// "Bi. Neema" ni JINA HALISI — halitafsiriwi.
   final String matron;
 
   final DemoChildStatus status;
@@ -67,10 +139,19 @@ class DemoTripEvent {
     required this.matron,
   });
 
-  final String date; // "Leo", "Jana"
-  final String time; // "06:45"
-  final String action; // "Alipanda basi"
+  /// Siku (Leo/Jana) — inatafsiriwa kupitia `date.label(l10n)`.
+  final DemoTripDay date;
+
+  /// Saa — "06:45". Namba; haitafsiriwi.
+  final String time;
+
+  /// Kitendo — enum; maneno yanatoka kamusi.
+  final DemoTripAction action;
+
+  /// Mahali — JINA HALISI la eneo, halitafsiriwi.
   final String place;
+
+  /// Jina la matron — JINA HALISI, halitafsiriwi.
   final String matron;
 }
 
@@ -82,12 +163,24 @@ class DemoGuardian {
     required this.phone,
   });
 
+  /// JINA HALISI — halitafsiriwi.
   final String name;
+
+  /// Uhusiano ("Baba", "Shangazi"). NOTE: kwa sasa ni String ya Kiswahili;
+  /// itakuwa enum pindi tuunganishe guardians wa kweli (Phase 5/7).
+  /// Kwa data ya mfano tunaiacha hivi ili tusiandike kamusi kwa maneno
+  /// ambayo hayajatengenezwa bado.
   final String relation;
+
   final String phone;
 }
 
 /// Taarifa/notification ya mfano.
+///
+/// NOTE: title/message ni sentensi kamili za mfano. Kwa Phase 10 (FCM)
+/// titakuwa na template za server (mfano "child_boarded" + jina + saa),
+/// hivyo sentensi hizi zitatolewa na mfumo wa templates, si kamusi ya
+/// upande wa kifaa. Kwa sasa tunaonyesha kama zilivyo pamoja na beji ya DEV.
 class DemoAlert {
   const DemoAlert({
     required this.title,
@@ -98,7 +191,11 @@ class DemoAlert {
 
   final String title;
   final String message;
+
+  /// Muda wa mfano ("Dakika 25 zilizopita"). Kama relation ya guardian,
+  /// hii ni sentensi — itatoka server baadaye.
   final String time;
+
   final bool read;
 }
 
@@ -117,30 +214,30 @@ const demoChildren = <DemoChild>[
     status: DemoChildStatus.onboard,
     events: [
       DemoTripEvent(
-        date: 'Leo',
+        date: DemoTripDay.today,
         time: '06:45',
-        action: 'Alipanda basi',
+        action: DemoTripAction.boarded,
         place: 'Mbezi Beach',
         matron: 'Bi. Neema',
       ),
       DemoTripEvent(
-        date: 'Leo',
+        date: DemoTripDay.today,
         time: '07:20',
-        action: 'Alifika shule',
+        action: DemoTripAction.arrivedAtSchool,
         place: 'Shule ya Msingi Mlimani',
         matron: 'Bi. Neema',
       ),
       DemoTripEvent(
-        date: 'Jana',
+        date: DemoTripDay.yesterday,
         time: '16:05',
-        action: 'Alipanda basi',
+        action: DemoTripAction.boarded,
         place: 'Shule ya Msingi Mlimani',
         matron: 'Bi. Neema',
       ),
       DemoTripEvent(
-        date: 'Jana',
+        date: DemoTripDay.yesterday,
         time: '16:40',
-        action: 'Alishuka',
+        action: DemoTripAction.alighted,
         place: 'Mbezi Beach',
         matron: 'Bi. Neema',
       ),
@@ -156,23 +253,23 @@ const demoChildren = <DemoChild>[
     status: DemoChildStatus.atSchool,
     events: [
       DemoTripEvent(
-        date: 'Leo',
+        date: DemoTripDay.today,
         time: '06:50',
-        action: 'Alipanda basi',
+        action: DemoTripAction.boarded,
         place: 'Mbezi Beach',
         matron: 'Bi. Neema',
       ),
       DemoTripEvent(
-        date: 'Leo',
+        date: DemoTripDay.today,
         time: '07:25',
-        action: 'Alifika shule',
+        action: DemoTripAction.arrivedAtSchool,
         place: 'Shule ya Sekondari Mwenge',
         matron: 'Bi. Neema',
       ),
       DemoTripEvent(
-        date: 'Jana',
+        date: DemoTripDay.yesterday,
         time: '16:15',
-        action: 'Alipanda basi',
+        action: DemoTripAction.boarded,
         place: 'Shule ya Sekondari Mwenge',
         matron: 'Bi. Neema',
       ),

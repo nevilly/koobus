@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/features/parent/dev/parent_demo_data.dart';
+import 'package:koobus/l10n/app_localizations.dart';
 
 class TripEventTile extends StatelessWidget {
   const TripEventTile({super.key, required this.event});
@@ -16,8 +17,13 @@ class TripEventTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isBoarding = event.action.toLowerCase().contains('panda');
-    final color = isBoarding ? AppColors.primary : AppColors.success;
+    final l10n = AppLocalizations.of(context);
+    final textTheme = Theme.of(context).textTheme;
+
+    // Alama inatokana na MAANA ya kitendo (enum), si kwa kutafuta neno
+    // la Kiswahili ndani ya String. Hii inafanya kazi kwa lugha zote.
+    final color =
+        event.action.isBoarding ? AppColors.primary : AppColors.success;
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -25,17 +31,22 @@ class TripEventTile extends StatelessWidget {
         leading: CircleAvatar(
           backgroundColor: color.withValues(alpha: 0.12),
           child: Icon(
-            isBoarding ? Icons.login : Icons.logout,
+            event.action.isBoarding ? Icons.login : Icons.logout,
             color: color,
           ),
         ),
         title: Text(
-          '${event.action} — ${event.time}',
-          style: Theme.of(context).textTheme.titleMedium,
+          // Kitendo na siku hutafsiriwa; saa na majina haya.
+          l10n.eventTitle(event.action.label(l10n), event.time),
+          style: textTheme.titleMedium,
         ),
         subtitle: Text(
-          '${event.date} · ${event.place}\nMatron: ${event.matron}',
-          style: Theme.of(context).textTheme.bodySmall,
+          l10n.eventSubtitle(
+            event.date.label(l10n),
+            event.place,
+            event.matron,
+          ),
+          style: textTheme.bodySmall,
         ),
         isThreeLine: true,
       ),

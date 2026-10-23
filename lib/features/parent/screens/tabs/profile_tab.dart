@@ -1,26 +1,32 @@
-// Wasifu — taarifa za mzazi, watu waliounganishwa, watoto/shule na logout.
+// Wasifu — taarifa za mzazi, watu waliounganishwa, watoto/shule, lugha
+// na logout.
 //
 // Hapa ndipo "Toka" (logout) inapatikana. Tunathibitisha kwanza ili
-// mtu asitokе kwa bahati mbaya.
+// mtu asitoke kwa bahati mbaya. Hapa pia mtumiaji anachagua LUGHA.
 
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:koobus/controllers/auth_controller.dart';
+import 'package:koobus/controllers/language_controller.dart';
 import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/widgets/app_button.dart';
 import 'package:koobus/core/widgets/dev_badge.dart';
 import 'package:koobus/features/auth/screens/login_screen.dart';
 import 'package:koobus/features/parent/dev/parent_demo_data.dart';
+import 'package:koobus/l10n/app_localizations.dart';
 
 class ProfileTab extends StatelessWidget {
   const ProfileTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final auth = context.watch<AuthController>();
+    // Lugha ya sasa — tunaisoma ili kuonyesha jina lake kwenye safu ya Lugha.
+    final language = context.watch<LanguageController>();
     final phone = auth.session?.phone ?? '—';
     final textTheme = Theme.of(context).textTheme;
 
@@ -40,8 +46,10 @@ class ProfileTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // "Juma Hamisi" ni JINA HALISI (DEV) — halitafsiriwi.
                   Text('Juma Hamisi', style: textTheme.titleLarge),
-                  Text('Mzazi · $phone', style: textTheme.bodySmall),
+                  Text(l10n.profileRoleSummary(phone),
+                      style: textTheme.bodySmall),
                 ],
               ),
             ),
@@ -52,16 +60,22 @@ class ProfileTab extends StatelessWidget {
 
         // --- Taarifa za mzazi ---
         _Section(
-          title: 'Taarifa za mzazi',
+          title: l10n.profileParentSection,
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Column(
                 children: [
-                  _InfoRow(label: 'Jina', value: 'Juma Hamisi'),
-                  _InfoRow(label: 'Namba ya simu', value: phone),
-                  _InfoRow(label: 'Aina ya akaunti', value: 'Mzazi'),
-                  _InfoRow(label: 'Lugha', value: 'Kiswahili'),
+                  _InfoRow(label: l10n.profileFullName, value: 'Juma Hamisi'),
+                  _InfoRow(label: l10n.loginPhoneLabel, value: phone),
+                  _InfoRow(
+                    label: l10n.profileAccountType,
+                    value: l10n.profileAccountTypeParent,
+                  ),
+                  _InfoRow(
+                    label: l10n.settingsLanguage,
+                    value: _languageName(l10n, language.languageCode),
+                  ),
                 ],
               ),
             ),
@@ -70,7 +84,7 @@ class ProfileTab extends StatelessWidget {
 
         // --- Waliounganishwa kuchukua watoto ---
         _Section(
-          title: 'Waliounganishwa kuchukua watoto',
+          title: l10n.profileGuardiansSection,
           trailing: const DevBadge(),
           child: Card(
             child: Column(
@@ -88,15 +102,16 @@ class ProfileTab extends StatelessWidget {
                         ),
                       ),
                     ),
+                    // Majina ni ya kweli (DEV) — hayatafsiriwi.
                     title: Text(guardian.name,
                         style: textTheme.titleMedium),
                     subtitle: Text(
                       '${guardian.relation} · ${guardian.phone}',
                       style: textTheme.bodySmall,
                     ),
-                    trailing: const Tooltip(
-                      message: 'Ameidhinishwa kumchukua mtoto',
-                      child: Icon(Icons.verified_user,
+                    trailing: Tooltip(
+                      message: l10n.profileGuardianApproved,
+                      child: const Icon(Icons.verified_user,
                           size: 18, color: AppColors.success),
                     ),
                   ),
@@ -104,8 +119,7 @@ class ProfileTab extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(
                       AppSpacing.md, 0, AppSpacing.md, AppSpacing.md),
                   child: Text(
-                    'Wewe pekee unaweza kuongeza au kuondoa watu hawa. '
-                    'Usimamizi halisi ni Phase 8.',
+                    l10n.profileGuardiansNotice,
                     style: textTheme.bodySmall,
                   ),
                 ),
@@ -116,7 +130,7 @@ class ProfileTab extends StatelessWidget {
 
         // --- Watoto na shule ---
         _Section(
-          title: 'Watoto na shule',
+          title: l10n.profileChildrenSection,
           child: Card(
             child: Column(
               children: [
@@ -126,7 +140,7 @@ class ProfileTab extends StatelessWidget {
                         color: AppColors.primary),
                     title: Text(child.name, style: textTheme.titleMedium),
                     subtitle: Text(
-                      '${child.school} · ${child.className}',
+                      l10n.childSchoolClass(child.school, child.className),
                       style: textTheme.bodySmall,
                     ),
                   ),
@@ -134,8 +148,7 @@ class ProfileTab extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(
                       AppSpacing.md, 0, AppSpacing.md, AppSpacing.md),
                   child: Text(
-                    'Watoto wanaweza kuwa shule tofauti. Kila mtoto ana '
-                    'matron na njia yake.',
+                    l10n.profileChildrenNotice,
                     style: textTheme.bodySmall,
                   ),
                 ),
@@ -146,21 +159,30 @@ class ProfileTab extends StatelessWidget {
 
         // --- Mipangilio ---
         _Section(
-          title: 'Mipangilio',
+          title: l10n.profileSettingsSection,
           child: Card(
             child: Column(
               children: [
                 ListTile(
                   leading: const Icon(Icons.language),
-                  title: const Text('Lugha'),
-                  trailing: const Text('Kiswahili'),
-                  onTap: null,
+                  title: Text(l10n.settingsLanguage),
+                  // Jina la lugha ya sasa linaonyeshwa hapa.
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(_languageName(l10n, language.languageCode)),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.chevron_right, size: 20),
+                    ],
+                  ),
+                  // Gusa -> chagua lugha.
+                  onTap: () => _pickLanguage(context),
                 ),
                 const Divider(height: 1),
-                const ListTile(
-                  leading: Icon(Icons.notifications_active_outlined),
-                  title: Text('Taarifa za push'),
-                  subtitle: Text('Zitakuja Phase 10'),
+                ListTile(
+                  leading: const Icon(Icons.notifications_active_outlined),
+                  title: Text(l10n.settingsNotifications),
+                  subtitle: Text(l10n.settingsNotificationsSubtitle),
                   enabled: false,
                 ),
               ],
@@ -173,14 +195,13 @@ class ProfileTab extends StatelessWidget {
         // --- Logout ---
         AppButton(
           key: const Key('logout_button'),
-          label: 'Toka kwenye akaunti',
+          label: l10n.logoutButton,
           icon: Icons.logout,
           onPressed: () => _confirmLogout(context),
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          'Ukitoka, session itafutwa kwenye kifaa hiki na utahitaji '
-          'kuingia tena.',
+          l10n.logoutFootnote,
           textAlign: TextAlign.center,
           style: textTheme.bodySmall,
         ),
@@ -188,22 +209,74 @@ class ProfileTab extends StatelessWidget {
     );
   }
 
+  /// Jina la lugha kwa kuonyesha (Kiswahili / English).
+  /// Hili linatoka kwenye kamusi — hivyo linaonekana sawa kwa lugha zote.
+  String _languageName(AppLocalizations l10n, String code) {
+    return code == AppLanguage.english
+        ? l10n.languageEnglish
+        : l10n.languageSwahili;
+  }
+
+  /// Fungua dialog ya kuchagua lugha.
+  ///
+  /// Mtumiaji anachagua; tunaita LanguageController.setLanguage — hiyo
+  /// inabadilisha app YOTE papo hapo na kuhifadhi kwenye kifaa.
+  Future<void> _pickLanguage(BuildContext context) async {
+    final language = context.read<LanguageController>();
+    final l10n = AppLocalizations.of(context);
+    final changedMsg = l10n.languageChanged;
+
+    final selected = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(AppLocalizations.of(ctx).languageDialogTitle),
+        contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<String>(
+              value: AppLanguage.swahili,
+              groupValue: language.languageCode,
+              title: Text(AppLocalizations.of(ctx).languageSwahili),
+              onChanged: (v) => Navigator.pop(ctx, v),
+            ),
+            RadioListTile<String>(
+              value: AppLanguage.english,
+              groupValue: language.languageCode,
+              title: Text(AppLocalizations.of(ctx).languageEnglish),
+              onChanged: (v) => Navigator.pop(ctx, v),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (selected == null || !context.mounted) return;
+
+    await language.setLanguage(selected);
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(changedMsg)),
+    );
+  }
+
   Future<void> _confirmLogout(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Toka?'),
-        content: const Text(
-          'Ukitoka, utahitaji kuingia tena kwenye kifaa hiki.',
-        ),
+        title: Text(l10n.logoutDialogTitle),
+        content: Text(l10n.logoutDialogBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Bado'),
+            child: Text(l10n.actionCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Ndiyo, toka'),
+            child: Text(l10n.logoutConfirm),
           ),
         ],
       ),

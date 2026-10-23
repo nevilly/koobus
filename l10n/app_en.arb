@@ -1,0 +1,213 @@
+{
+  "@@locale": "en",
+
+  "appName": "KooBus",
+  "appTagline": "Safety on the school journey",
+
+  "actionCancel": "Not now",
+  "actionRetry": "Try again",
+
+  "errorTitle": "Something went wrong",
+
+  "devBadgeLabel": "SAMPLE (DEV)",
+
+  "loginTitle": "Welcome to KooBus",
+  "loginSubtitle": "Log in to see your children's trips",
+  "loginPhoneLabel": "Phone number",
+  "loginPasswordLabel": "Password",
+  "loginSubmit": "Log in",
+  "loginDevNotice": "TEST mode (DEV): the real server is not built yet. This login only saves a test session.",
+
+  "validationPhoneRequired": "Please enter your phone number",
+  "validationPhoneInvalid": "Invalid number. Example: 0712345678",
+  "validationPasswordRequired": "Please enter your password",
+  "validationPasswordTooShort": "Password must be at least 6 characters",
+
+  "navHome": "Home",
+  "navChildren": "Children",
+  "navHistory": "History",
+  "navAlerts": "Alerts",
+  "navProfile": "Profile",
+
+  "tabPosition": "Tab {index} of {total}",
+  "@tabPosition": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "historyTitle": "History",
+  "historySubtitle": "Every boarding and alighting is saved with the time and the matron.",
+
+  "logoutButton": "Log out",
+  "logoutDialogTitle": "Log out?",
+  "logoutDialogBody": "You will need to log in again on this device.",
+  "logoutConfirm": "Yes, log out",
+  "logoutFootnote": "Logging out removes the session from this device. You will need to log in again.",
+
+  "profileTitle": "Profile",
+
+  "settingsLanguage": "Language",
+  "settingsNotifications": "Push notifications",
+  "settingsNotificationsSubtitle": "Coming in Phase 10",
+
+  "languageSwahili": "Kiswahili",
+  "languageEnglish": "English",
+
+  "languageChanged": "Language changed",
+
+  "welcomeUser": "Welcome, {phone}",
+  "@welcomeUser": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+
+  "homeTodayStatus": "Today's trip status",
+  "homeMapNotice": "The real map arrives in Phase 9 — no GPS yet.",
+  "homePhaseNotice": "The map, GPS and live arrival time arrive in Phase 9. Everything here is SAMPLE data (DEV).",
+
+  "etaMinutes": "{minutes} min",
+  "@etaMinutes": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+
+  "etaDistanceFrom": "~{km} km from {place}",
+  "@etaDistanceFrom": {
+    "placeholders": {
+      "km": { "type": "String" },
+      "place": { "type": "String" }
+    }
+  },
+
+  "busCardTitle": "Bus {plate}",
+  "@busCardTitle": {
+    "placeholders": {
+      "plate": { "type": "String" }
+    }
+  },
+
+  "busDriver": "Driver: {name}",
+  "@busDriver": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "busMatron": "Matron: {name}",
+  "@busMatron": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "busRouteLabel": "Route {name}",
+  "@busRouteLabel": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "busCallDriverNotice": "Calling the driver arrives in Phase 9.",
+  "capacityTitle": "Students on the bus",
+
+  "capacityCount": "{onboard} / {capacity}",
+  "@capacityCount": {
+    "placeholders": {
+      "onboard": { "type": "int" },
+      "capacity": { "type": "int" }
+    }
+  },
+
+  "childrenTitle": "Your children",
+  "childrenSubtitle": "Tap a child to see the boarding and alighting history.",
+  "childrenMultipleSchoolsNotice": "Children can be at different schools — each one has their own school, class and matron.",
+  "childrenHistoryButton": "Their history",
+
+  "childSchoolClass": "{school} · {className}",
+  "@childSchoolClass": {
+    "placeholders": {
+      "school": { "type": "String" },
+      "className": { "type": "String" }
+    }
+  },
+
+  "childHistoryTitle": "{name}'s history",
+  "@childHistoryTitle": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "childRouteLabel": "Route: {route}",
+  "@childRouteLabel": {
+    "placeholders": {
+      "route": { "type": "String" }
+    }
+  },
+
+  "childRecentActivity": "Recent activity",
+  "childHistoryDevNotice": "This information is SAMPLE data (DEV). The real history will come from the database through the API (Phase 6/7).",
+
+  "historyTabTitle": "Trip history",
+  "historyFilterNotice": "Date/school filters and the full history arrive in Phase 9.",
+
+  "alertsTabTitle": "Alerts",
+  "alertsSubtitle": "Bus alerts: boarding, arrival and delays.",
+  "alertsPushNotice": "Real push notifications (FCM) arrive in Phase 10.",
+
+  "statusWaitingBus": "Waiting for the bus",
+  "statusOnTheWay": "On the way",
+  "statusAtSchool": "At school",
+  "statusAtHome": "At home",
+
+  "eventBoarded": "Boarded the bus",
+  "eventArrivedSchool": "Arrived at school",
+  "eventAlighted": "Alighted",
+
+  "dayToday": "Today",
+  "dayYesterday": "Yesterday",
+
+  "eventTitle": "{action} — {time}",
+  "@eventTitle": {
+    "placeholders": {
+      "action": { "type": "String" },
+      "time": { "type": "String" }
+    }
+  },
+
+  "eventSubtitle": "{day} · {place}\nMatron: {matron}",
+  "@eventSubtitle": {
+    "placeholders": {
+      "day": { "type": "String" },
+      "place": { "type": "String" },
+      "matron": { "type": "String" }
+    }
+  },
+
+  "profileAccountTypeParent": "Parent",
+  "profileAccountType": "Account type",
+  "profileParentSection": "Parent details",
+  "profileFullName": "Name",
+
+  "profileRoleSummary": "Parent · {phone}",
+  "@profileRoleSummary": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+
+  "profileGuardiansSection": "Approved to pick up children",
+  "profileGuardianApproved": "Approved to pick up the child",
+  "profileGuardiansNotice": "Only you can add or remove these people. The real management arrives in Phase 8.",
+
+  "profileChildrenSection": "Children and schools",
+  "profileChildrenNotice": "Children can be at different schools. Each child has their own matron and route.",
+
+  "profileSettingsSection": "Settings",
+
+  "languageDialogTitle": "Choose a language"
+}
