@@ -2,6 +2,7 @@
 // KOO_BUS_ADAPT: Schools routes
 include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/SchoolsController.php';
 include_once  $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/Util.php";
+include_once $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/AuthGuard.php";
 
 class Schools extends SchoolsController
 {
@@ -44,8 +45,8 @@ class Schools extends SchoolsController
     public function add(){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        $token = Util::tokenValidate();
-        if(!$token) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('school_admin','super_admin'));
+        if(!$ok) return $res;
         $sql = parent::add($this->encode($this->data));
         if($sql) return array('status'=>201,'payload'=>array('id'=>$sql));
         return array('status'=>500,'payload'=>"Failed");
@@ -54,8 +55,8 @@ class Schools extends SchoolsController
     public function update(){
         if($this->clean->Method() !== "PUT")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        $token = Util::tokenValidate();
-        if(!$token) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('school_admin','super_admin'));
+        if(!$ok) return $res;
         $sql = parent::update_school($this->encode($this->data));
         if($sql) return array('status'=>200,'payload'=>"Updated");
         return array('status'=>500,'payload'=>"Failed");
@@ -64,8 +65,8 @@ class Schools extends SchoolsController
     public function delete(){
         if($this->clean->Method() !== "POST" && $this->clean->Method() !== "DELETE")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        $token = Util::tokenValidate();
-        if(!$token) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('school_admin','super_admin'));
+        if(!$ok) return $res;
         $id = isset($this->data->id) ? $this->data->id : '';
         $sql = parent::delete_school($id);
         if($sql) return array('status'=>200,'payload'=>"Deleted");

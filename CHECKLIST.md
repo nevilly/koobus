@@ -315,8 +315,8 @@ For each endpoint:
 - [x] Store authentication material securely on the device. (flutter_secure_storage)
 - [x] Restore a valid session appropriately.
 - [ ] Handle expired tokens.
-- [x] Enforce roles and permissions on the server. (AuthGuard added for trips/events/locations)
-- [ ] Verify school-level access.
+- [x] Enforce roles and permissions on the server. (AuthGuard added for trips/events/locations/children/parent_children/schools/buses/routes)
+- [x] Verify school-level access. (school_admin/super_admin protected)
 - [ ] Verify parent-to-child authorization.
 - [x] Verify driver-to-trip authorization.
 - [ ] Prevent users from changing IDs to access another family's information.
