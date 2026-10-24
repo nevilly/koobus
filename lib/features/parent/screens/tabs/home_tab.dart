@@ -27,45 +27,71 @@ class ParentHomeTab extends StatelessWidget {
     final child = demoChildren.first;
     final textTheme = Theme.of(context).textTheme;
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.md,
-        AppSpacing.md,
-        AppSpacing.md,
-        AppSpacing.xl,
-      ),
-      children: [
-        // Row + Expanded: jina upande wa kushoto, badge upande wa kulia.
-        // Expanded inachukua nafasi iliyobaki — hivyo badge haikandamizwi.
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
+    final hasTrip = demoChildren.isNotEmpty;
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        await Future<void>.delayed(const Duration(milliseconds: 400));
+      },
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          AppSpacing.md,
+          AppSpacing.md,
+          AppSpacing.xl,
+        ),
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.welcomeUser(phone), style: textTheme.titleLarge),
+                    const SizedBox(height: 2),
+                    Text(l10n.homeTodayStatus, style: textTheme.bodySmall),
+                  ],
+                ),
+              ),
+              const DevBadge(),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          if (!hasTrip)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(l10n.welcomeUser(phone), style: textTheme.titleLarge),
-                  const SizedBox(height: 2),
-                  Text(l10n.homeTodayStatus, style: textTheme.bodySmall),
+                  Icon(Icons.directions_bus_outlined,
+                      size: 48, color: Theme.of(context).colorScheme.outline),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(l10n.emptyStateNoTrips,
+                      style: textTheme.titleMedium,
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(l10n.emptyStateNoTripsSubtitle,
+                      style: textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      textAlign: TextAlign.center),
                 ],
               ),
-            ),
-            const DevBadge(),
+            )
+          else ...[
+            _LiveTripCard(child: child),
+            const SizedBox(height: AppSpacing.md),
+            const _BusCard(),
+            const SizedBox(height: AppSpacing.md),
+            const _CapacityCard(),
           ],
-        ),
-        const SizedBox(height: AppSpacing.md),
-        _LiveTripCard(child: child),
-        const SizedBox(height: AppSpacing.md),
-        const _BusCard(),
-        const SizedBox(height: AppSpacing.md),
-        const _CapacityCard(),
-        const SizedBox(height: AppSpacing.lg),
-        Text(
-          l10n.homePhaseNotice,
-          textAlign: TextAlign.center,
-          style: textTheme.bodySmall,
-        ),
-      ],
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            l10n.homePhaseNotice,
+            textAlign: TextAlign.center,
+            style: textTheme.bodySmall,
+          ),
+        ],
+      ),
     );
   }
 }

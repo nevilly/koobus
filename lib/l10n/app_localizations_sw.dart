@@ -22,6 +22,36 @@ class AppLocalizationsSw extends AppLocalizations {
   String get actionRetry => 'Jaribu tena';
 
   @override
+  String get actionRefresh => 'Onyesha upya';
+
+  @override
+  String get emptyStateNoChildren =>
+      'Hakuna watoto waliounganishwa na akaunti yako bado.';
+
+  @override
+  String get emptyStateNoChildrenSubtitle =>
+      'Ikiwa watoto wako hawajaonekana, wasiliana na msimamizi wa shule ili waongezwe.';
+
+  @override
+  String get emptyStateNoHistory => 'Hakuna historia ya safari kwa sasa.';
+
+  @override
+  String get emptyStateNoHistorySubtitle =>
+      'Historia itaonekana hapa mtoto anapopanda au kushuka basi.';
+
+  @override
+  String get emptyStateNoAlerts => 'Hakuna taarifa kwa sasa.';
+
+  @override
+  String get emptyStateNoAlertsSubtitle => 'Taarifa kuhusu basi zitakuja hapa.';
+
+  @override
+  String get emptyStateNoTrips => 'Hakuna safari inayofanyika leo.';
+
+  @override
+  String get emptyStateNoTripsSubtitle => 'Utaarifiwa basi linapoanza safari.';
+
+  @override
   String get errorTitle => 'Imeshindikana';
 
   @override

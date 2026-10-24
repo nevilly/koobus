@@ -19,40 +19,65 @@ class AlertsTab extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
+    final alerts = demoAlerts;
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        await Future<void>.delayed(const Duration(milliseconds: 400));
+      },
+      child: ListView(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.alertsTabTitle, style: textTheme.titleLarge),
+                    const SizedBox(height: 2),
+                    Text(
+                      l10n.alertsSubtitle,
+                      style: textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+              const DevBadge(),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          if (alerts.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Kichwa hiki ni sawa na jina la tab; linatoka kamusi.
-                  Text(l10n.alertsTabTitle, style: textTheme.titleLarge),
-                  const SizedBox(height: 2),
-                  Text(
-                    l10n.alertsSubtitle,
-                    style: textTheme.bodySmall,
-                  ),
+                  Icon(Icons.notifications_none_outlined,
+                      size: 48, color: Theme.of(context).colorScheme.outline),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(l10n.emptyStateNoAlerts,
+                      style: textTheme.titleMedium,
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(l10n.emptyStateNoAlertsSubtitle,
+                      style: textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      textAlign: TextAlign.center),
                 ],
               ),
+            )
+          else ...[
+            for (final alert in alerts) _AlertCard(alert: alert),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              l10n.alertsPushNotice,
+              textAlign: TextAlign.center,
+              style: textTheme.bodySmall,
             ),
-            const DevBadge(),
           ],
-        ),
-        const SizedBox(height: AppSpacing.md),
-        // NOTE: sentensi za taarifa (title/message/time) bado ni za MFANO
-        // kwa Kiswahili — zitakuja kutoka server (templates) Phase 10.
-        for (final alert in demoAlerts) _AlertCard(alert: alert),
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          l10n.alertsPushNotice,
-          textAlign: TextAlign.center,
-          style: textTheme.bodySmall,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

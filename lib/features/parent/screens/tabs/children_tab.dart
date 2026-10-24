@@ -20,41 +20,66 @@ class ChildrenTab extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
-    // ListView = orodha inayosogeza (scroll). Tunatumia `children:` kwa
-    // sababu orodha ni ndogo na tayari tunayo data. Kwa orodha kubwa
-    // tutatumia ListView.builder (Phase 6).
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
+    final children = demoChildren;
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        await Future<void>.delayed(const Duration(milliseconds: 400));
+      },
+      child: ListView(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.childrenTitle, style: textTheme.titleLarge),
+                    const SizedBox(height: 2),
+                    Text(
+                      l10n.childrenSubtitle,
+                      style: textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+              const DevBadge(),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          if (children.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(l10n.childrenTitle, style: textTheme.titleLarge),
-                  const SizedBox(height: 2),
-                  Text(
-                    l10n.childrenSubtitle,
-                    style: textTheme.bodySmall,
-                  ),
+                  Icon(Icons.child_care_outlined,
+                      size: 48, color: Theme.of(context).colorScheme.outline),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(l10n.emptyStateNoChildren,
+                      style: textTheme.titleMedium,
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(l10n.emptyStateNoChildrenSubtitle,
+                      style: textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      textAlign: TextAlign.center),
                 ],
               ),
+            )
+          else ...[
+            for (final child in children) ...[
+              _ChildCard(child: child),
+              const SizedBox(height: AppSpacing.md),
+            ],
+            Text(
+              l10n.childrenMultipleSchoolsNotice,
+              style: textTheme.bodySmall,
             ),
-            const DevBadge(),
           ],
-        ),
-        const SizedBox(height: AppSpacing.md),
-        for (final child in demoChildren) ...[
-          _ChildCard(child: child),
-          const SizedBox(height: AppSpacing.md),
         ],
-        Text(
-          l10n.childrenMultipleSchoolsNotice,
-          style: textTheme.bodySmall,
-        ),
-      ],
+      ),
     );
   }
 }

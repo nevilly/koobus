@@ -122,6 +122,60 @@ abstract class AppLocalizations {
   /// **'Jaribu tena'**
   String get actionRetry;
 
+  /// Kitufe cha ku-refresh data.
+  ///
+  /// In sw, this message translates to:
+  /// **'Onyesha upya'**
+  String get actionRefresh;
+
+  /// Hali tupu pale hakuna watoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna watoto waliounganishwa na akaunti yako bado.'**
+  String get emptyStateNoChildren;
+
+  /// Maelezo ya ziada ya hali tupu ya watoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ikiwa watoto wako hawajaonekana, wasiliana na msimamizi wa shule ili waongezwe.'**
+  String get emptyStateNoChildrenSubtitle;
+
+  /// Hali tupu pale hakuna historia.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna historia ya safari kwa sasa.'**
+  String get emptyStateNoHistory;
+
+  /// Maelezo ya ziada ya hali tupu ya historia.
+  ///
+  /// In sw, this message translates to:
+  /// **'Historia itaonekana hapa mtoto anapopanda au kushuka basi.'**
+  String get emptyStateNoHistorySubtitle;
+
+  /// Hali tupu pale hakuna taarifa.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna taarifa kwa sasa.'**
+  String get emptyStateNoAlerts;
+
+  /// Maelezo ya ziada ya hali tupu ya taarifa.
+  ///
+  /// In sw, this message translates to:
+  /// **'Taarifa kuhusu basi zitakuja hapa.'**
+  String get emptyStateNoAlertsSubtitle;
+
+  /// Hali tupu pale hakuna safari inayoendelea.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna safari inayofanyika leo.'**
+  String get emptyStateNoTrips;
+
+  /// Maelezo ya ziada ya hali tupu ya safari.
+  ///
+  /// In sw, this message translates to:
+  /// **'Utaarifiwa basi linapoanza safari.'**
+  String get emptyStateNoTripsSubtitle;
+
   /// Kichwa cha kawaida cha kosa kwenye ErrorView.
   ///
   /// In sw, this message translates to:

@@ -22,6 +22,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionRetry => 'Try again';
 
   @override
+  String get actionRefresh => 'Refresh';
+
+  @override
+  String get emptyStateNoChildren => 'No children linked to your account yet.';
+
+  @override
+  String get emptyStateNoChildrenSubtitle =>
+      'If your children don\'t appear, contact the school administrator to have them added.';
+
+  @override
+  String get emptyStateNoHistory => 'No trip history yet.';
+
+  @override
+  String get emptyStateNoHistorySubtitle =>
+      'History will appear here when a child boards or alights the bus.';
+
+  @override
+  String get emptyStateNoAlerts => 'No alerts yet.';
+
+  @override
+  String get emptyStateNoAlertsSubtitle => 'Bus alerts will appear here.';
+
+  @override
+  String get emptyStateNoTrips => 'No trip in progress today.';
+
+  @override
+  String get emptyStateNoTripsSubtitle =>
+      'You\'ll be notified when the bus starts its trip.';
+
+  @override
   String get errorTitle => 'Something went wrong';
 
   @override

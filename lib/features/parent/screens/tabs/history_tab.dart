@@ -16,40 +16,71 @@ class HistoryTab extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return ListView(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
+    final children = demoChildren;
+    final hasEvents = children.any((c) => c.events.isNotEmpty);
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        await Future<void>.delayed(const Duration(milliseconds: 400));
+      },
+      child: ListView(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.historyTabTitle, style: textTheme.titleLarge),
+                    const SizedBox(height: 2),
+                    Text(
+                      l10n.historySubtitle,
+                      style: textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+              const DevBadge(),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          if (!hasEvents)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(l10n.historyTabTitle, style: textTheme.titleLarge),
-                  const SizedBox(height: 2),
-                  Text(
-                    l10n.historySubtitle,
-                    style: textTheme.bodySmall,
-                  ),
+                  Icon(Icons.history_outlined,
+                      size: 48, color: Theme.of(context).colorScheme.outline),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(l10n.emptyStateNoHistory,
+                      style: textTheme.titleMedium,
+                      textAlign: TextAlign.center),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(l10n.emptyStateNoHistorySubtitle,
+                      style: textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      textAlign: TextAlign.center),
                 ],
               ),
+            )
+          else ...[
+            for (final child in children) ...[
+              if (child.events.isNotEmpty) ...[
+                Text(child.name, style: textTheme.titleMedium),
+                const SizedBox(height: AppSpacing.sm),
+                for (final event in child.events) TripEventTile(event: event),
+                const SizedBox(height: AppSpacing.md),
+              ],
+            ],
+            Text(
+              l10n.historyFilterNotice,
+              style: textTheme.bodySmall,
             ),
-            const DevBadge(),
           ],
-        ),
-        const SizedBox(height: AppSpacing.md),
-        for (final child in demoChildren) ...[
-          Text(child.name, style: textTheme.titleMedium),
-          const SizedBox(height: AppSpacing.sm),
-          for (final event in child.events) TripEventTile(event: event),
-          const SizedBox(height: AppSpacing.md),
         ],
-        Text(
-          l10n.historyFilterNotice,
-          style: textTheme.bodySmall,
-        ),
-      ],
+      ),
     );
   }
 }

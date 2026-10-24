@@ -6,6 +6,15 @@
 
   "actionCancel": "Not now",
   "actionRetry": "Try again",
+  "actionRefresh": "Refresh",
+  "emptyStateNoChildren": "No children linked to your account yet.",
+  "emptyStateNoChildrenSubtitle": "If your children don't appear, contact the school administrator to have them added.",
+  "emptyStateNoHistory": "No trip history yet.",
+  "emptyStateNoHistorySubtitle": "History will appear here when a child boards or alights the bus.",
+  "emptyStateNoAlerts": "No alerts yet.",
+  "emptyStateNoAlertsSubtitle": "Bus alerts will appear here.",
+  "emptyStateNoTrips": "No trip in progress today.",
+  "emptyStateNoTripsSubtitle": "You'll be notified when the bus starts its trip.",
 
   "errorTitle": "Something went wrong",
 

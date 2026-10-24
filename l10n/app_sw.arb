@@ -20,6 +20,42 @@
   "@actionRetry": {
     "description": "Kitufe kwenye ErrorView ili kujaribu oparesheni tena."
   },
+  "actionRefresh": "Onyesha upya",
+  "@actionRefresh": {
+    "description": "Kitufe cha ku-refresh data."
+  },
+  "emptyStateNoChildren": "Hakuna watoto waliounganishwa na akaunti yako bado.",
+  "@emptyStateNoChildren": {
+    "description": "Hali tupu pale hakuna watoto."
+  },
+  "emptyStateNoChildrenSubtitle": "Ikiwa watoto wako hawajaonekana, wasiliana na msimamizi wa shule ili waongezwe.",
+  "@emptyStateNoChildrenSubtitle": {
+    "description": "Maelezo ya ziada ya hali tupu ya watoto."
+  },
+  "emptyStateNoHistory": "Hakuna historia ya safari kwa sasa.",
+  "@emptyStateNoHistory": {
+    "description": "Hali tupu pale hakuna historia."
+  },
+  "emptyStateNoHistorySubtitle": "Historia itaonekana hapa mtoto anapopanda au kushuka basi.",
+  "@emptyStateNoHistorySubtitle": {
+    "description": "Maelezo ya ziada ya hali tupu ya historia."
+  },
+  "emptyStateNoAlerts": "Hakuna taarifa kwa sasa.",
+  "@emptyStateNoAlerts": {
+    "description": "Hali tupu pale hakuna taarifa."
+  },
+  "emptyStateNoAlertsSubtitle": "Taarifa kuhusu basi zitakuja hapa.",
+  "@emptyStateNoAlertsSubtitle": {
+    "description": "Maelezo ya ziada ya hali tupu ya taarifa."
+  },
+  "emptyStateNoTrips": "Hakuna safari inayofanyika leo.",
+  "@emptyStateNoTrips": {
+    "description": "Hali tupu pale hakuna safari inayoendelea."
+  },
+  "emptyStateNoTripsSubtitle": "Utaarifiwa basi linapoanza safari.",
+  "@emptyStateNoTripsSubtitle": {
+    "description": "Maelezo ya ziada ya hali tupu ya safari."
+  },
 
   "errorTitle": "Imeshindikana",
   "@errorTitle": {
