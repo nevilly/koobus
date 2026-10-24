@@ -19,6 +19,49 @@ class Trips extends TripsController
     public function all(){
         if($this->clean->Method() !== "GET")
             return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $resUser) = AuthGuard::requireAny();
+        if(!$ok) return $resUser;
+        $user = $resUser;
+        $role = isset($user->role) ? $user->role : (isset($user->privilege) ? $user->privilege : '');
+        if($role == 'parent' && isset($user->id)){
+            include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/ParentChildrenController.php';
+            include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/ChildrenController.php';
+            $pcc = new ParentChildrenController();
+            $links = $pcc->get_by_parent($user->id);
+            $routeIds = array();
+            if(is_array($links)){
+                foreach($links as $l){
+                    if(isset($l->child_id)){
+                        $cc = new ChildrenController();
+                        $c = $cc->get($l->child_id);
+                        if($c){
+                            if(is_array($c)){
+                                foreach($c as $child){
+                                    if(isset($child->route_id)) $routeIds[] = intval($child->route_id);
+                                }
+                            } elseif(is_object($c)){
+                                if(isset($c->route_id)) $routeIds[] = intval($c->route_id);
+                            }
+                        }
+                    }
+                }
+            }
+            $routeIds = array_values(array_unique($routeIds));
+            if(empty($routeIds)){
+                return array('status'=>200,'payload'=>array());
+            }
+            $all = parent::get('');
+            if($all && is_array($all)){
+                $filtered = array();
+                foreach($all as $t){
+                    if(isset($t->route_id) && in_array(intval($t->route_id), $routeIds)){
+                        $filtered[] = $t;
+                    }
+                }
+                return array('status'=>200,'payload'=>$filtered);
+            }
+            return array('status'=>200,'payload'=>array());
+        }
         $res = parent::get('');
         if($res){ return array('status'=>200,'payload'=>$res); }
         return array('status'=>204,'payload'=>http::message(204));
@@ -27,8 +70,56 @@ class Trips extends TripsController
     public function get($params=''){
         if($this->clean->Method() !== "GET")
             return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $resUser) = AuthGuard::requireAny();
+        if(!$ok) return $resUser;
+        $user = $resUser;
+        $role = isset($user->role) ? $user->role : (isset($user->privilege) ? $user->privilege : '');
         $p = parent::decode($params);
         $id = isset($p->page) ? $p->page : '';
+        if($role == 'parent' && isset($user->id) && $id !== ''){
+            include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/ParentChildrenController.php';
+            include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/ChildrenController.php';
+            $pcc = new ParentChildrenController();
+            $links = $pcc->get_by_parent($user->id);
+            $routeIds = array();
+            if(is_array($links)){
+                foreach($links as $l){
+                    if(isset($l->child_id)){
+                        $cc = new ChildrenController();
+                        $c = $cc->get($l->child_id);
+                        if($c){
+                            if(is_array($c)){
+                                foreach($c as $child){
+                                    if(isset($child->route_id)) $routeIds[] = intval($child->route_id);
+                                }
+                            } elseif(is_object($c)){
+                                if(isset($c->route_id)) $routeIds[] = intval($c->route_id);
+                            }
+                        }
+                    }
+                }
+            }
+            $routeIds = array_values(array_unique($routeIds));
+            $trip = parent::get($id);
+            if($trip){
+                if(is_object($trip)){
+                    if(isset($trip->route_id) && !in_array(intval($trip->route_id), $routeIds)){
+                        return array('status'=>403,'payload'=>"Forbidden");
+                    }
+                    return array('status'=>200,'payload'=>$trip);
+                } elseif(is_array($trip)){
+                    $filtered = array();
+                    foreach($trip as $t){
+                        if(isset($t->route_id) && in_array(intval($t->route_id), $routeIds)){
+                            $filtered[] = $t;
+                        }
+                    }
+                    if(empty($filtered)) return array('status'=>403,'payload'=>"Forbidden");
+                    return array('status'=>200,'payload'=>$filtered);
+                }
+            }
+            return array('status'=>404,'payload'=>"Not found");
+        }
         $res = parent::get($id);
         if($res) return array('status'=>200,'payload'=>$res);
         return array('status'=>404,'payload'=>"Not found");
