@@ -317,7 +317,7 @@ For each endpoint:
 - [ ] Handle expired tokens.
 - [x] Enforce roles and permissions on the server. (AuthGuard added for trips/events/locations/children/parent_children/schools/buses/routes)
 - [x] Verify school-level access. (school_admin/super_admin protected)
-- [x] Verify parent-to-child authorization. (children/trips filtered by parent_children)
+- [x] Verify parent-to-child authorization. (children/trips/trip_events filtered by parent_children)
 - [x] Verify driver-to-trip authorization.
 - [ ] Prevent users from changing IDs to access another family's information.
 - [ ] Avoid leaking private information in logs or error messages.
