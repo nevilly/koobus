@@ -575,3 +575,46 @@ KooBus must not be called production-ready until the applicable requirements bel
 - [ ] Production deployment and support responsibilities are documented.
 
 **Final principle:** Build a small, real, testable system first. Expand it only when the current stage is understood, working and verified.
+
+# POST-MVP (PHASE 14+) — PARENT EXPERIENCE ENHANCEMENTS
+
+> See `FUTURE_UX_IDEAS.md` for full details, schema ideas and rationale.
+
+## 14.1 Driver Red Alert (Student Not Attending) — PRIORITY #1
+- [ ] Add `trip_attendance` concept (boarded/alighted/absent/excused, marked_by matron/parent/driver)
+- [ ] Driver app: split student list into "Boarding" vs "Not attending today"
+- [ ] Red border/avatar + `HATAFIKA` badge on student not attending
+- [ ] Allow matron/parent to mark "child will not attend today"
+- [ ] Do not stop at stops marked as not attending (visual cue only for now)
+
+## 14.2 Bus Fee Payments (Installments/Weekly/Full)
+- [ ] Add `bus_fees`, `fee_invoices`, `fee_payments` schema ideas to ERD
+- [ ] Parent UI placeholders: Fees tab/section showing balance, due date, history
+- [ ] Support full / installments / weekly (UI only)
+- [ ] Receipts/history view
+- [ ] Payment reminders/overdue badge
+- [ ] (Later) integrate payment gateway (AzamPay/Selcom/M-Pesa)
+
+## 14.3 Alternative Transport Marketplace (Bajaj/Bodaboda/Coaster)
+- [ ] Add `transport_providers`, `transport_requests` schema ideas to ERD
+- [ ] "Pata Usafiri Karibu" screen (backup transport) with filters by vehicle type/area
+- [ ] Provider registration + verification flow (pending/approved/rejected)
+- [ ] `Imethibitishwa` badge, availability toggle
+- [ ] Call/contact flow (safe)
+- [ ] Start with Bajaj/Coaster first; be cautious with bodaboda for young children
+
+## 14.4 Communication, SMS & Reports
+- [ ] "Piga simu" buttons (driver/matron) using `tel:`
+- [ ] SMS fallback for feature phones (Africa's Talking/Telerivet) — plan only
+- [ ] School announcements (`school_announcements`) in Taarifa tab
+- [ ] Driver/reporting form (`complaints`) for delays/speeding/conduct
+- [ ] Parent complaints + status tracking
+
+## 14.5 UX Polish & Notifications
+- [ ] "Mwanafunzi hayuko hewani" alert when marked absent
+- [ ] Fee due reminders on Home/Wasifu
+- [ ] Communication history
+- [ ] Alternate transport request status ("Inasubiri uthibitisho")
+- [ ] Extend guardian permissions/roles as needed
+
+**Rule:** These are post-MVP enhancements. Do not block Phase 5-13 with these items. Only add UI placeholders/schema planning if they don't interfere with the main flow.

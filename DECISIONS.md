@@ -210,6 +210,16 @@ Format: date, decision, reason, files affected.
   dumps — needs a manual check), and nothing has been tested against a real
   server (none exists until Phase 6/7).
 
+## 2026-10-24 — Internationalization (Kiswahili/English) with Flutter gen-l10n
+
+- **Decision:** Use official Flutter localization (`flutter gen-l10n`) with `.arb` files. Kiswahili (`sw`) is the template/base locale (`template-arb-file: app_sw.arb`). Language selection lives in Profile (Wasifu) and is persisted via `LanguageService` (abstract + `SecureLanguageService` + `InMemoryLanguageService`) mirroring the session pattern (`flutter_secure_storage`).
+- **Reason:** Compile-time safety (missing keys fail build), official tooling, no runtime JSON parsing. Keeping the same storage pattern avoids adding `shared_preferences` and makes testing easy. Material/Cupertino/Widgets localizations are included via `AppLocalizations.localizationsDelegates`.
+- **Validators:** Changed from static getters to factories taking `AppLocalizations` (`Validators.phone(l10n)`, `Validators.password(l10n)`) plus a UI-free `Validators.isPhoneValid(String)`. The validation rules stay in one place; wording comes from the dictionary. Tests use `AppLocalizationsSw()`.
+- **Widgets:** `ErrorView.title` made nullable (`String?`) with fallback to `l10n.errorTitle`. `DevBadge` now uses `l10n.devBadgeLabel`. `ParentShell` tab titles/labels read from `l10n` (no longer `const` lists), added tooltips. Tab accessibility labels become localized.
+- **Demo data:** Identity/names/places remain untranslatable (`Amina Juma`, `Mbezi Beach`, `Bi. Neema`, school names). Labels/statuses/actions/dates become enums (`DemoChildStatus`, `DemoTripAction`, `DemoTripDay`) resolved via `l10n` (prevents string-matching bugs like checking for "panda" when switching languages). `DemoTripEvent` uses `DemoTripDay` instead of raw strings like `"Leo"`.
+- **Files:** `l10n.yaml`, `l10n/app_sw.arb`, `l10n/app_en.arb`, `lib/l10n/*`, `lib/core/storage/language_service.dart`, `lib/controllers/language_controller.dart`, `lib/main.dart` (MultiProvider + `Consumer<LanguageController>` wraps `MaterialApp`), all localized parent/auth/core screens/widgets, updated tests.
+- **Verified by:** `flutter gen-l10n` succeeded; `flutter analyze` — No issues found; `flutter test` — all tests passed (21 tests). Language picker added to Profile (Wasifu) with dialog, instant rebuild on change, SnackBar confirmation, persisted in secure storage.
+
 ## Known bugs / unfinished
 
 - NDK 28.2.13676358 is **installed** (2.12 GB) and `flutter build apk --debug`
@@ -225,3 +235,4 @@ Format: date, decision, reason, files affected.
 - Parent screens use labelled DEV fixtures. Real children, bus, GPS and map
   arrive in Phase 5/9; push notifications in Phase 10. No production screen may
   read `parent_demo_data.dart`.
+- Language switching (sw/en) implemented and tests pass; device verification on V2333 pending (picker + persistence + instant UI change).

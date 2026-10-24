@@ -1,0 +1,14 @@
+Options -Indexes
+Options +FollowSymLinks -MultiViews
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteCond $1 !^(public|robot\.txt)
+
+#RewriteCond %{HTTP:Authorization} ^(.+)$
+
+RewriteRule ^(.+)?/?$ index.php [NC,L]
+
+#RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
