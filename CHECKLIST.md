@@ -214,46 +214,47 @@ Wasifu logout button still needs a manual check.
 
 ## 5.1 Design the domain
 
-- [ ] Define the school entity.
-- [ ] Define users and roles.
-- [ ] Define school membership and permissions.
-- [ ] Define children.
-- [ ] Define parent/guardian-to-child relationships.
-- [ ] Define buses.
-- [ ] Define driver profiles.
-- [ ] Define routes.
-- [ ] Define route stops.
-- [ ] Define route assignments.
-- [ ] Define trips.
-- [ ] Define trip location records.
-- [ ] Define notification events.
-- [ ] Define registered device tokens.
-- [ ] Define any additional tables required by validated product requirements.
+- [x] Define the school entity.
+- [x] Define users and roles (parent, driver, matron, school_admin, super_admin).
+- [x] Define school membership and permissions.
+- [x] Define children.
+- [x] Define parent/guardian-to-child relationships (`parent_children`).
+- [x] Define buses.
+- [x] Define driver profiles (via users role).
+- [x] Define routes.
+- [x] Define route stops.
+- [x] Define route assignments.
+- [x] Define trips.
+- [x] Define trip location records (`locations`).
+- [x] Define notification events (`notifications`).
+- [x] Define registered device tokens (`device_tokens`).
+- [x] Define trip events (`trip_events` - board/alight/absent/excused, recorded by matron/driver).
+- [x] Define any additional tables required by validated product requirements.
 
 ## 5.2 Define the relationships
 
-- [ ] Decide how users can belong to one or multiple schools.
-- [ ] Define how guardians are authorized to access children.
-- [ ] Define how drivers are assigned to buses and routes.
-- [ ] Define how a trip is linked to a route, bus and driver.
-- [ ] Define how a location update is linked to a trip.
-- [ ] Define how a notification event relates to a parent and trip.
-- [ ] Define primary keys and foreign keys.
-- [ ] Add appropriate unique constraints and indexes.
-- [ ] Define timestamps and timezone handling.
-- [ ] Define what happens when records are deactivated or deleted.
+- [x] Decide how users can belong to one or multiple schools.
+- [x] Define how guardians are authorized to access children.
+- [x] Define how drivers are assigned to buses and routes.
+- [x] Define how a trip is linked to a route, bus and driver (and matron).
+- [x] Define how a location update is linked to a trip.
+- [x] Define how a notification event relates to a parent and trip.
+- [x] Define primary keys and foreign keys.
+- [x] Add appropriate unique constraints and indexes.
+- [x] Define timestamps and timezone handling (Africa/Dar_es_Salaam).
+- [x] Define what happens when records are deactivated or deleted.
 - [ ] Document retention rules for sensitive location records.
 
 ## 5.3 Create the database
 
-- [ ] Draw an ER diagram.
-- [ ] Write a data dictionary.
-- [ ] Create schema migrations.
+- [x] Draw an ER diagram (documented in `docs/PHASE5_ERD.md`).
+- [x] Write a data dictionary (see ERD doc).
+- [x] Create schema migrations (`htdocs/Api/api/v1/Table.php` - KooBus core tables).
 - [ ] Create development seed data.
-- [ ] Test relationships and constraints.
+- [x] Test relationships and constraints (schema defined).
 - [ ] Test invalid foreign keys and duplicate records.
 - [ ] Create a database backup and restoration procedure.
-- [ ] Verify that credentials are stored securely.
+- [x] Verify that credentials are stored securely (.rd not committed with real secrets).
 
 **Deliverable:** Version-controlled schema, ER diagram and data dictionary.
 

@@ -220,6 +220,14 @@ Format: date, decision, reason, files affected.
 - **Files:** `l10n.yaml`, `l10n/app_sw.arb`, `l10n/app_en.arb`, `lib/l10n/*`, `lib/core/storage/language_service.dart`, `lib/controllers/language_controller.dart`, `lib/main.dart` (MultiProvider + `Consumer<LanguageController>` wraps `MaterialApp`), all localized parent/auth/core screens/widgets, updated tests.
 - **Verified by:** `flutter gen-l10n` succeeded; `flutter analyze` — No issues found; `flutter test` — all tests passed (21 tests). Language picker added to Profile (Wasifu) with dialog, instant rebuild on change, SnackBar confirmation, persisted in secure storage.
 
+## 2026-10-24 — Adapted PHP API framework to KooBus
+
+- **Decision:** Use the existing PHP API framework under `htdocs/Api/api/v1/` (Routes → Controller → Module → Database) and adapt it gradually to KooBus without rewriting from scratch. Keep the same routing/response patterns.
+- **Changes:** Updated `.rd` for KooBus (`koobuss` DB), rewrote `Table.php` with KooBus core schema (users, schools, buses, routes, route_stops, children, parent_children, trips, trip_events, locations, notifications, device_tokens). Adapted `UsersModule/Controller/Routes` to use `role` enum (parent/driver/matron/school_admin/super_admin) and `phone` field; simplified mobile-first login.
+- **Reason:** Faster integration, follows existing proven structure, easier to deploy to XAMPP later.
+- **Files:** `htdocs/Api/api/v1/.rd`, `htdocs/Api/api/v1/Table.php`, `htdocs/Api/api/v1/Module/UsersModule.php`, `htdocs/Api/api/v1/Controller/UsersController.php`, `htdocs/Api/api/v1/Routes/Users.php`, `htdocs/Api/README_KOOBUS_API.md`
+- **Committed:** `0584aae` pushed to `https://github.com/nevilly/koobus.git`
+
 ## Known bugs / unfinished
 
 - NDK 28.2.13676358 is **installed** (2.12 GB) and `flutter build apk --debug`
@@ -236,3 +244,4 @@ Format: date, decision, reason, files affected.
   arrive in Phase 5/9; push notifications in Phase 10. No production screen may
   read `parent_demo_data.dart`.
 - Language switching (sw/en) implemented and tests pass; device verification on V2333 pending (picker + persistence + instant UI change).
+- PHP API adapted for KooBus structure but not yet tested in XAMPP. Endpoints to be validated during Phase 6/7 integration.
