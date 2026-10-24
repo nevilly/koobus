@@ -19,6 +19,35 @@ class TripEvents extends TripEventsController
     public function all(){
         if($this->clean->Method() !== "GET")
             return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $resUser) = AuthGuard::requireAny();
+        if(!$ok) return $resUser;
+        $user = $resUser;
+        $role = isset($user->role) ? $user->role : (isset($user->privilege) ? $user->privilege : '');
+        if($role == 'parent' && isset($user->id)){
+            include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/ParentChildrenController.php';
+            $pcc = new ParentChildrenController();
+            $links = $pcc->get_by_parent($user->id);
+            $childIds = array();
+            if(is_array($links)){
+                foreach($links as $l){
+                    if(isset($l->child_id)) $childIds[] = intval($l->child_id);
+                }
+            }
+            if(empty($childIds)){
+                return array('status'=>200,'payload'=>array());
+            }
+            $all = parent::get('');
+            if($all && is_array($all)){
+                $filtered = array();
+                foreach($all as $e){
+                    if(isset($e->child_id) && in_array(intval($e->child_id), $childIds)){
+                        $filtered[] = $e;
+                    }
+                }
+                return array('status'=>200,'payload'=>$filtered);
+            }
+            return array('status'=>200,'payload'=>array());
+        }
         $res = parent::get('');
         if($res){ return array('status'=>200,'payload'=>$res); }
         return array('status'=>204,'payload'=>http::message(204));
@@ -27,8 +56,42 @@ class TripEvents extends TripEventsController
     public function get($params=''){
         if($this->clean->Method() !== "GET")
             return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $resUser) = AuthGuard::requireAny();
+        if(!$ok) return $resUser;
+        $user = $resUser;
+        $role = isset($user->role) ? $user->role : (isset($user->privilege) ? $user->privilege : '');
         $p = parent::decode($params);
         $id = isset($p->page) ? $p->page : '';
+        if($role == 'parent' && isset($user->id) && $id !== ''){
+            include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/ParentChildrenController.php';
+            $pcc = new ParentChildrenController();
+            $links = $pcc->get_by_parent($user->id);
+            $childIds = array();
+            if(is_array($links)){
+                foreach($links as $l){
+                    if(isset($l->child_id)) $childIds[] = intval($l->child_id);
+                }
+            }
+            $event = parent::get($id);
+            if($event){
+                if(is_object($event)){
+                    if(isset($event->child_id) && !in_array(intval($event->child_id), $childIds)){
+                        return array('status'=>403,'payload'=>"Forbidden");
+                    }
+                    return array('status'=>200,'payload'=>$event);
+                } elseif(is_array($event)){
+                    $filtered = array();
+                    foreach($event as $e){
+                        if(isset($e->child_id) && in_array(intval($e->child_id), $childIds)){
+                            $filtered[] = $e;
+                        }
+                    }
+                    if(empty($filtered)) return array('status'=>403,'payload'=>"Forbidden");
+                    return array('status'=>200,'payload'=>$filtered);
+                }
+            }
+            return array('status'=>404,'payload'=>"Not found");
+        }
         $res = parent::get($id);
         if($res) return array('status'=>200,'payload'=>$res);
         return array('status'=>404,'payload'=>"Not found");
