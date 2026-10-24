@@ -308,17 +308,17 @@ For each endpoint:
 # PHASE 7 — AUTHENTICATION AND AUTHORIZATION
 
 - [ ] Define how school staff create or approve accounts.
-- [ ] Implement secure password hashing on the server.
-- [ ] Implement login and logout.
-- [ ] Use a suitable token/session design.
+- [x] Implement secure password hashing on the server. (Util::Hash)
+- [x] Implement login and logout. (API + Flutter AuthController/SessionService)
+- [x] Use a suitable token/session design. (Token-based with Owesis header)
 - [ ] Define token expiry and renewal.
-- [ ] Store authentication material securely on the device.
-- [ ] Restore a valid session appropriately.
+- [x] Store authentication material securely on the device. (flutter_secure_storage)
+- [x] Restore a valid session appropriately.
 - [ ] Handle expired tokens.
-- [ ] Enforce roles and permissions on the server.
+- [x] Enforce roles and permissions on the server. (AuthGuard added for trips/events/locations)
 - [ ] Verify school-level access.
 - [ ] Verify parent-to-child authorization.
-- [ ] Verify driver-to-trip authorization.
+- [x] Verify driver-to-trip authorization.
 - [ ] Prevent users from changing IDs to access another family's information.
 - [ ] Avoid leaking private information in logs or error messages.
 
