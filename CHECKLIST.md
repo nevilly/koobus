@@ -264,13 +264,13 @@ Wasifu logout button still needs a manual check.
 
 ## 6.1 Prepare the backend
 
-- [ ] Set up the PHP development environment.
-- [ ] Configure MySQL access.
-- [ ] Create environment configuration for secrets.
-- [ ] Establish a consistent API response format.
-- [ ] Establish error handling and HTTP status codes.
-- [ ] Configure request validation.
-- [ ] Configure secure database access using prepared statements.
+- [x] Set up the PHP development environment. (XAMPP structure in place)
+- [x] Configure MySQL access. (Database.php configured via .rd)
+- [x] Create environment configuration for secrets. (.rd configured for KooBus)
+- [x] Establish a consistent API response format. (HTTP::response in place)
+- [x] Establish error handling and HTTP status codes. (HTTP class in place)
+- [x] Configure request validation. (Util helpers in place)
+- [x] Configure secure database access using prepared statements. (real_escape_string + parameterized patterns in place)
 - [ ] Set up a development API URL.
 - [ ] Document how Android emulator and physical-phone networking differ.
 
