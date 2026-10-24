@@ -2,6 +2,7 @@
 // KOO_BUS_ADAPT: ParentChildren routes
 include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/ParentChildrenController.php';
 include_once  $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/Util.php";
+include_once $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/AuthGuard.php";
 
 class ParentChildren extends ParentChildrenController
 {
@@ -56,7 +57,8 @@ class ParentChildren extends ParentChildrenController
     public function add(){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('school_admin','super_admin'));
+        if(!$ok) return $res;
         $sql = parent::add($this->encode($this->data));
         if($sql) return array('status'=>201,'payload'=>array('id'=>$sql));
         return array('status'=>500,'payload'=>"Failed");
@@ -65,7 +67,8 @@ class ParentChildren extends ParentChildrenController
     public function update(){
         if($this->clean->Method() !== "PUT")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('school_admin','super_admin'));
+        if(!$ok) return $res;
         $sql = parent::update_link($this->encode($this->data));
         if($sql) return array('status'=>200,'payload'=>"Updated");
         return array('status'=>500,'payload'=>"Failed");
@@ -74,7 +77,8 @@ class ParentChildren extends ParentChildrenController
     public function unlink(){
         if($this->clean->Method() !== "POST" && $this->clean->Method() !== "DELETE")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('school_admin','super_admin'));
+        if(!$ok) return $res;
         $id = isset($this->data->id) ? $this->data->id : '';
         $sql = parent::unlink($id);
         if($sql) return array('status'=>200,'payload'=>"Unlinked");
@@ -84,7 +88,8 @@ class ParentChildren extends ParentChildrenController
     public function unlink_pair(){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('school_admin','super_admin'));
+        if(!$ok) return $res;
         $pid = isset($this->data->parent_id) ? $this->data->parent_id : '';
         $cid = isset($this->data->child_id) ? $this->data->child_id : '';
         $sql = parent::unlink_by_pair($pid, $cid);

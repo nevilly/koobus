@@ -2,6 +2,7 @@
 // KOO_BUS_ADAPT: Children routes
 include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/ChildrenController.php';
 include_once  $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/Util.php";
+include_once $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/AuthGuard.php";
 
 class Children extends ChildrenController
 {
@@ -56,7 +57,8 @@ class Children extends ChildrenController
     public function add(){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('school_admin','super_admin'));
+        if(!$ok) return $res;
         $sql = parent::add($this->encode($this->data));
         if($sql) return array('status'=>201,'payload'=>array('id'=>$sql));
         return array('status'=>500,'payload'=>"Failed");
@@ -65,7 +67,8 @@ class Children extends ChildrenController
     public function update(){
         if($this->clean->Method() !== "PUT")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('school_admin','super_admin'));
+        if(!$ok) return $res;
         $sql = parent::update_child($this->encode($this->data));
         if($sql) return array('status'=>200,'payload'=>"Updated");
         return array('status'=>500,'payload'=>"Failed");
