@@ -3,6 +3,7 @@
 
 include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/UsersController.php';
 include_once  $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/Util.php";
+include_once $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/AuthGuard.php";
 
 class Users extends UsersController
 {
@@ -170,20 +171,16 @@ class Users extends UsersController
      * KOO_BUS_ADAPT: Get current user profile
      */
     public function user(){
-        if($this->clean->Method() !== "GET" || !Util::tokenValidate())
+        if($this->clean->Method() !== "GET")
             return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireAuth();
+        if(!$ok) return $res;
 
-        $status = 204;
-        $data = http::message($status);
-        $datas =  parent::getUserIdByToken(Util::$token);
-
-        if($datas) {
-            $status = 200;
-            $d = (array) $datas;
-            $d['password'] = null;
-            if(isset($d['username'])) $d['username'] = ucfirst($d['username']);
-            $data = (object) $d;
-        }
+        $status = 200;
+        $d = (array) $res;
+        $d['password'] = null;
+        if(isset($d['username'])) $d['username'] = ucfirst($d['username']);
+        $data = (object) $d;
 
         return array('status'=>$status, 'payload'=>$data);
     }

@@ -2,6 +2,7 @@
 // KOO_BUS_ADAPT: Locations routes (GPS)
 include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/LocationsController.php';
 include_once  $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/Util.php";
+include_once $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/AuthGuard.php";
 
 class Locations extends LocationsController
 {
@@ -18,8 +19,20 @@ class Locations extends LocationsController
     public function upload(){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('driver','school_admin','super_admin'));
+        if(!$ok) return $res;
+        $user = $res;
         // KOO_BUS_ADAPT: driver anaweza kupakia location ya trip yake
+        if(isset($user->id) && isset($user->role) && $user->role == 'driver' && isset($this->data->trip_id)){
+            include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/TripsController.php';
+            $tc = new TripsController();
+            $trip = $tc->get($this->data->trip_id);
+            if($trip && is_object($trip)){
+                if(isset($trip->driver_id) && intval($trip->driver_id) != intval($user->id)){
+                    return array('status'=>403,'payload'=>"Forbidden");
+                }
+            }
+        }
         $sql = parent::add($this->encode($this->data));
         if($sql) return array('status'=>201,'payload'=>array('id'=>$sql));
         return array('status'=>500,'payload'=>"Failed");

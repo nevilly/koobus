@@ -2,6 +2,7 @@
 // KOO_BUS_ADAPT: TripEvents routes
 include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/TripEventsController.php';
 include_once  $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/Util.php";
+include_once $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/AuthGuard.php";
 
 class TripEvents extends TripEventsController
 {
@@ -67,7 +68,8 @@ class TripEvents extends TripEventsController
     public function add(){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('driver','matron','school_admin','super_admin'));
+        if(!$ok) return $res;
         // KOO_BUS_ADAPT: matron/driver huweza kurekodi board/alight/absent/excused
         $sql = parent::add($this->encode($this->data));
         if($sql) return array('status'=>201,'payload'=>array('id'=>$sql));

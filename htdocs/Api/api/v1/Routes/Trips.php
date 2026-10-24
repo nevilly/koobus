@@ -2,6 +2,7 @@
 // KOO_BUS_ADAPT: Trips routes
 include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/TripsController.php';
 include_once  $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/Util.php";
+include_once $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/AuthGuard.php";
 
 class Trips extends TripsController
 {
@@ -74,7 +75,8 @@ class Trips extends TripsController
     public function add(){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('driver','matron','school_admin','super_admin'));
+        if(!$ok) return $res;
         $sql = parent::add($this->encode($this->data));
         if($sql) return array('status'=>201,'payload'=>array('id'=>$sql));
         return array('status'=>500,'payload'=>"Failed");
@@ -83,7 +85,8 @@ class Trips extends TripsController
     public function update(){
         if($this->clean->Method() !== "PUT")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('driver','matron','school_admin','super_admin'));
+        if(!$ok) return $res;
         $sql = parent::update_trip($this->encode($this->data));
         if($sql) return array('status'=>200,'payload'=>"Updated");
         return array('status'=>500,'payload'=>"Failed");
@@ -92,8 +95,20 @@ class Trips extends TripsController
     public function start(){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('driver','school_admin','super_admin'));
+        if(!$ok) return $res;
+        $user = $res;
         $id = isset($this->data->trip_id) ? $this->data->trip_id : (isset($this->data->id) ? $this->data->id : '');
+        // KOO_BUS_ADAPT: ruhusu driver kuanza trip yake tu
+        if(isset($user->id) && isset($user->role) && $user->role == 'driver'){
+            $trip = parent::get($id);
+            if($trip && $trip->num_rows > 0){
+                $t = $trip->fetch_object();
+                if(isset($t->driver_id) && intval($t->driver_id) != intval($user->id)){
+                    return array('status'=>403,'payload'=>"Forbidden");
+                }
+            }
+        }
         $sql = parent::start_trip($id);
         if($sql) return array('status'=>200,'payload'=>"Trip started");
         return array('status'=>500,'payload'=>"Failed");
@@ -102,8 +117,19 @@ class Trips extends TripsController
     public function end(){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('driver','school_admin','super_admin'));
+        if(!$ok) return $res;
+        $user = $res;
         $id = isset($this->data->trip_id) ? $this->data->trip_id : (isset($this->data->id) ? $this->data->id : '');
+        if(isset($user->id) && isset($user->role) && $user->role == 'driver'){
+            $trip = parent::get($id);
+            if($trip && $trip->num_rows > 0){
+                $t = $trip->fetch_object();
+                if(isset($t->driver_id) && intval($t->driver_id) != intval($user->id)){
+                    return array('status'=>403,'payload'=>"Forbidden");
+                }
+            }
+        }
         $sql = parent::end_trip($id);
         if($sql) return array('status'=>200,'payload'=>"Trip completed");
         return array('status'=>500,'payload'=>"Failed");
@@ -112,8 +138,19 @@ class Trips extends TripsController
     public function cancel(){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        if(!Util::tokenValidate()) return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $res) = AuthGuard::requireRole(array('driver','school_admin','super_admin'));
+        if(!$ok) return $res;
+        $user = $res;
         $id = isset($this->data->trip_id) ? $this->data->trip_id : (isset($this->data->id) ? $this->data->id : '');
+        if(isset($user->id) && isset($user->role) && $user->role == 'driver'){
+            $trip = parent::get($id);
+            if($trip && $trip->num_rows > 0){
+                $t = $trip->fetch_object();
+                if(isset($t->driver_id) && intval($t->driver_id) != intval($user->id)){
+                    return array('status'=>403,'payload'=>"Forbidden");
+                }
+            }
+        }
         $sql = parent::cancel_trip($id);
         if($sql) return array('status'=>200,'payload'=>"Trip cancelled");
         return array('status'=>500,'payload'=>"Failed");
