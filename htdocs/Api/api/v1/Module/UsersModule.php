@@ -2,6 +2,7 @@
 
 include_once $_SERVER["DOCUMENT_ROOT"] ."/api/v1/Module/Database.php";
 
+// KOO_BUS_ADAPT: Rekebishwa kwa schema ya KooBus (role, phone, removed privilege)
 class UsersModule extends Database
 {
     private $table = "users";
@@ -120,36 +121,40 @@ class UsersModule extends Database
      */
     public function get_user_by_email_or_username($value){
         $value = $this->con->real_escape_string($value);
-        $value = !empty($value)? "email='$value' OR username='$value'" :'';
+        $value = !empty($value)? "email='$value' OR username='$value' OR phone='$value'" :'';
         return parent::select(parent::encode(['table'=>$this->table,'where'=>$value]));
     }
 
 
     /**
+     * KOO_BUS_ADAPT: support role enum
      * @param $value
      * @return mixed
      */
     public function get_users_by_roles($value){
+        if(empty($value)) return false;
         $v = explode(',',$value);
         $vs = '';
-        foreach ($v as $key=> $item) {
-            $pg = $this->con->real_escape_string($key);
-            $vs .= "privilege='$pg' OR ";
+        foreach ($v as $item) {
+            $item = trim($this->con->real_escape_string($item));
+            if($item === '') continue;
+            $vs .= "role='$item' OR ";
         }
-
-        $vs = chop('OR',$vs);
-
-        $value = !empty($value)? $vs :'';
-        return parent::select(parent::encode(['table'=>$this->table,'where'=>$value]));
+        if($vs === '') return false;
+        $vs = rtrim($vs, " OR ");
+        return parent::select(parent::encode(['table'=>$this->table,'where'=>$vs]));
     }
 
     /**
+     * KOO_BUS_ADAPT: check user by token/username/email/phone with role
      * @param $name
      * @param $password
      * @return mixed
      */
     public function check_user($name, $password){
-        return parent::select(parent::encode(['table'=>$this->table,'col'=>'token,name,privilege','where'=>"token = '$name' AND status ='1' OR username='$name' AND password='$password' AND status = '1' OR email='$name' AND password='$password' AND status = '1' OR phone_number='$name' AND password='$password' AND status = '1'"]));
+        $name = $this->con->real_escape_string($name);
+        $password = $this->con->real_escape_string($password);
+        return parent::select(parent::encode(['table'=>$this->table,'col'=>'token,role,first_name,last_name,phone,email,username,id','where'=>"token = '$name' AND status ='1' OR username='$name' AND password='$password' AND status = '1' OR email='$name' AND password='$password' AND status = '1' OR phone='$name' AND password='$password' AND status = '1'"]));
     }
     /**
      * @param $name

@@ -1,4 +1,5 @@
 <?php
+// KOO_BUS_ADAPT: Rekebishwa kwa KooBus - inatumia role/phone/schema mpya
 
 include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/UsersController.php';
 include_once  $_SERVER["DOCUMENT_ROOT"] . "/api/v1/Util/Util.php";
@@ -16,7 +17,7 @@ class Users extends UsersController
     {
         parent::__construct();
         $this->clean = new Util();
-        $this->data =parent::decode(file_get_contents("php://input"));
+        $this->data = parent::decode(file_get_contents("php://input"));
 
         $this->key = getenv("SECRET");
     }
@@ -36,7 +37,8 @@ class Users extends UsersController
 
         if(isset($this->data->avatar) && !empty($this->data->avatar)){
             $avatar = $this->data->avatar;
-            $username = (self::getUserIdByToken(Util::$token))->username;
+            $userObj = self::getUserIdByToken(Util::$token);
+            $username = $userObj ? $userObj->username : '';
 
             if($username){
                 $message = Util::base64_to_PNG($avatar, "/public/uploads/$username/data/");
@@ -49,13 +51,11 @@ class Users extends UsersController
     }
 
     /**
-     * @param string $data
-     * @return array
-     * @throws Exception
+     * KOO_BUS_ADAPT: Register user kwa KooBus
      */
     public function add($data = ''){
 
-        if($this->clean->Method() !== "POST" &&  !Util::tokenValidate()  && !(array) $this->data)
+        if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
 
         $data = $this->data;
@@ -63,74 +63,46 @@ class Users extends UsersController
         $ln = isset($data->last_name)?ucfirst($this->clean->clean_input($data->last_name)) : '';
         $un = isset($data->username)?$this->clean->clean_input($data->username) : '';
         $e = isset($data->email) ? $data->email : '';
-        $addr = isset($data->address)?$this->clean->clean_input($data->address) : '';
         $gn = isset($data->gender)?$this->clean->clean_input($data->gender) : '';
-        $ag = isset($data->age)?$this->clean->clean_input($data->age) : '';
         $pwd = isset($data->password)?$this->clean->clean_input($data->password) : '';
         $bio = isset($data->bio)?$this->clean->clean_input($data->bio) : '';
-        $role = isset($data->role)?$this->clean->clean_input($data->role) : '';
-        //$pwd1 = isset($data->confirm_password)??$this->clean->clean_input($data->confirm_password);
-        $pn = isset($data->phone)?$this->clean->clean_input($data->phone) : '';
+        $role = isset($data->role)?$this->clean->clean_input($data->role) : 'parent';
+        $pn = isset($data->phone)?$this->clean->clean_input($data->phone) : (isset($data->phone_number)?$this->clean->clean_input($data->phone_number):'');
 
         $status = 204;
-        $data = http::message($status);
+        $res = http::message($status);
 
-        if(!empty($fn) && !empty($ln) && !empty($un) && !empty($e) &&  !empty($pwd) && !empty($pn)){
-
-            $status = 401;
-
-            $data = "Sorry a user with the same information exists on our system. Please login!";
-
-            if(!parent::get_user_by_email_or_username($e) &&
-                !parent::get_user_by_email_or_username($un)){
-
-                $data = "Sorry something went wrong. Please try again!";
-
-
-                //User data
-                // Token
-                $token = Util::encrypt_decrypt(Util::generateToken($this->encode(['username'=>$un]),$this->key));
-
-                $sql =  parent::add($this->encode(array(
-                    'first_name'=>$fn,
-                    'last_name'=>$ln,
-                    'privilege'=>$role,
-                    'username'=>$un,
-                    'phone_number'=>$pn,
-                    'password'=>Util::Hash($pwd),
-                    'birth'=>$ag,
-                    'gender'=>$gn,
-                    'address'=>$addr,
-                    'email'=>$e,
-                    'bio'=>$bio,
-                    'token'=>$token,
-                )));
-
-                if($sql){
-                    $appName = isset($_ENV['mail_user']) ? getenv("mail_user"): '';
-                    $from = isset($_ENV['mail']) ? getenv("mail") :'';
-                    $host = isset($_ENV['smtp_host']) ?getenv("smtp_host") :'';
-                    $port = isset($_ENV['smtp_port']) ?getenv("smtp_port"):'';
-                    $url = Util::Url();
-
-                    // get user data for token generation
-                    $user = parent::check_user($un, Util::Hash($pwd));
-
-                    $status = 200;
-                    $data = "User #$un was added successful!";
-                    // mail
-                    $sub = "Account Registration!";
-                    $msg = "Hello <b>$un</b>, <br> Thank you for creating an account with us, 
-from <b>$appName</b> a while ago!<br> Your username is <b>$un</b> <br> passwords are <b>$pwd</b><br>
-<a href='$url/activate/$token'>Click here to activate your account</a>";
-
-                    Util::Mailer($from,$e,$sub,$msg,$un);
-                }
+        if(!empty($pwd) && (!empty($pn) || !empty($e))){
+            if(parent::get_user_by_email_or_username($e) || parent::get_user_by_email_or_username($pn) || (!empty($un) && parent::get_user_by_email_or_username($un))){
+                $status = 401;
+                $res = "Sorry a user with the same information exists on our system. Please login!";
+                return array('status'=>$status, 'payload'=>$res);
             }
 
+            $token = Util::encrypt_decrypt(Util::generateToken($this->encode(['username'=>$un ?: $pn]),$this->key));
+            $sql =  parent::add($this->encode(array(
+                'first_name'=>$fn,
+                'last_name'=>$ln,
+                'role'=>$role,
+                'username'=>$un,
+                'phone'=>$pn,
+                'password'=>Util::Hash($pwd),
+                'gender'=>$gn,
+                'email'=>$e,
+                'bio'=>$bio,
+                'token'=>$token,
+                'status'=>'1'
+            )));
+            if($sql){
+                $status = 200;
+                $res = "User registered successfully";
+            } else {
+                $status = 500;
+                $res = "Sorry something went wrong. Please try again!";
+            }
         }
 
-        return array('status'=>$status, 'payload'=>$data);
+        return array('status'=>$status, 'payload'=>$res);
     }
 
     /**
@@ -149,60 +121,33 @@ from <b>$appName</b> a while ago!<br> Your username is <b>$un</b> <br> passwords
         $ln = isset($data->last_name)? ucfirst($this->clean->clean_input($data->last_name)) : '';
         $un = isset($data->username)?$this->clean->clean_input($data->username) : '';
         $e = isset($data->email)?$data->email : '';
-        $addr = isset($data->address)?$this->clean->clean_input($data->address) : '';
         $gn = isset($data->gender)?$this->clean->clean_input($data->gender) : '';
-        $ag = isset($data->age)? date("Y-m-d", strtotime($data->age)): '';
         $pwd = isset($data->password)?$this->clean->clean_input($data->password) : '';
         $bio = isset($data->bio)?$this->clean->clean_input($data->bio) : '';
-        $role = isset($data->position)?$this->clean->clean_input($data->position) : '';
-        //$pwd1 = isset($data->confirm_password)??$this->clean->clean_input($data->confirm_password);
         $pn = isset($data->phone)?$this->clean->clean_input($data->phone) : '';
 
         $status = 403;
-
-        $data = "Sorry something went wrong. Please try again!";
+        $res = "Sorry something went wrong. Please try again!";
 
         $dd = array(
             'first_name'=>$fn,
             'last_name'=>$ln,
-            'position'=>$role,
-            'phone_number'=>$pn,
-            'password'=>Util::Hash($pwd),
-            'birth'=>$ag,
+            'phone'=>$pn,
             'gender'=>strtolower($gn),
-            'address'=>$addr,
             'email'=>$e,
             'bio'=>$bio,
             'id'=>$user
         );
-
-        if(!$this->get_user_by_email_or_username($un))
-            $dd["username"] = $un;
+        if(!empty($pwd)) $dd['password'] = Util::Hash($pwd);
+        if(!empty($un) && !$this->get_user_by_email_or_username($un)) $dd["username"] = $un;
 
         $sql =  parent::update_user($this->encode($dd));
-
         if($sql){
-            $appName = isset($_ENV['mail_user']) ?getenv("mail_user"): '';
-            $from = isset($_ENV['mail']) ? getenv("mail") :'';
-            $host = isset($_ENV['smtp_host']) ?getenv("smtp_host") :'';
-            $port = isset($_ENV['smtp_port']) ?getenv("smtp_port"):'';
-            $url = Util::Url();
-
-            //User data
-            // Token
-            $token = Util::encrypt_decrypt(Util::generateToken($user,$this->key));
-
             $status = 200;
-            $data = "User #$un was updated successful!";
-            // mail
-            $sub = "Account updating!";
-            $msg = "Hello <b>$un</b>, <br> Thank you for updating your account with us, 
-from <b>$appName</b> a while ago!";
-
-            Util::Mailer($from,$e,$sub,$msg,$appName);
+            $res = "User updated successfully";
         }
 
-        return array('status'=>$status, 'payload'=>$data);
+        return array('status'=>$status, 'payload'=>$res);
     }
 
     /**
@@ -216,19 +161,13 @@ from <b>$appName</b> a while ago!";
             return array('status'=>403,'payload'=>"Unauthorized Access");
         $params = parent::decode($params);
         $t = isset($params->page) && !empty($params->page) ? Util::encrypt_decrypt($params->page,'decrypt') : '';
-//        print_r($t);
         if(Util::tokenValidate($t) && parent::activate_user_by_token(Util::$token))
-            print("
-        <h1 style='color: green;font-size: 2rem;text-align: center'>Thank you for trusting us</h1>
-        
-        ");
-
+            print("<h1 style='color: green;font-size: 2rem;text-align: center'>Thank you for trusting us</h1>");
         exit();
     }
 
     /**
-     * @return array
-     * @throws Exception
+     * KOO_BUS_ADAPT: Get current user profile
      */
     public function user(){
         if($this->clean->Method() !== "GET" || !Util::tokenValidate())
@@ -242,8 +181,7 @@ from <b>$appName</b> a while ago!";
             $status = 200;
             $d = (array) $datas;
             $d['password'] = null;
-            $d['username'] = ucfirst($d['username']);
-
+            if(isset($d['username'])) $d['username'] = ucfirst($d['username']);
             $data = (object) $d;
         }
 
@@ -253,7 +191,7 @@ from <b>$appName</b> a while ago!";
 
     public function get_users_by_roles($value)
     {
-        $sql = parent::get_users_by_roles($value); // TODO: Change the autogenerated stub
+        $sql = parent::get_users_by_roles($value);
         $status = 204;
         $data = http::message($status);
         if($sql){
@@ -270,21 +208,20 @@ from <b>$appName</b> a while ago!";
      */
     public function delete($id = ''){
 
-        $id = !empty($this->data->user_id) ? $this->data->user_id : '';
+        $id = !empty($this->data->user_id) ? $this->data->user_id : $id;
         $message = "User with #$id ID. does not exists!";
         $status = false;
 
         if($this->clean->Method() !== "POST" || !Util::tokenValidate() || empty($id))
             return array('status'=>403,'payload'=>"Unauthorized Access");
 
-        $username = parent::get($id);
-        if(is_object($username))
-            $username = $username->name;
+        $usernameObj = parent::get($id);
+        $username = $usernameObj && is_object($usernameObj) ? (isset($usernameObj->username)?$usernameObj->username : $id) : $id;
 
-        $data =  parent::delete_user($id); //returns bool
-        if($data){
-            $status = ($data);
-            $message = "User was #$username deleted!";
+        $dataRes =  parent::delete_user($id);
+        if($dataRes){
+            $status = true;
+            $message = "User was deleted!";
         }
 
         return array('status'=>200, 'payload'=>array('status'=>$status,'message'=>$message));
@@ -298,17 +235,17 @@ from <b>$appName</b> a while ago!";
         if($this->clean->Method() !== "GET")
             return array('status'=>403,'payload'=>"Unauthorized Access");
 
-        $d = $this->decode($d);
-        $username = isset($d->page) && !empty($d->page) ? $d->page : '';
+        $decoded = $this->decode($d);
+        $username = isset($decoded->page) && !empty($decoded->page) ? $decoded->page : '';
         $data = "No record found!";
         $datas =  parent::users($username);
         $status = 204;
         if($datas) {
             $status = 200;
-            if(empty($username))
+            if(empty($username) && is_array($datas))
                 foreach ($datas as $key => $datum) {
-                    $datas[$key]['password'] = '';
-                    $datas[$key]['status'] = (int) $datas[$key]['status'];
+                    if(isset($datas[$key]['password'])) $datas[$key]['password'] = '';
+                    if(isset($datas[$key]['status'])) $datas[$key]['status'] = (int) $datas[$key]['status'];
                 }
 
             $data = $datas;
@@ -318,15 +255,11 @@ from <b>$appName</b> a while ago!";
     }
 
     /**
-     * @return array
+     * KOO_BUS_ADAPT: Login for KooBus app (mobile first)
      */
     public function login(){
         if($this->clean->Method() !== "POST" || !is_object($this->data))
             return array('status'=>403,'payload'=>"Unauthorized Access");
-        $device_type = strtolower(Util::RequestType());
-
-        $allowed_devices = preg_match("(desktop|mobile web)", $device_type);
-        $isApp = !isset(apache_request_headers()["Request_type"]);
 
         $status = 406;
         $message = http::message($status);
@@ -335,45 +268,19 @@ from <b>$appName</b> a while ago!";
             $u = $this->clean->clean_input($this->data->username);
             $p = $this->data->password;
 
-            if(strlen($u) >= 5 && strlen($p) >= 6 ) {
-
-               $p = Util::Hash($p);
-
-               $token = Util::generateToken((object)$this->encode(["username" => $u]), $this->key);
-               $token = Util::encrypt_decrypt($token);
+            if(strlen($u) >= 3 && strlen($p) >= 4 ) {
+               $ph = Util::Hash($p);
+               $token_gen = Util::generateToken((object)$this->encode(array("username" => $u)), $this->key);
+               $token_enc = Util::encrypt_decrypt($token_gen);
 
                 $message = "Invalid username or password";
-                $user = parent::check_user($token, $p);
-                $user = !is_object($user) ? parent::check_user($u, $p) : $user;
+                $user = parent::check_user($token_enc, $ph);
+                if(!is_object($user)) $user = parent::check_user($u, $ph);
 
-                if($allowed_devices && preg_match("(1|2)",$user->privilege) && $user->status == '1') {
-
-                    include_once $_SERVER["DOCUMENT_ROOT"]."/api/v1/Session.php";
-                    if ($user->token) {
-
-                        if($user->privilege == '1')
-                            $role = "Administrator";
-                        elseif ($user->privilege == '2')
-                            $role = "Super Admin" ;
-                        else
-                            $role = 'User';
-
-                        $session = new Session();
-                        $session->add("name", $user->username);
-                        $session->add("role", $role);
-                        $session->add("token", $user->token);
-
+                if($user && $user->status == '1') {
+                    if (isset($user->token) && $user->token) {
                         $status = 200;
-                        // get token
-                        $message = $user->token; /// return token
-                    }
-                }elseif ($isApp && $user->status == '1') {
-
-                    if ($user->token) {
-                        //                    print_r($user);
-                        $status = 200;
-                        // get token
-                        $message = $user->token; /// return token
+                        $message = $user->token;
                     }
                 }
             }
@@ -396,38 +303,29 @@ from <b>$appName</b> a while ago!";
             && !empty($this->data->username)) {
             $u = $this->clean->clean_input($this->data->username);
             if($user = parent::get_user_by_email_or_username($u)){
-                $to = $user->email;
-                $username = $user->username;
-                $id = $user->id;
+                $to = isset($user->email) ? $user->email : '';
+                $username = isset($user->username) ? $user->username : $u;
+                $id = isset($user->id) ? $user->id : '';
 
                 try {
                     $new_password = substr(Util::generate_key(),0,8);
-                    $appName = isset($_ENV['mail_user']) ??getenv("mail_user");
-                    $from = isset($_ENV['mail']) ??getenv("mail");
-                    $host = isset($_ENV['smtp_host']) ??getenv("smtp_host");
-                    $port = isset($_ENV['smtp_port']) ??getenv("smtp_port");
-                    $message = "Sorry user with provided details does not exists!";
+                    $appName = getenv("APP_NAME") ?: 'KooBus';
+                    $from = getenv("mail") ?: '';
 
-                    if(parent::reset_password(parent::encode(array('p'=>$this->clean->Hash($new_password),'u'=>$id)))){
-                        // mail
+                    if(parent::reset_password(parent::encode(array('p'=>Util::Hash($new_password),'u'=>$id)))){
                         $sub = "Password reset request!";
-                        $msg = "Hello <b>$username</b>, <br> Here the new password you've request 
-from <b>$appName</b> a while ago!<br> <b>$new_password</b>";
+                        $msg = "Hello <b>$username</b>, <br> Here the new password you've request from <b>$appName</b> a while ago!<br> <b>$new_password</b>";
                         $status = 200;
-                        $message = "Password rest was successful!";
-                        Util::Mailer($from,$to,$sub,$msg,$appName);
+                        $message = "Password reset was successful!";
+                        if(!empty($from) && !empty($to)) Util::Mailer($from,$to,$sub,$msg,$appName);
                     }
-
                 } catch (Exception $e) {
                     $message = $e;
                 }
             }
         }
 
-
         return array('status'=>$status,'payload'=>$message);
     }
 
 }
-
-//$class = new Users();
