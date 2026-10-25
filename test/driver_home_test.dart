@@ -37,6 +37,19 @@ TripModel _pendingTrip() {
   );
 }
 
+TripModel _activeTrip() {
+  return TripModel(
+    id: 11,
+    routeId: 3,
+    busId: 2,
+    driverId: 7,
+    tripType: 'morning',
+    status: TripStatus.active,
+    createdAt: DateTime.now(),
+    startedAt: DateTime.now(),
+  );
+}
+
 Widget _wrap(DriverController controller) {
   return MaterialApp(
     theme: AppTheme.light,
@@ -92,6 +105,52 @@ void main() {
     expect(find.text('Safari imeanza.'), findsOneWidget);
 
     // Acha SnackBar itokee ili kuondoa timer inayosubiri.
+    await tester.pump(const Duration(seconds: 5));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('inathibitisha kabla ya kumaliza safari', (tester) async {
+    final repository = FakeDriverRepository(
+      active: _activeTrip(),
+      route: _route,
+      bus: _bus,
+      stops: _stops,
+    );
+    final controller = DriverController(
+      repository: repository,
+      driverId: 7,
+      driverName: 'Juma',
+    );
+
+    await tester.pumpWidget(_wrap(controller));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('end_trip_button')),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('end_trip_button')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Maliza safari?'), findsOneWidget);
+    expect(repository.endCalls, 0);
+
+    await tester.tap(find.text('Hapana, endelea'));
+    await tester.pumpAndSettle();
+    expect(repository.endCalls, 0);
+    expect(find.text('Maliza safari'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('end_trip_button')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ndiyo, maliza'));
+    await tester.pumpAndSettle();
+
+    expect(repository.endCalls, 1);
+    expect(find.text('Hakuna safari iliyopangwa'), findsOneWidget);
+
     await tester.pump(const Duration(seconds: 5));
     await tester.pumpAndSettle();
   });

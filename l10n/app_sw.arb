@@ -72,7 +72,7 @@
     "description": "Kichwa cha screen ya kuingia."
   },
 
-  "loginSubtitle": "Ingia ili kuona safari za watoto wako",
+  "loginSubtitle": "Karibu tena. Ingia kuendelea na KooBus",
   "@loginSubtitle": {
     "description": "Maelezo chini ya kichwa cha login."
   },
@@ -106,7 +106,7 @@
     "description": "Hitilafu ikiwa field ya simu ipo wazi."
   },
 
-  "validationPhoneInvalid": "Namba si sahihi. Mfano: 0712345678",
+  "validationPhoneInvalid": "Namba si sahihi. Mfano: 0712345678 au 255712345678",
   "@validationPhoneInvalid": {
     "description": "Hitilafu ikiwa namba ya simu si sahihi."
   },
@@ -575,6 +575,22 @@
   "driverReadyActive": "Safari inaendelea",
   "driverStartTrip": "Anza safari",
   "driverEndTrip": "Maliza safari",
+  "driverEndTripDialogTitle": "Maliza safari?",
+  "@driverEndTripDialogTitle": {
+    "description": "Kichwa cha dialog ya kuthibitisha kumaliza safari."
+  },
+  "driverEndTripDialogBody": "Una uhakika unataka kumaliza safari hii? Hatua hii haiwezi kutenduliwa.",
+  "@driverEndTripDialogBody": {
+    "description": "Maelezo ya dialog ya kuthibitisha kumaliza safari."
+  },
+  "driverEndTripConfirm": "Ndiyo, maliza",
+  "@driverEndTripConfirm": {
+    "description": "Kitufe cha kuthibitisha kumaliza safari."
+  },
+  "driverEndTripCancel": "Hapana, endelea",
+  "@driverEndTripCancel": {
+    "description": "Kitufe cha kuacha kumaliza safari."
+  },
   "driverViewStops": "Vituo vya route",
   "driverStopsTitle": "Vituo vya route",
   "driverStopsCount": "Vituo {count}",

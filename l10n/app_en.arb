@@ -21,7 +21,7 @@
   "devBadgeLabel": "SAMPLE (DEV)",
 
   "loginTitle": "Welcome to KooBus",
-  "loginSubtitle": "Log in to see your children's trips",
+  "loginSubtitle": "Welcome back. Log in to continue to KooBus",
   "loginPhoneLabel": "Phone number",
   "loginPasswordLabel": "Password",
   "loginSubmit": "Log in",
@@ -29,7 +29,7 @@
   "sessionExpiredNotice": "Your session has expired. Please sign in again to continue.",
 
   "validationPhoneRequired": "Please enter your phone number",
-  "validationPhoneInvalid": "Invalid number. Example: 0712345678",
+  "validationPhoneInvalid": "Invalid number. Example: 0712345678 or 255712345678",
   "validationPasswordRequired": "Please enter your password",
   "validationPasswordTooShort": "Password must be at least 6 characters",
 
@@ -273,6 +273,22 @@
   "driverReadyActive": "Trip is in progress",
   "driverStartTrip": "Start trip",
   "driverEndTrip": "End trip",
+  "driverEndTripDialogTitle": "End trip?",
+  "@driverEndTripDialogTitle": {
+    "description": "Title of the end-trip confirmation dialog."
+  },
+  "driverEndTripDialogBody": "Are you sure you want to end this trip? This action cannot be undone.",
+  "@driverEndTripDialogBody": {
+    "description": "Body of the end-trip confirmation dialog."
+  },
+  "driverEndTripConfirm": "Yes, end trip",
+  "@driverEndTripConfirm": {
+    "description": "Button that confirms ending a trip."
+  },
+  "driverEndTripCancel": "No, continue",
+  "@driverEndTripCancel": {
+    "description": "Button that keeps the trip running."
+  },
   "driverViewStops": "Route stops",
   "driverStopsTitle": "Route stops",
   "driverStopsCount": "Stops: {count}",

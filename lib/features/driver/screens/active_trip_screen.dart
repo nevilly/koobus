@@ -47,8 +47,9 @@ class ActiveTripCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.driverStatusActive,
-                  style: textTheme.titleMedium
-                      ?.copyWith(color: AppColors.success),
+                  style: textTheme.titleMedium?.copyWith(
+                    color: AppColors.success,
+                  ),
                 ),
               ),
             ],
@@ -60,6 +61,7 @@ class ActiveTripCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           AppButton(
+            key: const Key('end_trip_button'),
             label: l10n.driverEndTrip,
             icon: Icons.stop_circle_outlined,
             loading: busy,

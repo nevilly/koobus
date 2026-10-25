@@ -61,7 +61,7 @@ class AppLocalizationsSw extends AppLocalizations {
   String get loginTitle => 'Karibu KooBus';
 
   @override
-  String get loginSubtitle => 'Ingia ili kuona safari za watoto wako';
+  String get loginSubtitle => 'Karibu tena. Ingia kuendelea na KooBus';
 
   @override
   String get loginPhoneLabel => 'Namba ya simu';
@@ -84,7 +84,8 @@ class AppLocalizationsSw extends AppLocalizations {
   String get validationPhoneRequired => 'Tafadhali weka namba ya simu';
 
   @override
-  String get validationPhoneInvalid => 'Namba si sahihi. Mfano: 0712345678';
+  String get validationPhoneInvalid =>
+      'Namba si sahihi. Mfano: 0712345678 au 255712345678';
 
   @override
   String get validationPasswordRequired => 'Tafadhali weka nenosiri';
@@ -477,6 +478,19 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get driverEndTrip => 'Maliza safari';
+
+  @override
+  String get driverEndTripDialogTitle => 'Maliza safari?';
+
+  @override
+  String get driverEndTripDialogBody =>
+      'Una uhakika unataka kumaliza safari hii? Hatua hii haiwezi kutenduliwa.';
+
+  @override
+  String get driverEndTripConfirm => 'Ndiyo, maliza';
+
+  @override
+  String get driverEndTripCancel => 'Hapana, endelea';
 
   @override
   String get driverViewStops => 'Vituo vya route';

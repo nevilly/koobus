@@ -16,10 +16,13 @@ import 'package:koobus/l10n/app_localizations.dart';
 class Validators {
   const Validators._(); // class hii haijengwi (static pekee)
 
-  // Simu ya Tanzania: inaanza na +255 au 0, ikifuatiwa na 6 au 7 (mtandao
-  // wa simu), jumla ya tarakimu 9 baada ya prefix.
-  // Mfano halisi: +255712345678 au 0712345678
-  static final RegExp _phonePattern = RegExp(r'^(?:\+255|0)[67]\d{8}$');
+  // Simu ya Tanzania: inaanza na +255, 255 au 0, ikifuatiwa na 6 au 7
+  // (mtandao wa simu), jumla ya tarakimu 9 baada ya prefix.
+  // Mfano halisi: +255712345678, 255712345678 au 0712345678.
+  //
+  // DB yetu inaweza kuhifadhi namba kwa format ya kimataifa (255...)
+  // bila alama ya plus, hivyo login lazima ikubali format zote tatu.
+  static final RegExp _phonePattern = RegExp(r'^(?:\+?255|0)[67]\d{8}$');
 
   /// Inarudisha function ya validator inayotumia lugha iliyochaguliwa.
   ///

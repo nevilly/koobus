@@ -61,7 +61,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginTitle => 'Welcome to KooBus';
 
   @override
-  String get loginSubtitle => 'Log in to see your children\'s trips';
+  String get loginSubtitle => 'Welcome back. Log in to continue to KooBus';
 
   @override
   String get loginPhoneLabel => 'Phone number';
@@ -84,7 +84,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get validationPhoneRequired => 'Please enter your phone number';
 
   @override
-  String get validationPhoneInvalid => 'Invalid number. Example: 0712345678';
+  String get validationPhoneInvalid =>
+      'Invalid number. Example: 0712345678 or 255712345678';
 
   @override
   String get validationPasswordRequired => 'Please enter your password';
@@ -477,6 +478,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get driverEndTrip => 'End trip';
+
+  @override
+  String get driverEndTripDialogTitle => 'End trip?';
+
+  @override
+  String get driverEndTripDialogBody =>
+      'Are you sure you want to end this trip? This action cannot be undone.';
+
+  @override
+  String get driverEndTripConfirm => 'Yes, end trip';
+
+  @override
+  String get driverEndTripCancel => 'No, continue';
 
   @override
   String get driverViewStops => 'Route stops';

@@ -197,7 +197,7 @@ abstract class AppLocalizations {
   /// Maelezo chini ya kichwa cha login.
   ///
   /// In sw, this message translates to:
-  /// **'Ingia ili kuona safari za watoto wako'**
+  /// **'Karibu tena. Ingia kuendelea na KooBus'**
   String get loginSubtitle;
 
   /// Lebo ya field ya namba ya simu.
@@ -239,7 +239,7 @@ abstract class AppLocalizations {
   /// Hitilafu ikiwa namba ya simu si sahihi.
   ///
   /// In sw, this message translates to:
-  /// **'Namba si sahihi. Mfano: 0712345678'**
+  /// **'Namba si sahihi. Mfano: 0712345678 au 255712345678'**
   String get validationPhoneInvalid;
 
   /// Hitilafu ikiwa field ya nenosiri ipo wazi.
@@ -931,6 +931,30 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Maliza safari'**
   String get driverEndTrip;
+
+  /// Kichwa cha dialog ya kuthibitisha kumaliza safari.
+  ///
+  /// In sw, this message translates to:
+  /// **'Maliza safari?'**
+  String get driverEndTripDialogTitle;
+
+  /// Maelezo ya dialog ya kuthibitisha kumaliza safari.
+  ///
+  /// In sw, this message translates to:
+  /// **'Una uhakika unataka kumaliza safari hii? Hatua hii haiwezi kutenduliwa.'**
+  String get driverEndTripDialogBody;
+
+  /// Kitufe cha kuthibitisha kumaliza safari.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ndiyo, maliza'**
+  String get driverEndTripConfirm;
+
+  /// Kitufe cha kuacha kumaliza safari.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hapana, endelea'**
+  String get driverEndTripCancel;
 
   /// No description provided for @driverViewStops.
   ///

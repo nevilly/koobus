@@ -31,6 +31,8 @@ void main() {
       expect(Validators.phone(l10n)('0712345678'), isNull);
       expect(Validators.phone(l10n)('0612345678'), isNull);
       expect(Validators.phone(l10n)('+255712345678'), isNull);
+      // DB yetu inahifadhi namba za kimataifa bila plus.
+      expect(Validators.phone(l10n)('255712345678'), isNull);
     });
 
     test('ujumbe wa hitilafu unatoka kwenye kamusi', () {

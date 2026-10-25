@@ -89,19 +89,40 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     if (!mounted) return;
     final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(ok ? l10n.driverTripStarted : _errorText(l10n)),
-      ),
+      SnackBar(content: Text(ok ? l10n.driverTripStarted : _errorText(l10n))),
     );
   }
 
   Future<void> _end() async {
+    final l10n = AppLocalizations.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.driverEndTripDialogTitle),
+        content: Text(l10n.driverEndTripDialogBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.driverEndTripCancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.driverEndTripConfirm),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
     final ok = await _controller.endTrip();
     if (!mounted) return;
-    final l10n = AppLocalizations.of(context);
+    final currentL10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(ok ? l10n.driverTripEnded : _errorText(l10n)),
+        content: Text(
+          ok ? currentL10n.driverTripEnded : _errorText(currentL10n),
+        ),
       ),
     );
   }
@@ -169,14 +190,17 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
           ),
         ],
       ),
-      body: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, _) {
-          return RefreshIndicator(
-            onRefresh: _controller.load,
-            child: _body(context, l10n),
-          );
-        },
+      body: SafeArea(
+        top: false,
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, _) {
+            return RefreshIndicator(
+              onRefresh: _controller.load,
+              child: _body(context, l10n),
+            );
+          },
+        ),
       ),
     );
   }
@@ -196,10 +220,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
             const SizedBox(height: 80),
-            ErrorView(
-              message: _errorText(l10n),
-              onRetry: _controller.load,
-            ),
+            ErrorView(message: _errorText(l10n), onRetry: _controller.load),
           ],
         );
       case DriverViewState.empty:
@@ -249,11 +270,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         const SizedBox(height: AppSpacing.md),
 
         if (trip.isActive)
-          ActiveTripCard(
-            trip: trip,
-            busy: _controller.busy,
-            onEnd: _end,
-          )
+          ActiveTripCard(trip: trip, busy: _controller.busy, onEnd: _end)
         else if (trip.isPending)
           AppButton(
             key: const Key('start_trip_button'),
@@ -434,8 +451,9 @@ class _InfoRow extends StatelessWidget {
             width: 110,
             child: Text(
               label,
-              style: textTheme.bodySmall
-                  ?.copyWith(color: AppColors.textSecondary),
+              style: textTheme.bodySmall?.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
           ),
           Expanded(child: Text(value, style: textTheme.bodyMedium)),
@@ -446,11 +464,7 @@ class _InfoRow extends StatelessWidget {
 }
 
 class _ReadinessRow extends StatelessWidget {
-  const _ReadinessRow({
-    required this.ok,
-    required this.label,
-    this.detail,
-  });
+  const _ReadinessRow({required this.ok, required this.label, this.detail});
 
   final bool ok;
   final String label;
@@ -479,8 +493,9 @@ class _ReadinessRow extends StatelessWidget {
                 if (detail != null && detail!.trim().isNotEmpty)
                   Text(
                     detail!,
-                    style: textTheme.bodySmall
-                        ?.copyWith(color: AppColors.textSecondary),
+                    style: textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
               ],
             ),
@@ -550,9 +565,7 @@ class _ActionError extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
+              style: Theme.of(context).textTheme.bodySmall
                   ?.copyWith(color: AppColors.danger),
             ),
           ),
@@ -589,9 +602,7 @@ class _FinishedNote extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
+              style: Theme.of(context).textTheme.bodyMedium
                   ?.copyWith(color: color),
             ),
           ),
