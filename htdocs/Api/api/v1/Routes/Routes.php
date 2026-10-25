@@ -167,7 +167,7 @@ class Routes extends RoutesController
         return array('status'=>204,'payload'=>http::message(204));
     }
 
-    public function add(){
+    public function add($data = ''){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
         list($ok, $resUser) = AuthGuard::requireRole(array('school_admin','super_admin'));
@@ -190,7 +190,7 @@ class Routes extends RoutesController
         return array('status'=>500,'payload'=>"Failed");
     }
 
-    public function update(){
+    public function update($data = ''){
         if($this->clean->Method() !== "PUT")
             return array('status'=>403,'payload'=>"Unauthorized Access");
         list($ok, $resUser) = AuthGuard::requireRole(array('school_admin','super_admin'));
@@ -215,7 +215,7 @@ class Routes extends RoutesController
         return array('status'=>500,'payload'=>"Failed");
     }
 
-    public function delete(){
+    public function delete($data = ''){
         if($this->clean->Method() !== "POST" && $this->clean->Method() !== "DELETE")
             return array('status'=>403,'payload'=>"Unauthorized Access");
         list($ok, $resUser) = AuthGuard::requireRole(array('school_admin','super_admin'));

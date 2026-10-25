@@ -8,10 +8,13 @@ class ApiConfig {
   const ApiConfig._();
 
   /// Base URL ya API. Mfano:
-  /// `flutter run --dart-define=API_BASE_URL=http://192.168.1.10/api/v1`
+  /// `flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080/api/v1`
+  ///
+  /// `localhost` hapa ni kwa desktop/web. Emulator ya Android lazima ipate
+  /// `10.0.2.2`; simu halisi lazima ipate IP ya PC kwenye LAN.
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://localhost/api/v1',
+    defaultValue: 'http://localhost:8080/api/v1',
   );
 
   /// Kichwa cha Authorization kinachotumika na API (Owest/ Owesis scheme).

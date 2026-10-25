@@ -62,7 +62,10 @@ class Database
         $data = $param->data;
 //        print_r("INSERT INTO $table SET $data");
         $state = $this->con->query("INSERT INTO $table SET $data") ;
-        print_r($this->con->error);
+        // Usiweke SQL error kwenye response; iandike kwenye server log pekee.
+        if (!$state) {
+            error_log("KooBus insert error ($table): " . $this->con->error);
+        }
         return $state;
     }
 
@@ -104,8 +107,15 @@ class Database
 
         $where = isset($param->where) && !empty($param->where)  ? ' WHERE ' .$param->where : '';
 
-//        echo "SELECT $cols FROM $table $where ORDER BY id DESC $limit";
-        return $this->query($this->encode(['query'=>"SELECT $cols FROM $table $where ORDER BY id DESC $limit"]));
+        // KOO_BUS_ADAPT: modules zingine zinaweka `ORDER BY` ndani ya `where`
+        // (mf. route_stops kwa stop_order, trips kwa started_at). Bila hii,
+        // query ingekuwa na `ORDER BY` mbili na MySQL ingerudisha false.
+        $order = ' ORDER BY id DESC';
+        if (isset($param->where) && stripos($param->where, 'ORDER BY') !== false) {
+            $order = '';
+        }
+
+        return $this->query($this->encode(['query'=>"SELECT $cols FROM $table $where $order $limit"]));
     }
 
     /**
@@ -129,7 +139,10 @@ class Database
 
         //echo "CREATE TABLE IF NOT EXISTS $table ($value)";
         $sql = $this->con->query("CREATE TABLE IF NOT EXISTS $table ($value)");
-        return print_r(!$sql ?? $this->con->error.'<br>');
+        if (!$sql) {
+            error_log("KooBus createTable error ($table): " . $this->con->error);
+        }
+        return (bool) $sql;
     }
 
     /**

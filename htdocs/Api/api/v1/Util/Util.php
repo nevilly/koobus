@@ -125,6 +125,18 @@ class Util
         if ($key === null && empty($key))
             return false;
 
+        // KOO_BUS_ADAPT: baadhi ya callers walikuwa wanapass JSON string
+        // badala ya object. Tunakubali string/array/object ili token isiwe
+        // na warning ya `Undefined property: stdClass::$username`.
+        if (is_string($user)) {
+            $decoded = json_decode($user);
+            if (is_object($decoded)) $user = $decoded;
+        }
+        if (is_array($user)) {
+            $user = (object)$user;
+        }
+        $username = is_object($user) && isset($user->username) ? $user->username : '';
+
         // Create the token header
         $header = self::base64UrlEncode(json_encode([
             'typ' => 'JWT',
@@ -142,7 +154,7 @@ class Util
             'iss'  => $serverName,                       // Issuer
             'nbf'  => $issuedAt->getTimestamp(),         // Not before
             'exp'  => $expire,
-            'username' => $user->username,
+            'username' => $username,
         ]));
 
         // Create Signature Hash

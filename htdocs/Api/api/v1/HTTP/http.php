@@ -198,7 +198,9 @@ class HTTP{
         }
 
         header('X-Powered-By: OWESIS');
-        header('HTTP/2 '.$this->code .' '.self::Status());
+        // KOO_BUS_ADAPT: status line lazima iwe HTTP/1.1. `HTTP/2` haina
+        // status line kwa muundo huu na ilikuwa inavunja clients (Flutter/curl).
+        header('HTTP/1.1 '.$this->code .' '.self::Status());
         header('Content-Type:'.$this->content_type.";charset=UTF-8");
         header('Server: OWESIS/0.1');
     }

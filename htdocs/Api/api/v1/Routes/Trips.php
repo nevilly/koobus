@@ -344,7 +344,7 @@ class Trips extends TripsController
         return array('status'=>200,'payload'=>$res);
     }
 
-    public function add(){
+    public function add($data = ''){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
         // KOO_BUS_ADAPT: trips zinaundwa na admin wa shule pekee.
@@ -390,7 +390,7 @@ class Trips extends TripsController
         return array('status'=>500,'payload'=>"Failed");
     }
 
-    public function update(){
+    public function update($data = ''){
         if($this->clean->Method() !== "PUT")
             return array('status'=>403,'payload'=>"Unauthorized Access");
         // KOO_BUS_ADAPT: kubadilisha trip ni kazi ya admin.
@@ -497,7 +497,7 @@ class Trips extends TripsController
     public function end(){ return $this->transition('completed'); }
     public function cancel(){ return $this->transition('cancelled'); }
 
-    public function delete(){
+    public function delete($data = ''){
         if($this->clean->Method() !== "POST" && $this->clean->Method() !== "DELETE")
             return array('status'=>403,'payload'=>"Unauthorized Access");
         // KOO_BUS_ADAPT: kufuta trip ni kazi ya admin.

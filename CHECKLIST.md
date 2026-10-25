@@ -335,8 +335,10 @@ For each endpoint:
 > Flutter now signs in against the real API and routes by role (`parent` -> `ParentShell`,
 > `driver` -> `DriverHomeScreen`, other staff -> a clear "not supported yet" screen).
 > The DEV login button is debug-only and labelled; it is not part of release behaviour.
-> Live cross-family/cross-school/unauthorized-driver tests are still pending because Apache
-> and MySQL are not running on this machine (port 80 owned by PID 4, 3306 closed).
+> Live API smoke test now passes through Apache on port 8080 + MySQL: `/install`, first
+> super_admin bootstrap, `/users/login` and `/users/user` all return 200. Full
+> cross-family/cross-school/unauthorized-driver matrix is still pending. Port 80 is held by
+> `ReportServer$SQLEXPRESS`; Apache is on 8080.
 > Legacy template routes (`Ads.php`, `Booking.php`, `Upload.php`, singular `Notification.php`,
 > etc.) still exist and are not part of the KooBus API surface.
 
@@ -366,21 +368,25 @@ For each endpoint:
 - [x] Handle server errors during trip actions. (`ApiException` becomes a localized banner /
   SnackBar; network, `403`, `404`, `409` and generic server errors are handled separately)
 - [x] Display clear trip status. (status chip, readiness list and active-trip card)
-- [ ] Test all trip state transitions. (Flutter unit/widget tests cover pending, active,
-  start, end, conflict and empty states; the live server transition matrix is still pending
-  because Apache/MySQL are not running)
+- [x] Test all trip state transitions. (Flutter unit/widget tests cover pending, active,
+  start, end, conflict and empty states; the live server matrix passed for
+  `pending -> active`, `active -> completed`, `pending -> cancelled`, conflict `409`,
+  and the invalid `completed/cancelled -> active` and `pending/completed -> completed`)
 
 > **Status 2026-10-25:** Phase 8 code is implemented on both sides and `php -l` passes on the
 > changed PHP files. `flutter test` passes 55 tests, including the new driver controller and
 > driver home tests. A driver can sign in with a real token, see the assigned trip, bus, route
 > and stops, start/end the trip, and the state is reloaded from the server after each action.
-> Remaining before sign-off: run the live transition/conflict/authorization matrix in XAMPP
-> and verify on a device. Trip dates are still derived from `created_at` because `trips` has
-> no dedicated trip-date column.
+> The API is live on Apache 8080 + MySQL `koobuss`; install/login/profile pass. A local
+> school/driver/bus/route/stops/trip seed was created and the live transition/conflict/
+> authorization matrix passed: owner driver 200, parent/matron 403, other driver scoped
+> (204) and blocked from another trip (403), same-school admin 200, other-school admin 403.
+> Remaining before sign-off: app-restart and physical-device verification. Trip dates are
+> still derived from `created_at` because `trips` has no dedicated trip-date column.
 
 **Deliverable:** A driver can perform an authorized trip workflow backed by server data.
 
-**Completion gate:** Trip state is persisted on the server and remains consistent when the app restarts. (implemented; live persistence check pending XAMPP)
+**Completion gate:** Trip state is persisted on the server and remains consistent when the app restarts. (server persistence verified by reloading the active trip; app-restart/device check pending)
 
 # PHASE 9 — REAL GPS AND LIVE TRACKING
 

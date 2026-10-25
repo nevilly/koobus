@@ -319,6 +319,51 @@ Format: date, decision, reason, files affected.
 - **Still blocked:** the live transition/conflict/authorization matrix and on-device check
   need XAMPP (Apache/MySQL) running; only `php -l` and offline Flutter tests were possible.
 
+## 2026-10-25 — XAMPP deployment, routing fix and live API smoke test
+
+- **Deployment layout:** deploy `htdocs/Api/api` to `C:\xampp\htdocs\api` and
+  `htdocs/Api/public` to `C:\xampp\htdocs\public`. Do **not** copy the whole `htdocs/Api`
+  folder to `C:\xampp\htdocs\Api`: API includes use
+  `$_SERVER["DOCUMENT_ROOT"] . "/api/v1/..."`, so a nested `/Api/api/v1` path breaks
+  `Database.php`/controller includes.
+- **Update workflow:** `scripts/deploy-xampp.ps1` syncs the two folders, preserves the
+  target `.rd` after first creation, and supports `-Mirror` for an exact copy. A directory
+  junction (`mklink /J`) is documented as the dev alternative. The repo stays the source
+  of truth; XAMPP is only the runtime.
+- **Router bug fixed:** `Config.php` previously calculated `route`/`route1` off by one, so
+  `/api/v1/users/login` looked for `Routes/Login.php` instead of `Routes/Users.php`.
+  The router now strips `/api/v1` wherever it appears, maps the next segment to the route
+  class, the following one to the method, and the rest to encoded `page*` params.
+  `install`, `login`, `password`, `activate`, `user`, `users` and `search` aliases are kept.
+- **HTTP status line fixed:** `HTTP::Headers()` sent `HTTP/2 ...`, which is not a valid
+  HTTP/1.x status line; curl/Flutter rejected the response. It now sends `HTTP/1.1`.
+- **Token payload fixed:** `Util::generateToken()` accepts string/array/object and no longer
+  reads an undefined `stdClass::$username`; `Users::add` and `Users::login` pass an object.
+- **PHP 8 inheritance fixes:** route classes override `add/update/delete` from their
+  controllers/`Database`, so each override now keeps the parent's optional parameter
+  (`$data = ''`). Without this, PHP 8 aborted with "Declaration ... must be compatible"
+  the first time `Schools`, `Buses`, `Routes`, `Trips`, `Children`, `ParentChildren`,
+  `Notifications` or `TripEvents` was loaded.
+- **Database query fix:** some modules put `ORDER BY` inside `select()`'s `where` string
+  (for example `route_stops.stop_order` and `trips.started_at`). `Database::select()`
+  appended a second `ORDER BY id DESC`, which made MySQL return `false` and the API
+  answer `204`. It now appends the default order only when the caller did not supply one.
+  Insert/create-table SQL errors are logged instead of being printed into the response.
+- **Live verification:** Apache 2.4.56 (port 8080, because port 80 belongs to
+  `ReportServer$SQLEXPRESS`) and MySQL 3306 are running. `/api/v1/install` created the
+  `koobuss` tables; a local bootstrap `super_admin` was created; `POST /users/login` and
+  `GET /users/user` return 200 through real Apache. `flutter test` passes 55/55.
+- **Phase 8 live matrix passed:** with a local school (1), driver (2), bus (1), route (1),
+  two stops and three trips, the server returned: `pending -> active` (200),
+  concurrent start (409), `active -> completed` (200), `completed -> active` (409),
+  `pending -> completed` (409), `pending -> cancelled` (200), `cancelled -> active` (409),
+  and reloads showed the persisted status. Parent and matron received 403 on driver trip
+  endpoints; an owner driver and same-school `school_admin` received 200; another driver
+  was scoped to its own trips (204) and could not start/end trip 2 (403); another school's
+  admin received 403.
+- **Remaining:** app restart/device check, then change/remove the local test super_admin
+  and set a strong `SECRET` plus `APP_ENV: production` for release.
+
 ## Known bugs / unfinished
 
 - NDK 28.2.13676358 is **installed** (2.12 GB) and `flutter build apk --debug`
@@ -337,6 +382,10 @@ Format: date, decision, reason, files affected.
   arrive in Phase 5/9; push notifications in Phase 10. No production screen may
   read `parent_demo_data.dart`.
 - Language switching (sw/en) implemented and tests pass; device verification on V2333 pending (picker + persistence + instant UI change).
-- PHP API is implemented and passes `php -l`, but no live HTTP test has run yet
-  because Apache/MySQL are not running (port 80 held by PID 4, 3306 closed).
-  Repeat the Phase 6/7 authorization matrix in XAMPP before deployment.
+- PHP API passes `php -l` and has a live HTTP smoke test through Apache/MySQL:
+  install, login, profile and the Phase 8 transition/conflict/authorization matrix pass.
+  The broader Phase 6/7 cross-family audit and the app-restart/device check are still
+  pending before deployment.
+- Apache is configured on port 8080 (`Listen 8080`, `ServerName localhost:8080`).
+  Port 80 is held by SQL Server Reporting Services (`ReportServer$SQLEXPRESS`); stop that
+  service or keep using `:8080`.

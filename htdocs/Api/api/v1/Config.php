@@ -34,118 +34,104 @@ class Config extends HTTP {
     {
         parent::__construct();
 
-        $routes = explode('/',$_SERVER["REQUEST_URI"]);
-        $this->routes = $routes;
-       
-        // routes
-        $this->route = strtolower($routes[count($routes) - (count($routes) - 1)]);
-        $this->route1 = @$routes[count($routes) - (count($routes) - 2)];
-        $this->route2 = @$routes[count($routes) - (count($routes) - 3)];
-        $this->route3 = @$routes[count($routes) - (count($routes) - 4)];
-        $this->route4 = @$routes[count($routes) - (count($routes) - 5)];
-        $this->route5 = @$routes[count($routes) - (count($routes) - 6)];
-        $this->route6 = @$routes[count($routes) - (count($routes) - 7)];
+        // KOO_BUS_ADAPT: URL inachambuliwa kwa mpangilio:
+        //   /api/v1/{route}/{method}/{param1}/{param2}...
+        // Tunaondoa `/api/v1` popote ilipo kwenye path ili API ifanye kazi
+        // bila kujali imewekwa kwenye htdocs root au kwenye folder `Api`.
+        $path = parse_url(isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : "/", PHP_URL_PATH);
+        $segments = array_values(array_filter(explode("/", (string)$path), function ($part) {
+            return $part !== "";
+        }));
+        $this->routes = $segments;
 
-
-
-        # if it's locally change to this piece of code
-        if(in_array("api", $this->routes)){
-          
-         $this->route = strtolower($routes[count($routes) - (count($routes) - 3)]);
-            
-            $this->route1 = @$routes[count($routes) - (count($routes) - 4)];
-            $this->route2 = @$routes[count($routes) - (count($routes) - 5)];
-            $this->route3 = @$routes[count($routes) - (count($routes) - 6)];
-            $this->route4 = @$routes[count($routes) - (count($routes) - 7)];
-            $this->route5 = @$routes[count($routes) - (count($routes) - 8)];
-            $this->route6 = @$routes[count($routes) - (count($routes) - 9)];
+        $lowerSegments = array_map("strtolower", $segments);
+        $apiPos = array_search("api", $lowerSegments, true);
+        if ($apiPos !== false) {
+            $start = $apiPos + 1;
+            if (isset($segments[$start]) && strtolower($segments[$start]) === "v1") {
+                $start++;
+            }
+            $segments = array_slice($segments, $start);
         }
 
-        if(strpos($this->route, "password") !== false){
-            $this->route1 = $this->route;
-            $this->route = "Users";
-        }
+        $routeKey = isset($segments[0]) ? strtolower(rawurldecode($segments[0])) : "";
+        $method = isset($segments[1]) ? strtolower(rawurldecode($segments[1])) : "";
+        $args = array_slice($segments, 2);
+        $args = array_map("rawurldecode", $args);
 
-        if(strpos($this->route, "install") !== false){
-            $this->route1 = $this->route;
+        $this->route1 = $method;
+        $this->route2 = isset($args[0]) ? $args[0] : "";
+        $this->route3 = isset($args[1]) ? $args[1] : "";
+        $this->route4 = isset($args[2]) ? $args[2] : "";
+        $this->route5 = isset($args[3]) ? $args[3] : "";
+        $this->route6 = isset($args[4]) ? $args[4] : "";
+
+        // Njia za zamani zinazoingia moja kwa moja (bila jina la route).
+        if ($routeKey === "install") {
             $this->route = "Table";
-        }
-
-        if(strpos($this->route, "users") !== false && empty($this->route1)){
-            $this->route2 = $this->route1;
-            $this->route1 = $this->route;
+            $method = "install";
+        } elseif ($routeKey === "login") {
             $this->route = "Users";
-        }
-
-        if(strpos($this->route, "user") !== false && empty($this->route1)){
-            $this->route2 = $this->route1;
-            $this->route1 = $this->route;
+            $method = "login";
+        } elseif ($routeKey === "password") {
             $this->route = "Users";
-        }
-
-        if(strpos($this->route, "posts") !== false && empty($this->route1)){
-            $this->route2 = $this->route1;
-            $this->route1 = $this->route;
-            //$this->route = "posts";
-        }
-
-        if(strpos($this->route, "activate") !== false){
-            $this->route2 = $this->route1;
-            $this->route1 = $this->route;
+            $method = "pass";
+        } elseif ($routeKey === "activate") {
             $this->route = "Users";
-            include_once __DIR__ . "/Routes/$this->route.php";
+            $method = "activate";
+        } elseif ($routeKey === "user") {
+            $this->route = "Users";
+            if ($method === "") $method = "user";
+        } elseif ($routeKey === "users") {
+            $this->route = "Users";
+            if ($method === "") $method = "users";
+        } elseif ($routeKey === "search") {
+            $this->route = "Search";
+            if ($method === "") $method = "search";
+        } else {
+            // `trip_events`, `trip-events` -> `TripEvents`
+            $routeName = str_replace(" ", "", ucwords(str_replace(array("-", "_"), " ", $routeKey)));
+            $this->route = preg_replace("/[^A-Za-z0-9]/", "", $routeName);
+        }
+
+        $method = preg_replace("/[^a-z0-9_]/", "", str_replace("-", "_", $method));
+        $this->route1 = $method;
+
+        if ($this->route === "" || $this->route === null) {
+            return print_r(parent::response(array("status" => 403, "payload" => "Unauthorised Access")));
+        }
+
+        $params = parent::encode(array(
+            'page' => $this->route2,
+            'page1' => $this->route3,
+            'page2' => $this->route4,
+            'page3' => $this->route5,
+            'page4' => $this->route6
+        ));
+
+        $routeFile = __DIR__ . "/Routes/" . $this->route . ".php";
+        if (file_exists($routeFile)) {
+            include_once $routeFile;
+
+            if (!class_exists($this->route)) {
+                return print_r(parent::response(array("status" => 403, "payload" => "Unauthorised Access")));
+            }
+
             $class = new $this->route();
 
-            $r = str_replace("-","_", $this->route1);
-            $params = parent::encode(array(
-                'page'=>$this->route2,
-                'page1'=>$this->route3,
-                'page2'=>$this->route4,
-                'page3'=>$this->route5,
-                'page4'=>$this->route6
-            ));
+            if ($method !== "" && is_callable(array($class, $method))) {
+                return print_r(parent::response($class->$method($params))); /// This method should only return array data
+            }
 
-            return  parent::response($class->$r($params));
+            return print_r(parent::response(array("status" => 403, "payload" => "Unauthorised Access")));
         }
 
-        if(strpos($this->route, "login") !== false){
-            $this->route1 = $this->route;
-            $this->route = "Users";
+        // `install`/`Table` iko kwenye root ya api/v1, si kwenye Routes/.
+        if (file_exists(__DIR__ . "/" . $this->route . ".php")) {
+            return include_once __DIR__ . "/" . $this->route . ".php";
         }
 
-        if(strpos($this->route, "search") !== false){
-            $this->route1 = $this->route;
-            $this->route = "Search";
-        }
-
-        $this->route = ucfirst($this->route1);
-    
-
- 
-        if(file_exists(__DIR__."/Routes/$this->route.php")) {
-        
-            include_once __DIR__ . "/Routes/$this->route.php";
-
-             $class = new $this->route();
-           
-
-            $r = str_replace("-","_", $this->route2);
-             $params = parent::encode(array(
-                 'page'=>$this->route2,
-                 'page1'=>$this->route3,
-                 'page2'=>$this->route4,
-                 'page3'=>$this->route5,
-                 'page4'=>$this->route6
-             ));
-
-             if (method_exists($class,$r))
-                return print_r(parent::response($class->$r($params))); /// This method should only return array data
-            return print_r(parent::response(["status"=>403,"payload"=>"Unauthorised Access"]));
-        }elseif (file_exists(__DIR__."/$this->route.php")){
-            return include_once __DIR__ . "/$this->route.php";
-        }
-
-        return print_r(parent::response(["status"=>403,"payload"=>"Unauthorised Accessz"]));
+        return print_r(parent::response(array("status" => 403, "payload" => "Unauthorised Access")));
     }
 
 }

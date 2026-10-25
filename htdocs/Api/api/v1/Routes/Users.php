@@ -154,7 +154,7 @@ class Users extends UsersController
             return array('status'=>$status, 'payload'=>$res);
         }
 
-        $token = Util::encrypt_decrypt(Util::generateToken($this->encode(['username'=>$un ?: $pn]),$this->key));
+        $token = Util::encrypt_decrypt(Util::generateToken((object)['username'=>$un ?: $pn],$this->key));
 
         // KOO_BUS_ADAPT: usiingize thamani tupu kwenye unique/FK columns.
         //  - school_id=0 ingevunja FK (hakuna shule id 0)
@@ -431,7 +431,7 @@ class Users extends UsersController
 
             if(strlen($u) >= 3 && strlen($p) >= 4 ) {
                $ph = Util::Hash($p);
-               $token_gen = Util::generateToken((object)$this->encode(array("username" => $u)), $this->key);
+               $token_gen = Util::generateToken((object)array("username" => $u), $this->key);
                $token_enc = Util::encrypt_decrypt($token_gen);
 
                 $message = "Invalid username or password";
