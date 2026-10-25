@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import 'package:koobus/controllers/auth_controller.dart';
 import 'package:koobus/controllers/language_controller.dart';
+import 'package:koobus/core/network/api_client.dart';
 import 'package:koobus/core/storage/language_service.dart';
 import 'package:koobus/core/storage/secure_session_service.dart';
 import 'package:koobus/core/storage/session_service.dart';
@@ -40,7 +41,7 @@ void main() {
 // Inapokea sessionService na languageService ili kujenga controllers
 // (dependency injection): hii inaturuhusu kubadilisha hifadhi
 // (halisi -> ya majaribio) kwa urahisi.
-class KooBusApp extends StatelessWidget {
+class KooBusApp extends StatefulWidget {
   const KooBusApp({
     super.key,
     required this.sessionService,
@@ -51,19 +52,70 @@ class KooBusApp extends StatelessWidget {
   final LanguageService languageService;
 
   @override
+  State<KooBusApp> createState() => _KooBusAppState();
+}
+
+class _KooBusAppState extends State<KooBusApp> {
+  late final AuthController _auth;
+  late final LanguageController _language;
+  late final ApiClient _api;
+
+  // navigatorKey inaturuhusu kufanya navigation kutoka nje ya widget
+  // (mfano pale API inarudisha 401 na session inafutwa).
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _auth = AuthController(widget.sessionService);
+    _api = ApiClient(
+      tokenProvider: () => _auth.session?.token,
+      onUnauthorized: () => _auth.signOut(expired: true),
+    );
+    _language = LanguageController(widget.languageService)..loadLanguage();
+
+    _auth.addListener(_onAuthChanged);
+  }
+
+  /// Token expiry handling: pale token inapoisha muda (au server
+  /// inarudisha 401), tunamrudisha mtumiaji kwenye login mara moja.
+  ///
+  /// Tunafanya hivi TU pale sessionExpired = true. Logout ya kawaida
+  /// inashughulikiwa na screen yenyewe (profile), hivyo hatuna
+  /// navigation mbili zinazogongana.
+  void _onAuthChanged() {
+    if (!mounted) return;
+    if (_auth.status != AuthStatus.loggedOut || !_auth.sessionExpired) return;
+
+    final navigator = _navigatorKey.currentState;
+    if (navigator == null) return;
+
+    navigator.pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      (route) => false,
+    );
+  }
+
+  @override
+  void dispose() {
+    _auth.removeListener(_onAuthChanged);
+    _api.dispose();
+    _auth.dispose();
+    _language.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // MultiProvider: tunaweka controllers zote mbili kwenye "mti" wa widgets.
+    // MultiProvider: tunaweka controllers zote kwenye "mti" wa widgets.
     // Wowote wanaohitaji hali wanaweza kuisoma kwa
     // context.watch<AuthController>() au context.read<LanguageController>().
     return MultiProvider(
       providers: [
-        // create = jenga controller mara moja tu (app nzima).
-        ChangeNotifierProvider<AuthController>(
-          create: (_) => AuthController(sessionService),
-        ),
-        ChangeNotifierProvider<LanguageController>(
-          create: (_) => LanguageController(languageService)..loadLanguage(),
-        ),
+        ChangeNotifierProvider<AuthController>.value(value: _auth),
+        Provider<ApiClient>.value(value: _api),
+        ChangeNotifierProvider<LanguageController>.value(value: _language),
       ],
       // Consumer<LanguageController> — hapa MaterialApp INABAO lugha moja
       // kwa moja kutoka controller. Kila mtumiaji anapobadilisha lugha,
@@ -72,6 +124,7 @@ class KooBusApp extends StatelessWidget {
       child: Consumer<LanguageController>(
         builder: (context, language, _) {
           return MaterialApp(
+            navigatorKey: _navigatorKey,
             title: 'KooBus',
             debugShowCheckedModeBanner: false, // ondoa banner ya "DEBUG"
             theme: AppTheme.light,

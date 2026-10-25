@@ -96,6 +96,10 @@
   "@loginDevNotice": {
     "description": "Taarifa kwenye login ikikumbusha kuwa hakuna server bado."
   },
+  "sessionExpiredNotice": "Muda wa kikao umeisha. Tafadhali ingia tena ili kuendelea.",
+  "@sessionExpiredNotice": {
+    "description": "Ujumbe unaoonyeshwa kwenye login pale token ilipoisha muda."
+  },
 
   "validationPhoneRequired": "Tafadhali weka namba ya simu",
   "@validationPhoneRequired": {

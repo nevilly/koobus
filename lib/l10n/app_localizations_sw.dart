@@ -77,6 +77,10 @@ class AppLocalizationsSw extends AppLocalizations {
       'Hali ya MAJARIBIO (DEV): server halisi bado haijajengwa. Kuingia huku kunahifadhi session ya majaribio pekee.';
 
   @override
+  String get sessionExpiredNotice =>
+      'Muda wa kikao umeisha. Tafadhali ingia tena ili kuendelea.';
+
+  @override
   String get validationPhoneRequired => 'Tafadhali weka namba ya simu';
 
   @override

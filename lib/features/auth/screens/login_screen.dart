@@ -78,6 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // l10n = maneno ya lugha iliyochaguliwa.
     final l10n = AppLocalizations.of(context);
+    // Kama mtumiaji amefika hapa kwa sababu token ilisha muda,
+    // tunamwambia wazi badala ya kumwacha apoteze muda.
+    final sessionExpired = context.watch<AuthController>().sessionExpired;
 
     return Scaffold(
       body: SafeArea(
@@ -109,6 +112,38 @@ class _LoginScreenState extends State<LoginScreen> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
+                  if (sessionExpired) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.warning.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppColors.warning.withValues(alpha: 0.5),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.info_outline,
+                            color: AppColors.warning,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              l10n.sessionExpiredNotice,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(color: AppColors.warning),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.xl),
 
                   // TextFormField = TextField yenye muunganisho na Form

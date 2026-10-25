@@ -7,6 +7,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:koobus/core/storage/session_service.dart';
+import 'package:koobus/core/utils/token_utils.dart';
 
 /// Hali ya mtumiaji katika app.
 enum AuthStatus {
@@ -27,12 +28,19 @@ class AuthController extends ChangeNotifier {
 
   AuthStatus _status = AuthStatus.unknown;
   StoredSession? _session;
+  bool _sessionExpired = false;
 
   /// Hali ya sasa — screens zinasoma hii.
   AuthStatus get status => _status;
 
   /// Session ya sasa (token + simu) — `null` kama hali si loggedIn.
   StoredSession? get session => _session;
+
+  /// Je, mtumiaji alitolewa kwa sababu token ilisha muda?
+  ///
+  /// Login screen inaitumia kuonyesha ujumbe wa "session imeisha muda"
+  /// badala ya kumtaka mtumiaji aingie bila maelezo.
+  bool get sessionExpired => _sessionExpired;
 
   /// Angalia hifadhi: kuna session iliyopita inayostahili kuhifadhiwa?
   ///
@@ -47,8 +55,20 @@ class AuthController extends ChangeNotifier {
     final stored = await _sessionService.readSession();
 
     if (stored != null && stored.token.isNotEmpty) {
+      // Kinga: token iliyokwisha muda haipaswi kumwingiza mtumiaji.
+      // Tunafuta session na kumtaka aingie tena.
+      if (stored.isExpired || TokenUtils.isExpired(stored.token)) {
+        await _sessionService.clearSession();
+        _session = null;
+        _status = AuthStatus.loggedOut;
+        _sessionExpired = true;
+        notifyListeners();
+        return;
+      }
+
       _session = stored;
       _status = AuthStatus.loggedIn;
+      _sessionExpired = false;
     } else {
       _session = null;
       _status = AuthStatus.loggedOut;
@@ -62,18 +82,27 @@ class AuthController extends ChangeNotifier {
   /// Baada ya Phase 7, login screen itapokea token kutoka API halisi
   /// kwanza, kisha itaita hii. Controller haifahamu API — inahifadhi tu.
   Future<void> signIn({required String token, required String phone}) async {
-    final session = StoredSession(token: token, phone: phone);
+    final session = StoredSession(
+      token: token,
+      phone: phone,
+      expiresAt: TokenUtils.expiryOf(token),
+    );
     await _sessionService.saveSession(session);
     _session = session;
     _status = AuthStatus.loggedIn;
+    _sessionExpired = false;
     notifyListeners();
   }
 
   /// Toka — ondoa session na arifu.
-  Future<void> signOut() async {
+  ///
+  /// [expired] = `true` pale token ilipoisha muda au server ikarudisha 401.
+  /// Hii inaruhusu login screen kuonyesha ujumbe unaofaa.
+  Future<void> signOut({bool expired = false}) async {
     await _sessionService.clearSession();
     _session = null;
     _status = AuthStatus.loggedOut;
+    _sessionExpired = expired;
     notifyListeners();
   }
 }

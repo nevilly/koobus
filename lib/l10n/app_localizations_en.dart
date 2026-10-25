@@ -77,6 +77,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'TEST mode (DEV): the real server is not built yet. This login only saves a test session.';
 
   @override
+  String get sessionExpiredNotice =>
+      'Your session has expired. Please sign in again to continue.';
+
+  @override
   String get validationPhoneRequired => 'Please enter your phone number';
 
   @override

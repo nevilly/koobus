@@ -311,10 +311,10 @@ For each endpoint:
 - [x] Implement secure password hashing on the server. (Util::Hash)
 - [x] Implement login and logout. (API + Flutter AuthController/SessionService)
 - [x] Use a suitable token/session design. (Token-based with Owesis header)
-- [ ] Define token expiry and renewal.
+- [x] Define token expiry and renewal. (JWT `exp` ~61 days; renewal = re-login; no refresh token yet)
 - [x] Store authentication material securely on the device. (flutter_secure_storage)
-- [x] Restore a valid session appropriately.
-- [ ] Handle expired tokens.
+- [x] Restore a valid session appropriately. (expired token is cleared on restore)
+- [x] Handle expired tokens. (ApiClient 401 -> signOut + redirect to login; local `exp` check)
 - [x] Enforce roles and permissions on the server. (AuthGuard added for trips/events/locations/children/parent_children/schools/buses/routes)
 - [x] Verify school-level access. (school_admin/super_admin protected)
 - [x] Verify parent-to-child authorization. (children/trips/trip_events/locations filtered by parent_children)

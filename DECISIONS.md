@@ -228,6 +228,15 @@ Format: date, decision, reason, files affected.
 - **Files:** `htdocs/Api/api/v1/.rd`, `htdocs/Api/api/v1/Table.php`, `htdocs/Api/api/v1/Module/UsersModule.php`, `htdocs/Api/api/v1/Controller/UsersController.php`, `htdocs/Api/api/v1/Routes/Users.php`, `htdocs/Api/README_KOOBUS_API.md`
 - **Committed:** `0584aae` pushed to `https://github.com/nevilly/koobus.git`
 
+## 2026-10-25 — Phase 7 authorization hardening + token expiry handling
+
+- **Decision:** Centralize authorization in `Util/AuthGuard.php` (token + role check) and enforce parent-child scoping in the API; handle token expiry once in the Flutter network layer.
+- **API changes:** `AuthGuard::requireAuth/requireRole/requireAny` used in `Users`, `Trips`, `TripEvents`, `Locations`, `Children`, `ParentChildren`, `Schools`, `Buses`, `Routes`. Parent access to children/trips/trip_events/locations is filtered through `parent_children` (and the child's `route_id` for trips/locations); unlinked IDs return `403`. Driver trip/location ownership enforced. Admin CRUD restricted to `school_admin`/`super_admin`.
+- **Flutter changes:** Added `http`; new `lib/core/network/{api_config,api_exception,api_response,api_client}.dart`. `ApiClient` sends `Authorization: Owesis <token>`, maps the API’s `{status,payload}` envelope, and on `401` calls `onUnauthorized` (single-flight) which triggers `AuthController.signOut(expired: true)`; `403` does **not** log the user out. `TokenUtils` decodes JWT `exp` for proactive expiry; `StoredSession.expiresAt` persisted; `restoreSession()` clears expired sessions. `KooBusApp` is now stateful: creates `AuthController`, `LanguageController`, `ApiClient` once, and redirects to `LoginScreen` via `navigatorKey` when a session expires. Login shows a localized `sessionExpiredNotice`.
+- **Reason:** Satisfy Phase 7 gates (server-side roles, parent-child isolation, ID tampering prevention, token expiry) before starting Phase 8.
+- **Verified by:** `flutter analyze` (no errors), `flutter test` — 34 tests passed, including `test/api_client_test.dart`, `test/token_utils_test.dart`, `test/auth_session_expiry_test.dart`.
+- **Still open in Phase 7:** school-staff account creation/approval flow; centralized log/error redaction; PHP endpoints not yet exercised against XAMPP.
+
 ## Known bugs / unfinished
 
 - NDK 28.2.13676358 is **installed** (2.12 GB) and `flutter build apk --debug`

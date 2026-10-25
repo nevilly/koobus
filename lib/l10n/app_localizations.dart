@@ -224,6 +224,12 @@ abstract class AppLocalizations {
   /// **'Hali ya MAJARIBIO (DEV): server halisi bado haijajengwa. Kuingia huku kunahifadhi session ya majaribio pekee.'**
   String get loginDevNotice;
 
+  /// Ujumbe unaoonyeshwa kwenye login pale token ilipoisha muda.
+  ///
+  /// In sw, this message translates to:
+  /// **'Muda wa kikao umeisha. Tafadhali ingia tena ili kuendelea.'**
+  String get sessionExpiredNotice;
+
   /// Hitilafu ikiwa field ya simu ipo wazi.
   ///
   /// In sw, this message translates to:

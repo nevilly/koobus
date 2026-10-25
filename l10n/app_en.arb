@@ -26,6 +26,7 @@
   "loginPasswordLabel": "Password",
   "loginSubmit": "Log in",
   "loginDevNotice": "TEST mode (DEV): the real server is not built yet. This login only saves a test session.",
+  "sessionExpiredNotice": "Your session has expired. Please sign in again to continue.",
 
   "validationPhoneRequired": "Please enter your phone number",
   "validationPhoneInvalid": "Invalid number. Example: 0712345678",
