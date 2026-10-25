@@ -319,7 +319,7 @@ For each endpoint:
 - [x] Verify school-level access. (school_admin/super_admin protected)
 - [x] Verify parent-to-child authorization. (children/trips/trip_events/locations filtered by parent_children)
 - [x] Verify driver-to-trip authorization.
-- [ ] Prevent users from changing IDs to access another family's information.
+- [x] Prevent users from changing IDs to access another family's information. (scoping added for parent on children/trips/trip_events/locations)
 - [ ] Avoid leaking private information in logs or error messages.
 
 **Deliverable:** Users can authenticate and access only resources they are authorized to use.
