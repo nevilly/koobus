@@ -307,20 +307,33 @@ For each endpoint:
 
 # PHASE 7 — AUTHENTICATION AND AUTHORIZATION
 
-- [ ] Define how school staff create or approve accounts.
+- [x] Define how school staff create or approve accounts. (staff are created by an
+  authenticated `school_admin`/`super_admin`; public sign-up is `parent` only; the first
+  `super_admin` may self-register only while none exists — see DECISIONS 2026-10-25)
 - [x] Implement secure password hashing on the server. (Util::Hash)
 - [x] Implement login and logout. (API + Flutter AuthController/SessionService)
 - [x] Use a suitable token/session design. (Token-based with Owesis header)
 - [x] Define token expiry and renewal. (JWT `exp` ~61 days; renewal = re-login; no refresh token yet)
 - [x] Store authentication material securely on the device. (flutter_secure_storage)
 - [x] Restore a valid session appropriately. (expired token is cleared on restore)
-- [x] Handle expired tokens. (ApiClient 401 -> signOut + redirect to login; local `exp` check)
-- [x] Enforce roles and permissions on the server. (AuthGuard added for trips/events/locations/children/parent_children/schools/buses/routes)
-- [x] Verify school-level access. (school_admin/super_admin protected)
-- [x] Verify parent-to-child authorization. (children/trips/trip_events/locations filtered by parent_children)
-- [x] Verify driver-to-trip authorization.
-- [x] Prevent users from changing IDs to access another family's information. (scoping added for parent on children/trips/trip_events/locations)
-- [ ] Avoid leaking private information in logs or error messages.
+- [x] Handle expired tokens. (ApiClient 401 -> signOut + redirect to login; local `exp` check;
+  server-side expiry check fixed to fail closed)
+- [x] Enforce roles and permissions on the server. (AuthGuard added for users/trips/events/locations/children/parent_children/schools/buses/routes/devices/notifications)
+- [x] Verify school-level access. (`users.school_id` + `Util/Tenant.php`; super_admin unrestricted,
+  school_admin own school only, school_admin without a school fails closed; admin CRUD and
+  child/trip/event/location/notification reads scoped)
+- [x] Verify parent-to-child authorization. (children/trips/trip_events/locations filtered by parent_children; `get('')` on protected resources returns 403)
+- [x] Verify driver-to-trip authorization. (start/end/cancel and event/location upload require
+  `trips.driver_id` = caller; matron scoped by `trips.matron_id`)
+- [x] Prevent users from changing IDs to access another family's information. (scoping added for parent on children/trips/trip_events/locations; `recorded_by` forced from token)
+- [x] Avoid leaking private information in logs or error messages. (production hides PHP errors;
+  request log redacts password/token; API strips `password`/`token` from user responses)
+
+> **Status 2026-10-25:** Phase 7 code is complete and all changed PHP files pass `php -l`.
+> Live cross-family/cross-school/unauthorized-driver tests are still pending because Apache
+> and MySQL are not running on this machine (port 80 owned by PID 4, 3306 closed).
+> Legacy template routes (`Ads.php`, `Booking.php`, `Upload.php`, singular `Notification.php`,
+> etc.) still exist and are not part of the KooBus API surface.
 
 **Deliverable:** Users can authenticate and access only resources they are authorized to use.
 

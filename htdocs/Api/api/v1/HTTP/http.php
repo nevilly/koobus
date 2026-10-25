@@ -240,16 +240,32 @@ class HTTP{
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch,CURLOPT_TIMEOUT,90);
 
-        $f = fopen(__DIR__.'/../request.txt', 'a');
+        // KOO_BUS_ADAPT: Usalama wa logs.
+        // Hatua za awali ziliandika maombi YOTE (pamoja na password/token)
+        // kwenye request.txt. Sasa:
+        //  - production haifanyi verbose logging kabisa;
+        //  - fields nyeti zinabadilishwa kuwa `***`.
+        $appEnv = getenv('APP_ENV') ?: 'development';
+        $isProduction = $appEnv === 'production';
 
-        curl_setopt($ch,CURLOPT_VERBOSE,true);
-        curl_setopt($ch,CURLOPT_STDERR ,$f);
+        if(!$isProduction){
+            $f = fopen(__DIR__.'/../request.txt', 'a');
+            curl_setopt($ch,CURLOPT_VERBOSE,true);
+            curl_setopt($ch,CURLOPT_STDERR ,$f);
+        }
 
         if($isPost){
             curl_setopt($ch, CURLOPT_POST, 1);
 
-            // logs
-            file_put_contents(__DIR__."/../request.txt",print_r(json_encode($args), true),FILE_APPEND);
+            if(!$isProduction){
+                $logged = $args;
+                if(is_array($logged)){
+                    foreach(array('password','pass','token','secret','pin','authorization','api_key') as $sensitive){
+                        if(isset($logged[$sensitive])) $logged[$sensitive] = '***';
+                    }
+                }
+                file_put_contents(__DIR__."/../request.txt",print_r(json_encode($logged), true),FILE_APPEND);
+            }
 
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($args));
         }

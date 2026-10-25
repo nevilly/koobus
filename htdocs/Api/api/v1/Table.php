@@ -36,6 +36,7 @@ class Table extends  Database
              bio text null,
              password text not null,
              role enum('parent','driver','matron','school_admin','super_admin') default 'parent' not null,
+             school_id int(11) null,
              status enum('0','1') not null default '0',
              device_token text null,
              last_login datetime null,
@@ -62,6 +63,11 @@ class Table extends  Database
             primary key(id)
             "
         )));
+
+        // KOO_BUS_ADAPT: school_id kwa users (school-level isolation).
+        // users inaundwa kabla ya schools, hivyo column/FK inaongezwa hapa
+        // baada ya schools kuwepo. Hii pia inashughulikia DB ya zamani.
+        $this->ensureUsersSchoolColumn();
 
         // buses
         parent::createTable($this->encode(array(
@@ -242,6 +248,33 @@ class Table extends  Database
         // See FUTURE_UX_IDEAS.md
 
         echo "\n KooBus tables installed/checked successfully!\n";
+    }
+
+    /**
+     * KOO_BUS_ADAPT: hakikisha users.school_id ipo na FK yake.
+     *
+     * `createTable` haibadilishi table iliyopo, hivyo kwa DB ya zamani
+     * tunaongeza column hii kwa ALTER (mara moja tu).
+     */
+    private function ensureUsersSchoolColumn(){
+        $db = $this->con->query("SELECT DATABASE() AS db")->fetch_object();
+        $schema = $db ? $db->db : '';
+
+        $col = $this->con->query("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA='".$this->con->real_escape_string($schema)."'
+            AND TABLE_NAME='users' AND COLUMN_NAME='school_id'");
+        if($col && $col->num_rows === 0){
+            $this->con->query("ALTER TABLE users ADD COLUMN school_id int(11) null");
+        }
+
+        $fk = $this->con->query("SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+            WHERE TABLE_SCHEMA='".$this->con->real_escape_string($schema)."'
+            AND TABLE_NAME='users' AND CONSTRAINT_TYPE='FOREIGN KEY'
+            AND CONSTRAINT_NAME='fk_users_school'");
+        if($fk && $fk->num_rows === 0){
+            $this->con->query("ALTER TABLE users ADD CONSTRAINT fk_users_school
+                FOREIGN KEY (school_id) REFERENCES schools(id) ON DELETE SET NULL");
+        }
     }
 
 }

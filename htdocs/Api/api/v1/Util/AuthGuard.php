@@ -19,10 +19,17 @@ class AuthGuard extends UsersModule
             return false;
         }
         $guard = new self();
-        $user = $guard->getUserIdByToken(Util::$token);
-        if ($user && isset($user->id)) {
-            return $user;
+        $result = $guard->getUserIdByToken(Util::$token);
+
+        // KOO_BUS_ADAPT: getUserIdByToken inarudisha mysqli_result (module),
+        // si object. Lazima tufetch object kabla ya kuangalia ->id.
+        if ($result && $result instanceof mysqli_result && $result->num_rows > 0) {
+            $user = $result->fetch_object();
+            if ($user && isset($user->id)) {
+                return $user;
+            }
         }
+
         return false;
     }
 

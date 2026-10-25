@@ -1,5 +1,9 @@
 <?php
-error_reporting(1);
+// KOO_BUS_ADAPT: Usalama wa makosa.
+// - Kwenye production hatuonyeshi makosa kwa mtumiaji (yanaweza kuwa na
+//   taarifa nyeti: majina ya tables, paths, data).
+// - Makosa yanaandikwa kwenye log ya server pekee.
+// - Weka APP_ENV=development kwenye .rd/.env kuona makosa wakati wa dev.
 include_once __DIR__."/Util/DotRD.php";
 
 include_once __DIR__."/HTTP/http.php";
@@ -7,6 +11,13 @@ include_once __DIR__."/Util/Util.php";
 
 use DotRD\DotRD;
 (new DotRD(__DIR__ . '/.rd'))->load();
+
+// KOO_BUS_ADAPT: APP_ENV inasomwa BAADA ya .rd kupakiwa, ili
+// APP_ENV=production kwenye .rd ifanye kazi.
+$appEnv = getenv('APP_ENV') ?: 'development';
+error_reporting(E_ALL);
+ini_set('log_errors', '1');
+ini_set('display_errors', $appEnv === 'production' ? '0' : '1');
 
 
 class Config extends HTTP {

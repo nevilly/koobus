@@ -57,12 +57,12 @@ class UsersModule extends Database
 
             foreach ($data as $key=>$value) {
                 if($key !== 'id' && !empty($value))
-                  $d .= "$key='$value',";
+                  $d .= $key."='".$this->con->real_escape_string($value)."',";
             }
 
            $d = chop($d,',');
 
-            $id = $data['id'];
+            $id = intval($data['id']);
 
             $status = parent::update(parent::encode(array("table"=>$this->table,"data"=>"$d","where"=>"id='$id'")));
         }
@@ -79,7 +79,7 @@ class UsersModule extends Database
         $status = false;
 
         if(!empty($token))
-            $status = parent::update(parent::encode(array("table"=>$this->table,"data"=>"status='1'","where"=>"token='$token'")));
+            $status = parent::update(parent::encode(array("table"=>$this->table,"data"=>"status='1'","where"=>"token='".$this->con->real_escape_string($token)."'")));
 
         return $status;
     }
@@ -104,13 +104,13 @@ class UsersModule extends Database
         $str = '';
         if(!empty($id))
             if(is_numeric($id))
-                $str = "id=$id";
+                $str = "id=".intval($id);
             elseif (filter_var($id, FILTER_VALIDATE_EMAIL))
-                $str = "email='$id'";
+                $str = "email='".$this->con->real_escape_string($id)."'";
             elseif(strlen($id) < 25)
-                $str = "username='$id'";
+                $str = "username='".$this->con->real_escape_string($id)."'";
             elseif(strlen($id) > 100)
-                $str = "token='$id'";
+                $str = "token='".$this->con->real_escape_string($id)."'";
 
         return parent::select(parent::encode(['table'=>$this->table,'where'=>$str]));
     }
@@ -162,6 +162,7 @@ class UsersModule extends Database
      * @return mixed
      */
     public function getUserIdByToken($token){
+        $token = $this->con->real_escape_string($token);
         return parent::select(parent::encode(['table'=>$this->table,'col'=>'*, NULL AS password','where'=>"token = '$token' AND status ='1'"]));
     }
 

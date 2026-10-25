@@ -235,7 +235,46 @@ Format: date, decision, reason, files affected.
 - **Flutter changes:** Added `http`; new `lib/core/network/{api_config,api_exception,api_response,api_client}.dart`. `ApiClient` sends `Authorization: Owesis <token>`, maps the API’s `{status,payload}` envelope, and on `401` calls `onUnauthorized` (single-flight) which triggers `AuthController.signOut(expired: true)`; `403` does **not** log the user out. `TokenUtils` decodes JWT `exp` for proactive expiry; `StoredSession.expiresAt` persisted; `restoreSession()` clears expired sessions. `KooBusApp` is now stateful: creates `AuthController`, `LanguageController`, `ApiClient` once, and redirects to `LoginScreen` via `navigatorKey` when a session expires. Login shows a localized `sessionExpiredNotice`.
 - **Reason:** Satisfy Phase 7 gates (server-side roles, parent-child isolation, ID tampering prevention, token expiry) before starting Phase 8.
 - **Verified by:** `flutter analyze` (no errors), `flutter test` — 34 tests passed, including `test/api_client_test.dart`, `test/token_utils_test.dart`, `test/auth_session_expiry_test.dart`.
-- **Still open in Phase 7:** school-staff account creation/approval flow; centralized log/error redaction; PHP endpoints not yet exercised against XAMPP.
+- **Follow-up (same day):** the remaining Phase 7 items above were closed by the
+  school-tenancy/bootstrap work recorded in the next entry.
+
+## 2026-10-25 — School tenancy, staff bootstrap and authentication bug fixes
+
+- **Decision:** Treat `users.school_id` as the tenancy boundary and enforce it in one
+  helper (`Util/Tenant.php`). `super_admin` is unrestricted; `school_admin` is limited to
+  its own `school_id` and fails closed with `403` when it has none. Resource ownership is
+  resolved through joins (`route.school_id`, `trips.driver_id`/`matron_id`,
+  `parent_children`), never trusted from the request body.
+- **Account creation:** public registration is limited to `parent`. `school_admin` may
+  create `parent`/`driver`/`matron` only, forced into the caller's school. `super_admin`
+  may create any role. The very first `super_admin` may self-register only while no
+  `super_admin` exists; afterwards the endpoint requires `super_admin`.
+- **Scoping added:** `Users` (list/get/update/delete, `get_users_by_roles`), `Buses`,
+  `Routes`, `Schools` (writes; reads stay available to any authenticated user),
+  `Children`, `ParentChildren`, `Trips`, `TripEvents`, `Locations`, `DeviceTokens`,
+  `Notifications`. `DeviceTokens::remove` is owner-or-super_admin;
+  `remove_by_user` is the school-scoped admin path for other users.
+- **Auth bugs fixed:** `AuthGuard::user()` now handles the `mysqli_result` returned by
+  `UsersModule::getUserIdByToken()` (it previously rejected every request);
+  `Util::tokenValidate()` now compares `exp` with `time()`, uses `hash_equals`, checks
+  for three JWT segments and strips malformed payloads; `base64UrlDecode` added.
+  `Config.php` hides PHP errors in production; `Module/Database.php` no longer sets
+  `error_reporting(1)`. Registration no longer calls
+  `get_user_by_email_or_username('')` (empty value returned every user and blocked
+  sign-ups); `phone` + `password` are required, empty optional fields and
+  `school_id = 0` are omitted to avoid UNIQUE/FK failures.
+- **Reason:** Phase 7 completion gate requires cross-family, cross-school and
+  unauthorized-driver access to fail safely, and the `school_id` column is needed
+  before Phase 8 staff/driver flows.
+- **Files:** `Config.php`, `Table.php`, `Module/Database.php`, `HTTP/http.php`,
+  `Util/{AuthGuard,Tenant,Util}.php`, `Routes/{Users,Children,ParentChildren,Schools,
+  Buses,Routes,Trips,TripEvents,Locations,DeviceTokens,Notifications}.php`.
+- **Verified by:** `C:\xampp\php\php.exe -l` on all 17 changed files — all pass.
+  Live HTTP tests are blocked until Apache/MySQL run (port 80 held by PID 4, 3306 closed).
+- **Still open:** legacy template routes (`Ads.php`, `Booking.php`, `Upload.php`,
+  singular `Notification.php`, etc.) were not reviewed or removed; the hardcoded AES
+  key/IV in `Util::encrypt_decrypt` should move to environment configuration; live
+  authorization tests must be repeated once XAMPP is running.
 
 ## Known bugs / unfinished
 
@@ -245,12 +284,15 @@ Format: date, decision, reason, files affected.
 - Logout button on Wasifu could not be located by automated UI dumps (scroll
   position/grid navigation issue, not a confirmed bug). Must be checked by hand
   before Phase 4 is signed off.
-- Login screen signs in with a clearly-labelled DEV token. Real authentication
-  (API-issued token, password check on server, token expiry) is Phase 7.
+- Login screen still offers a clearly-labelled DEV shortcut, but real
+  authentication (API-issued token, server password check, token expiry) is
+  implemented as of Phase 7; the DEV shortcut must be removed/hidden for release.
 - Windows Developer Mode is now ON (registry
   `AllowDevelopmentWithoutDevLicense = 1`); plugin builds (symlinks) work.
 - Parent screens use labelled DEV fixtures. Real children, bus, GPS and map
   arrive in Phase 5/9; push notifications in Phase 10. No production screen may
   read `parent_demo_data.dart`.
 - Language switching (sw/en) implemented and tests pass; device verification on V2333 pending (picker + persistence + instant UI change).
-- PHP API adapted for KooBus structure but not yet tested in XAMPP. Endpoints to be validated during Phase 6/7 integration.
+- PHP API is implemented and passes `php -l`, but no live HTTP test has run yet
+  because Apache/MySQL are not running (port 80 held by PID 4, 3306 closed).
+  Repeat the Phase 6/7 authorization matrix in XAMPP before deployment.

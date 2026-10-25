@@ -98,6 +98,22 @@ class Util
     }
 
     /**
+     * KOO_BUS_ADAPT: decode base64url (kinyume cha base64UrlEncode).
+     */
+    public static function base64UrlDecode($text)
+    {
+        $remainder = strlen($text) % 4;
+        if ($remainder) {
+            $text .= str_repeat('=', 4 - $remainder);
+        }
+        return base64_decode(str_replace(
+            array('-', '_'),
+            array('+', '/'),
+            $text
+        ));
+    }
+
+    /**
      * @param $user object
      * @return false|string
      */
@@ -398,34 +414,34 @@ class Util
 
         // get vaules
         $toke = explode('.', $token);
+        if (count($toke) !== 3) {
+            return false;
+        }
         $header = $toke[0];
         $payload = $toke[1];
         $signature = $toke[2];
 
-        // check expire time
-        $date = new DateTime();
-        $exp = $date->setTimestamp(json_decode(base64_decode($payload))->exp);
-        $exp = new DateTime(date("Y-m-d H:i:s",$exp->getTimestamp()));
-        $date = new DateTime();
-        $now = new DateTime(date("Y-m-d H:i:s",$date->getTimestamp()));
-
-        $dif = $exp->diff($now);
-        $days = $dif->days;
-        $minutes = $dif->m;
-        $hours = $dif->h;
-        $secs = $dif->s;
-
-        $isNotExpired = $days > 0 || $hours > 0 || $minutes > 0 || $secs > 0;
+        // KOO_BUS_ADAPT: angalia muda kwa kulinganisha timestamps moja kwa moja.
+        // Toleo la awali lilitumia DateTime::diff(), ambalo hurudisha thamani
+        // chanya hata token ikiwa imeisha muda — hivyo token zilizoisha
+        // zilikubaliwa. Sasa tuna-fail closed.
+        $payloadJson = json_decode(self::base64UrlDecode($payload));
+        if (!$payloadJson || !isset($payloadJson->exp)) {
+            return false;
+        }
+        if (time() >= intval($payloadJson->exp)) {
+            return false;
+        }
 
         // generate signature
         $sig = Util::base64UrlEncode(hash_hmac('sha256', $header . "." . $payload, $secret, true));
 
         // verify signature
-        $isValidSignature = ($signature === $sig);
+        $isValidSignature = hash_equals($sig, (string) $signature);
 
         $status = false;
         // validate
-        if($isValidSignature && $isNotExpired) {
+        if($isValidSignature) {
             $status = true;
             self::$token = self::encrypt_decrypt($token);
         }
