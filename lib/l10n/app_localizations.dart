@@ -221,7 +221,7 @@ abstract class AppLocalizations {
   /// Taarifa kwenye login ikikumbusha kuwa hakuna server bado.
   ///
   /// In sw, this message translates to:
-  /// **'Hali ya MAJARIBIO (DEV): server halisi bado haijajengwa. Kuingia huku kunahifadhi session ya majaribio pekee.'**
+  /// **'Hali ya MAJARIBIO (DEV): kitufe hiki kinatumia token ya majaribio na data ya mfano. Kinaonekana kwenye debug build pekee.'**
   String get loginDevNotice;
 
   /// Ujumbe unaoonyeshwa kwenye login pale token ilipoisha muda.
@@ -673,6 +673,348 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Chagua lugha'**
   String get languageDialogTitle;
+
+  /// No description provided for @loginErrorInvalid.
+  ///
+  /// In sw, this message translates to:
+  /// **'Namba ya simu au nenosiri si sahihi.'**
+  String get loginErrorInvalid;
+
+  /// No description provided for @loginErrorNetwork.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeshindikana kuunganisha na server. Angalia mtandao na ujaribu tena.'**
+  String get loginErrorNetwork;
+
+  /// No description provided for @loginErrorGeneric.
+  ///
+  /// In sw, this message translates to:
+  /// **'Kuingia hakukufanikiwa. Jaribu tena.'**
+  String get loginErrorGeneric;
+
+  /// No description provided for @loginDevButton.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ingia kwa hali ya majaribio (DEV)'**
+  String get loginDevButton;
+
+  /// No description provided for @roleUnsupportedTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Akaunti hii bado haitumiki'**
+  String get roleUnsupportedTitle;
+
+  /// No description provided for @roleUnsupportedBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ukurasa wa akaunti hii utaongezwa hatua zijazo. Kwa sasa unaweza kuingia kama mzazi au dereva.'**
+  String get roleUnsupportedBody;
+
+  /// No description provided for @roleLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Aina ya akaunti'**
+  String get roleLabel;
+
+  /// No description provided for @roleLabelParent.
+  ///
+  /// In sw, this message translates to:
+  /// **'Mzazi'**
+  String get roleLabelParent;
+
+  /// No description provided for @roleLabelDriver.
+  ///
+  /// In sw, this message translates to:
+  /// **'Dereva'**
+  String get roleLabelDriver;
+
+  /// No description provided for @roleLabelMatron.
+  ///
+  /// In sw, this message translates to:
+  /// **'Matron'**
+  String get roleLabelMatron;
+
+  /// No description provided for @roleLabelSchoolAdmin.
+  ///
+  /// In sw, this message translates to:
+  /// **'Msimamizi wa shule'**
+  String get roleLabelSchoolAdmin;
+
+  /// No description provided for @roleLabelSuperAdmin.
+  ///
+  /// In sw, this message translates to:
+  /// **'Msimamizi mkuu'**
+  String get roleLabelSuperAdmin;
+
+  /// No description provided for @roleLabelUnknown.
+  ///
+  /// In sw, this message translates to:
+  /// **'Haijulikani'**
+  String get roleLabelUnknown;
+
+  /// No description provided for @driverHomeTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari ya dereva'**
+  String get driverHomeTitle;
+
+  /// No description provided for @driverHomeSubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari uliyopangiwa leo'**
+  String get driverHomeSubtitle;
+
+  /// Salamu kwa dereva.
+  ///
+  /// In sw, this message translates to:
+  /// **'Karibu, {name}'**
+  String driverGreeting(String name);
+
+  /// No description provided for @driverLoadingTrip.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inapakia safari...'**
+  String get driverLoadingTrip;
+
+  /// No description provided for @driverNoTripTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna safari iliyopangwa'**
+  String get driverNoTripTitle;
+
+  /// No description provided for @driverNoTripSubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna safari inayoendelea au iliyopangwa kwako kwa sasa. Vuta chini kuonyesha upya.'**
+  String get driverNoTripSubtitle;
+
+  /// No description provided for @driverTripStatus.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hali ya safari'**
+  String get driverTripStatus;
+
+  /// No description provided for @driverStatusPending.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imepangwa'**
+  String get driverStatusPending;
+
+  /// No description provided for @driverStatusActive.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inaendelea'**
+  String get driverStatusActive;
+
+  /// No description provided for @driverStatusCompleted.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imekamilika'**
+  String get driverStatusCompleted;
+
+  /// No description provided for @driverStatusCancelled.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeghairiwa'**
+  String get driverStatusCancelled;
+
+  /// No description provided for @driverTripType.
+  ///
+  /// In sw, this message translates to:
+  /// **'Aina ya safari'**
+  String get driverTripType;
+
+  /// No description provided for @driverTripTypeMorning.
+  ///
+  /// In sw, this message translates to:
+  /// **'Asubuhi'**
+  String get driverTripTypeMorning;
+
+  /// No description provided for @driverTripTypeAfternoon.
+  ///
+  /// In sw, this message translates to:
+  /// **'Mchana'**
+  String get driverTripTypeAfternoon;
+
+  /// No description provided for @driverBus.
+  ///
+  /// In sw, this message translates to:
+  /// **'Basi'**
+  String get driverBus;
+
+  /// No description provided for @driverRoute.
+  ///
+  /// In sw, this message translates to:
+  /// **'Route'**
+  String get driverRoute;
+
+  /// No description provided for @driverScheduledFor.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeundwa'**
+  String get driverScheduledFor;
+
+  /// No description provided for @driverStartedAt.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ilianza'**
+  String get driverStartedAt;
+
+  /// No description provided for @driverEndedAt.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ilikamilika'**
+  String get driverEndedAt;
+
+  /// No description provided for @driverNoBus.
+  ///
+  /// In sw, this message translates to:
+  /// **'Basi halijulikani'**
+  String get driverNoBus;
+
+  /// No description provided for @driverNoRoute.
+  ///
+  /// In sw, this message translates to:
+  /// **'Route haijulikani'**
+  String get driverNoRoute;
+
+  /// No description provided for @driverReadiness.
+  ///
+  /// In sw, this message translates to:
+  /// **'Utayari wa safari'**
+  String get driverReadiness;
+
+  /// No description provided for @driverReadyDriver.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wewe umepewa safari hii'**
+  String get driverReadyDriver;
+
+  /// No description provided for @driverReadyBus.
+  ///
+  /// In sw, this message translates to:
+  /// **'Basi limepangwa'**
+  String get driverReadyBus;
+
+  /// No description provided for @driverReadyRoute.
+  ///
+  /// In sw, this message translates to:
+  /// **'Route imepakiwa'**
+  String get driverReadyRoute;
+
+  /// No description provided for @driverReadyStops.
+  ///
+  /// In sw, this message translates to:
+  /// **'Vituo vimepakiwa'**
+  String get driverReadyStops;
+
+  /// No description provided for @driverReadyStatus.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari iko tayari kuanza'**
+  String get driverReadyStatus;
+
+  /// No description provided for @driverReadyActive.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari inaendelea'**
+  String get driverReadyActive;
+
+  /// No description provided for @driverStartTrip.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anza safari'**
+  String get driverStartTrip;
+
+  /// No description provided for @driverEndTrip.
+  ///
+  /// In sw, this message translates to:
+  /// **'Maliza safari'**
+  String get driverEndTrip;
+
+  /// No description provided for @driverViewStops.
+  ///
+  /// In sw, this message translates to:
+  /// **'Vituo vya route'**
+  String get driverViewStops;
+
+  /// No description provided for @driverStopsTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Vituo vya route'**
+  String get driverStopsTitle;
+
+  /// Idadi ya vituo kwenye route.
+  ///
+  /// In sw, this message translates to:
+  /// **'Vituo {count}'**
+  String driverStopsCount(int count);
+
+  /// No description provided for @driverNoStops.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna vituo vilivyowekwa kwenye route hii.'**
+  String get driverNoStops;
+
+  /// No description provided for @driverStopNoCoordinates.
+  ///
+  /// In sw, this message translates to:
+  /// **'Kituo hiki hakina mahali (GPS) kilichowekwa.'**
+  String get driverStopNoCoordinates;
+
+  /// No description provided for @driverTripConflict.
+  ///
+  /// In sw, this message translates to:
+  /// **'Dereva ana safari nyingine inayoendelea. Maliza au ghairi kwanza.'**
+  String get driverTripConflict;
+
+  /// No description provided for @driverTripStarted.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari imeanza.'**
+  String get driverTripStarted;
+
+  /// No description provided for @driverTripEnded.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari imekamilika. Asante.'**
+  String get driverTripEnded;
+
+  /// No description provided for @driverTripCompletedNote.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari hii imekamilika. Onyesha upya kama kuna safari mpya.'**
+  String get driverTripCompletedNote;
+
+  /// No description provided for @driverTripCancelledNote.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari hii imeghairiwa.'**
+  String get driverTripCancelledNote;
+
+  /// No description provided for @driverErrorNetwork.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeshindikana kuunganisha na server. Angalia mtandao.'**
+  String get driverErrorNetwork;
+
+  /// No description provided for @driverErrorForbidden.
+  ///
+  /// In sw, this message translates to:
+  /// **'Huna ruhusa kuona safari hii.'**
+  String get driverErrorForbidden;
+
+  /// No description provided for @driverErrorNotFound.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari, basi au route haipatikani.'**
+  String get driverErrorNotFound;
+
+  /// No description provided for @driverServerError.
+  ///
+  /// In sw, this message translates to:
+  /// **'Server imeshindikana. Jaribu tena.'**
+  String get driverServerError;
 }
 
 class _AppLocalizationsDelegate

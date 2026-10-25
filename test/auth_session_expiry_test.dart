@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:koobus/controllers/auth_controller.dart';
 import 'package:koobus/core/storage/secure_session_service.dart';
 import 'package:koobus/core/storage/session_service.dart';
+import 'package:koobus/models/user_model.dart';
 
 String _tokenWithExpiry(DateTime expiry) {
   String part(Map<String, dynamic> data) =>
@@ -94,5 +95,45 @@ void main() {
 
     expect(auth.status, AuthStatus.loggedOut);
     expect(auth.sessionExpired, isFalse);
+  });
+
+  test('signIn + attachProfile vinahifadhi role, userId na jina', () async {
+    final store = InMemorySessionService();
+    final auth = AuthController(store);
+
+    await auth.signIn(token: 'real-token', phone: '0712345678');
+    expect(auth.role, UserRole.unknown);
+
+    await auth.attachProfile(
+      const UserModel(
+        id: 7,
+        role: UserRole.driver,
+        firstName: 'Juma',
+        lastName: 'Hamisi',
+        phone: '0712345678',
+      ),
+    );
+
+    expect(auth.role, UserRole.driver);
+    expect(auth.isDriver, isTrue);
+    expect(auth.userId, 7);
+    expect(auth.displayName, 'Juma Hamisi');
+
+    final stored = await store.readSession();
+    expect(stored?.role, 'driver');
+    expect(stored?.userId, 7);
+    expect(stored?.displayName, 'Juma Hamisi');
+  });
+
+  test('session ya zamani ya DEV inachukuliwa kama mzazi', () async {
+    final store = InMemorySessionService();
+    final auth = AuthController(store);
+
+    await auth.signIn(
+      token: 'DEV-TOKEN-DO-NOT-USE-IN-PRODUCTION',
+      phone: '0712345678',
+    );
+
+    expect(auth.role, UserRole.parent);
   });
 }

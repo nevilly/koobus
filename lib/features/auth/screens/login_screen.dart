@@ -1,19 +1,29 @@
-// Login screen ya KooBus — ukurasa wa kuingia kwa mzazi au dereva.
+// Login screen ya KooBus — ukurasa wa kuingia kwa mzazi, dereva au
+// mfanyakazi wa shule.
 //
-// Hii ni UI pekee bila backend: inaangalia umbo (form) na inaonyesha
-// ujumbe wakati server bado haijaunganishwa (Phase 6 tutaijenga API).
+// Token halisi inatoka kwenye API (`/users/login`), kisha tunasoma
+// profile (`/users/user`) ili kujua role. Role ndiyo inayoamua
+// tunampeleka wapi (RoleHome).
+//
+// Kitufe cha DEV kinaonekana kwenye debug build pekee. Ni cha kufanya
+// majaribio bila server, na kimeandikwa wazi "DEV" — hakuna token ya
+// majaribio kwenye release build.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import 'package:koobus/app/role_home.dart';
 import 'package:koobus/controllers/auth_controller.dart';
 import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/constants/app_spacing.dart';
+import 'package:koobus/core/network/api_client.dart';
+import 'package:koobus/core/network/api_exception.dart';
 import 'package:koobus/core/utils/validators.dart';
 import 'package:koobus/core/widgets/app_button.dart';
 import 'package:koobus/l10n/app_localizations.dart';
-import 'package:koobus/features/parent/screens/parent_shell.dart';
+import 'package:koobus/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,71 +33,139 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // FormKey hutumika ku-"control" umbo zima: tunaweza kuuliza
-  // "je, umbo lote limejaa kwa usahihi?" kwa _formKey.currentState.validate()
   final _formKey = GlobalKey<FormState>();
-
-  // Controllers ni "vipokezi" vya maandishi yanayoingizwa.
-  // Baada ya widget kuondoka, lazima zisafishwe (dispose) — hii
-  // inazuia "memory leak".
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  bool _obscurePassword = true; // nenosiri limefichwa?
-  bool _submitting = false; // tunasubiri server?
+  bool _obscurePassword = true;
+  bool _submitting = false;
+  String? _error;
 
   @override
   void dispose() {
-    // dispose = "safisha baada ya kutumika"
     _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _submit() {
-    final form = _formKey.currentState;
-    // validate() inaangalia kila field; ikiona hitilafu inaionyesha
-    // na inarudisha false. Kama zote zimepita inarudisha true.
-    if (form == null || !form.validate()) {
-      return; // kuna hitilafu — usifanye chochote zaidi
+  String _messageFor(ApiException error, AppLocalizations l10n) {
+    if (error.statusCode == 0) return l10n.loginErrorNetwork;
+    if (error.statusCode == 401 ||
+        error.statusCode == 403 ||
+        error.statusCode == 406) {
+      return l10n.loginErrorInvalid;
     }
+    return l10n.loginErrorGeneric;
+  }
 
-    setState(() => _submitting = true);
+  /// Ingia kwa API halisi: token -> session -> profile -> RoleHome.
+  Future<void> _submit() async {
+    final form = _formKey.currentState;
+    if (form == null || !form.validate()) return;
 
-    // NOTE: Hakuna API bado. Tunatumia token ya MAJARIBIO (DEV ONLY)
-    // ili kuonyesha session inafanya kazi. Token halisi itatoka kwenye
-    // API (Phase 7). Hii inajulisha wazi kwa mtumiaji.
-    const devToken = 'DEV-TOKEN-DO-NOT-USE-IN-PRODUCTION';
+    final l10n = AppLocalizations.of(context);
+    final auth = context.read<AuthController>();
+    final service = AuthService(context.read<ApiClient>());
+    final phone = _phoneController.text.trim();
+    final password = _passwordController.text;
 
-    Future.delayed(const Duration(milliseconds: 500), () async {
-      if (!mounted) return; // widget imeondoka? usifanye kitu
-      await context.read<AuthController>().signIn(
-            token: devToken,
-            phone: _phoneController.text.trim(),
-          );
-      if (!mounted) return;
-
-      // Sasa tuko ndani — nenda home kwa kuiondoa login kwenye stack
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const ParentShell()),
-      );
+    setState(() {
+      _submitting = true;
+      _error = null;
     });
+
+    var tokenSaved = false;
+    try {
+      final token = await service.login(phone: phone, password: password);
+
+      // Hifadhi token kwanza ili ApiClient iweze kuomba profile.
+      await auth.signIn(token: token, phone: phone);
+      tokenSaved = true;
+
+      final user = await service.profile();
+      await auth.attachProfile(user);
+
+      if (!mounted) return;
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const RoleHome()),
+        (route) => false,
+      );
+    } on ApiException catch (error) {
+      // Kama token ilihifadhiwa lakini profile ilishindikana, tusimwache
+      // mtumiaji na session isiyo na role.
+      if (tokenSaved) await auth.signOut();
+      if (!mounted) return;
+      setState(() => _error = _messageFor(error, l10n));
+    } catch (_) {
+      if (tokenSaved) await auth.signOut();
+      if (!mounted) return;
+      setState(() => _error = l10n.loginErrorGeneric);
+    } finally {
+      if (mounted) setState(() => _submitting = false);
+    }
+  }
+
+  /// Kuingia kwa majaribio — debug build pekee.
+  Future<void> _devLogin() async {
+    final auth = context.read<AuthController>();
+    final phone = _phoneController.text.trim().isEmpty
+        ? '0712345678'
+        : _phoneController.text.trim();
+
+    setState(() {
+      _submitting = true;
+      _error = null;
+    });
+
+    await auth.signIn(
+      token: 'DEV-TOKEN-DO-NOT-USE-IN-PRODUCTION',
+      phone: phone,
+      role: 'parent',
+      displayName: phone,
+    );
+
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const RoleHome()),
+      (route) => false,
+    );
+  }
+
+  Widget _errorCard(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.danger.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.danger.withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline, color: AppColors.danger, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              _error!,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: AppColors.danger),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // l10n = maneno ya lugha iliyochaguliwa.
     final l10n = AppLocalizations.of(context);
-    // Kama mtumiaji amefika hapa kwa sababu token ilisha muda,
-    // tunamwambia wazi badala ya kumwacha apoteze muda.
     final sessionExpired = context.watch<AuthController>().sessionExpired;
 
     return Scaffold(
       body: SafeArea(
-        // Safeapa inazuia UI kuingia kwenye "notch" ya simu
         child: Center(
           child: SingleChildScrollView(
-            // inaruhusu kurasa kusogeza chini kama keyboard inafunika
             padding: AppSpacing.page,
             child: Form(
               key: _formKey,
@@ -144,14 +222,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ],
+                  if (_error != null) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    _errorCard(l10n),
+                  ],
                   const SizedBox(height: AppSpacing.xl),
 
-                  // TextFormField = TextField yenye muunganisho na Form
-                  // (hivyo validate() inaweza kuizungumzia).
                   TextFormField(
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
-                    // validator inarudisha error message au null
                     validator: Validators.phone(l10n),
                     decoration: InputDecoration(
                       labelText: l10n.loginPhoneLabel,
@@ -162,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: AppSpacing.md),
                   TextFormField(
                     controller: _passwordController,
-                    obscureText: _obscurePassword, // true = nukta ••••
+                    obscureText: _obscurePassword,
                     validator: Validators.password(l10n),
                     decoration: InputDecoration(
                       labelText: l10n.loginPasswordLabel,
@@ -181,26 +260,33 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: AppSpacing.lg),
 
-                  // AppButton = kitufe chetu cha kawaida. Inajua loading
-                  // yenyewe: inaonyesha spinner na inajizuia kwa kubonyeza
-                  // mara mbili. Haihitaji SizedBox(height: 48) tena —
-                  // urefu unatoka kwenye theme.
                   AppButton(
                     label: l10n.loginSubmit,
                     loading: _submitting,
-                    onPressed: _submit,
+                    onPressed: _submitting ? null : _submit,
                   ),
-                  const SizedBox(height: AppSpacing.md),
 
-                  // Onyo la wazi: kuingia huku si halisi.
-                  Text(
-                    l10n.loginDevNotice,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(color: AppColors.warning),
-                  ),
+                  // Kitufe cha majaribio: debug build pekee, na limeandikwa
+                  // wazi kuwa ni DEV. Hakiwezi kufika release build.
+                  if (kDebugMode) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    AppButton(
+                      key: const Key('dev_login_button'),
+                      label: l10n.loginDevButton,
+                      icon: Icons.science_outlined,
+                      loading: false,
+                      onPressed: _submitting ? null : _devLogin,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      l10n.loginDevNotice,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: AppColors.warning),
+                    ),
+                  ],
                 ],
               ),
             ),

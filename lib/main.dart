@@ -18,7 +18,7 @@ import 'package:koobus/l10n/app_localizations.dart';
 import 'package:koobus/app/app_theme.dart';
 import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/features/auth/screens/login_screen.dart';
-import 'package:koobus/features/parent/screens/parent_shell.dart';
+import 'package:koobus/app/role_home.dart';
 
 // main() ni function ya kuanzia. Flutter inaita mara moja tu
 // inapoanza programu kwenye simu.
@@ -183,8 +183,9 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     // 3. Nenda ukurasa unaofaa: home kama session ipo, login kama haipo.
+    //    RoleHome ndiyo inaamua mzazi -> ParentShell, dereva -> DriverHome.
     final next = auth.status == AuthStatus.loggedIn
-        ? const ParentShell()
+        ? const RoleHome()
         : const LoginScreen();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => next),

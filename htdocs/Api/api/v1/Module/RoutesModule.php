@@ -16,5 +16,11 @@ class RoutesModule extends Database {
     }
     public function get($id=''){ $str=''; if(!empty($id)&&is_numeric($id)) $str="id=".intval($id); return parent::select(parent::encode(['table'=>$this->table,'where'=>$str])); }
     public function get_by_school($school_id){ if(empty($school_id)) return false; $school_id=intval($school_id); return parent::select(parent::encode(['table'=>$this->table,'where'=>"school_id='$school_id'"])); }
+    // KOO_BUS_ADAPT: vituo vya route kwa mpangilio wa safari.
+    public function get_stops($route_id){
+        if(empty($route_id)) return false;
+        $route_id = intval($route_id);
+        return parent::select(parent::encode(['table'=>'route_stops','where'=>"route_id='$route_id' ORDER BY stop_order ASC, id ASC"]));
+    }
     public function delete_route($id){ if(empty($id)) return false; $id=intval($id); return parent::delete(parent::encode(['table'=>$this->table,'where'=>"id='$id'"])); }
 }

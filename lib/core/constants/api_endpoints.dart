@@ -1,1 +1,27 @@
-// TODO: Define API endpoints.
+// ApiEndpoints — majina ya njia za API sehemu MOJA.
+//
+// Sababu: kama server itabadilisha URL, tunabadilisha hapa tu badala ya
+// kutafuta strings kwenye screens zote. Njia zote zinaanza na `/` na
+// zinaongezwa kwenye ApiConfig.baseUrl.
+
+class ApiEndpoints {
+  const ApiEndpoints._();
+
+  // ---- Auth ----
+  static const String login = '/users/login';
+  static const String profile = '/users/user';
+
+  // ---- Trips ----
+  static String tripsByDriver(int driverId) => '/trips/by_driver/$driverId';
+  static String activeTripByDriver(int driverId) =>
+      '/trips/active_by_driver/$driverId';
+  static String trip(int id) => '/trips/get/$id';
+  static const String tripStart = '/trips/start';
+  static const String tripEnd = '/trips/end';
+  static const String tripCancel = '/trips/cancel';
+
+  // ---- Routes / buses ----
+  static String route(int id) => '/routes/get/$id';
+  static String routeStops(int id) => '/routes/stops/$id';
+  static String bus(int id) => '/buses/get/$id';
+}

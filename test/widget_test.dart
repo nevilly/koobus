@@ -8,7 +8,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:koobus/core/storage/secure_session_service.dart';
 import 'package:koobus/core/storage/language_service.dart';
-import 'package:koobus/core/widgets/app_button.dart';
 import 'package:koobus/features/parent/screens/tabs/profile_tab.dart';
 import 'package:koobus/main.dart';
 
@@ -52,10 +51,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Karibu KooBus'), findsOneWidget); // login
 
-    // Ingia: weka namba na nenosiri
+    // Ingia: weka namba na nenosiri.
+    // Tunatumia kitufe cha DEV kwa sababu tests hazina server halisi;
+    // kitufe hiki kinaonekana kwenye debug build pekee.
     await tester.enterText(find.byType(TextFormField).at(0), '0712345678');
     await tester.enterText(find.byType(TextFormField).at(1), '123456');
-    await tester.tap(find.widgetWithText(AppButton, 'Ingia'));
+    await tester.tap(find.byKey(const Key('dev_login_button')));
     await tester.pumpAndSettle();
 
     // Sasa yuko home
@@ -83,7 +84,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextFormField).at(0), '0712345678');
     await tester.enterText(find.byType(TextFormField).at(1), '123456');
-    await tester.tap(find.widgetWithText(AppButton, 'Ingia'));
+    await tester.tap(find.byKey(const Key('dev_login_button')));
     await tester.pumpAndSettle();
     expect(find.text('Karibu, 0712345678'), findsOneWidget);
 

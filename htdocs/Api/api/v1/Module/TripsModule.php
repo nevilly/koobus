@@ -92,7 +92,7 @@ class TripsModule extends Database
     public function cancel_trip($id){
         if(empty($id)) return false;
         $id = intval($id);
-        return parent::update(parent::encode(array("table"=>$this->table,"data"=>"status='cancelled'","where"=>"id='$id'")));
+        return parent::update(parent::encode(array("table"=>$this->table,"data"=>"status='cancelled'","where"=>"id='$id' AND status IN ('pending','active')")));
     }
 
     public function delete_trip($id){

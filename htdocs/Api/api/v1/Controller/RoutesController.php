@@ -7,5 +7,6 @@ class RoutesController extends RoutesModule {
     public function update_route($data){ return parent::update_route($data); }
     public function get($id=''){ $res=parent::get($id); $data=false; if($res&&$res->num_rows>0){ if(!empty($id)) $data=$res->fetch_object(); else $data=$res->fetch_all(MYSQLI_ASSOC); } return $data; }
     public function get_by_school($school_id){ $res=parent::get_by_school($school_id); if($res&&$res->num_rows>0) return $res->fetch_all(MYSQLI_ASSOC); return false; }
+    public function get_stops($route_id){ $res=parent::get_stops($route_id); if($res&&$res->num_rows>0) return $res->fetch_all(MYSQLI_ASSOC); return false; }
     public function delete_route($id){ return parent::delete_route($id); }
 }

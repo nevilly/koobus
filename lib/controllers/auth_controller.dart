@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:koobus/core/storage/session_service.dart';
 import 'package:koobus/core/utils/token_utils.dart';
+import 'package:koobus/models/user_model.dart';
 
 /// Hali ya mtumiaji katika app.
 enum AuthStatus {
@@ -41,6 +42,31 @@ class AuthController extends ChangeNotifier {
   /// Login screen inaitumia kuonyesha ujumbe wa "session imeisha muda"
   /// badala ya kumtaka mtumiaji aingie bila maelezo.
   bool get sessionExpired => _sessionExpired;
+
+  /// Role ya mtumiaji. Kama session ya zamani haina role (mfano token
+  /// ya DEV), tunaitafsiri kama `parent` ili app isikwame.
+  UserRole get role {
+    final raw = _session?.role;
+    if (raw == null || raw.isEmpty) {
+      final token = _session?.token ?? '';
+      if (token.startsWith('DEV-')) return UserRole.parent;
+      return UserRole.unknown;
+    }
+    return UserModel.parseRole(raw);
+  }
+
+  /// `users.id` ya mtumiaji aliyeingia (inahitajika kwa safari za dereva).
+  int? get userId => _session?.userId;
+
+  /// Jina la kuonyesha (kutoka profile ya API).
+  String get displayName {
+    final name = _session?.displayName;
+    if (name != null && name.trim().isNotEmpty) return name.trim();
+    return _session?.phone ?? '';
+  }
+
+  bool get isDriver => role == UserRole.driver;
+  bool get isParent => role == UserRole.parent;
 
   /// Angalia hifadhi: kuna session iliyopita inayostahili kuhifadhiwa?
   ///
@@ -78,17 +104,51 @@ class AuthController extends ChangeNotifier {
 
   /// Ingia — hifadhi session mpya na arifu.
   ///
-  /// NOTE: Hii sasa inaitwa na login screen kwa token ya majaribio.
-  /// Baada ya Phase 7, login screen itapokea token kutoka API halisi
-  /// kwanza, kisha itaita hii. Controller haifahamu API — inahifadhi tu.
-  Future<void> signIn({required String token, required String phone}) async {
+  /// Login screen inaita hii mara mbili kwa mchakato mmoja:
+  ///  1. Baada ya `/users/login` kurudisha token (role bado haijulikani).
+  ///  2. Baada ya `/users/user` kurudisha profile (`attachProfile`).
+  ///
+  /// Kwa nini si mara moja? Kwa sababu `ApiClient` inasoma token kutoka
+  /// session hii; bila kuihifadhi kwanza, hatuwezi kuomba profile.
+  Future<void> signIn({
+    required String token,
+    required String phone,
+    String? role,
+    int? userId,
+    String? displayName,
+  }) async {
     final session = StoredSession(
       token: token,
       phone: phone,
       expiresAt: TokenUtils.expiryOf(token),
+      role: role,
+      userId: userId,
+      displayName: displayName,
     );
     await _sessionService.saveSession(session);
     _session = session;
+    _status = AuthStatus.loggedIn;
+    _sessionExpired = false;
+    notifyListeners();
+  }
+
+  /// Weka taarifa za profile (role, id, jina) kwenye session iliyopo.
+  ///
+  /// Hii haibadilishi token; inaongeza tu kile API iliturudishia.
+  Future<void> attachProfile(UserModel user) async {
+    final current = _session;
+    if (current == null) return;
+
+    final updated = StoredSession(
+      token: current.token,
+      phone: current.phone,
+      expiresAt: current.expiresAt,
+      role: user.roleValue,
+      userId: user.id,
+      displayName: user.displayName,
+    );
+    await _sessionService.saveSession(updated);
+    _session = updated;
     _status = AuthStatus.loggedIn;
     _sessionExpired = false;
     notifyListeners();

@@ -230,6 +230,7 @@ class Trips extends TripsController
         $p = parent::decode($params);
         $id = isset($p->page) ? $p->page : '';
         if($id === '') return array('status'=>403,'payload'=>"Forbidden");
+        if(!is_numeric($id)) return array('status'=>400,'payload'=>"Invalid trip id");
 
         $trip = parent::get($id);
         if(!$trip || !is_object($trip))
@@ -441,6 +442,8 @@ class Trips extends TripsController
         $role = $this->roleOf($user);
 
         $id = isset($this->data->trip_id) ? $this->data->trip_id : (isset($this->data->id) ? $this->data->id : '');
+        if($id === '' || !is_numeric($id))
+            return array('status'=>400,'payload'=>"Invalid trip id");
         $trip = parent::get($id);
         if(!$trip || !is_object($trip))
             return array('status'=>404,'payload'=>"Not found");
@@ -452,11 +455,41 @@ class Trips extends TripsController
             return array('status'=>403,'payload'=>"Forbidden");
         }
 
+        // KOO_BUS_ADAPT: mabadiliko halali pekee ndiyo yanaruhusiwa.
+        //   pending -> active      (start)
+        //   active  -> completed   (end)
+        //   pending/active -> cancelled
+        $current = isset($trip->status) ? $trip->status : '';
+        if($newStatus === 'active'){
+            if($current !== 'pending')
+                return array('status'=>409,'payload'=>"Trip cannot be started from status '$current'");
+
+            // Dereva asiwe na safari nyingine inayoendelea kwa wakati mmoja.
+            $active = parent::get_active_by_driver($trip->driver_id);
+            if(is_array($active)){
+                foreach($active as $a){
+                    if(isset($a['id']) && intval($a['id']) !== intval($id))
+                        return array('status'=>409,'payload'=>"Driver already has an active trip");
+                }
+            }
+        } elseif($newStatus === 'completed'){
+            if($current !== 'active')
+                return array('status'=>409,'payload'=>"Trip cannot be completed from status '$current'");
+        } else {
+            if(!in_array($current, array('pending','active'), true))
+                return array('status'=>409,'payload'=>"Trip cannot be cancelled from status '$current'");
+        }
+
         if($newStatus === 'active') $sql = parent::start_trip($id);
         elseif($newStatus === 'completed') $sql = parent::end_trip($id);
         else $sql = parent::cancel_trip($id);
 
-        if($sql) return array('status'=>200,'payload'=>"Trip ".$newStatus);
+        if($sql){
+            // Hakikisha hali imebadilika kweli (kuzuia race au update iliyoshindikana).
+            $after = parent::get($id);
+            if($after && is_object($after) && isset($after->status) && $after->status === $newStatus)
+                return array('status'=>200,'payload'=>"Trip ".$newStatus);
+        }
         return array('status'=>500,'payload'=>"Failed");
     }
 
@@ -472,6 +505,8 @@ class Trips extends TripsController
         if(!$ok) return $resUser;
 
         $id = isset($this->data->id) ? $this->data->id : '';
+        if($id === '' || !is_numeric($id))
+            return array('status'=>400,'payload'=>"Invalid trip id");
         $trip = parent::get($id);
         if(!$trip || !is_object($trip))
             return array('status'=>404,'payload'=>"Not found");

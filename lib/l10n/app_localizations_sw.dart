@@ -74,7 +74,7 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get loginDevNotice =>
-      'Hali ya MAJARIBIO (DEV): server halisi bado haijajengwa. Kuingia huku kunahifadhi session ya majaribio pekee.';
+      'Hali ya MAJARIBIO (DEV): kitufe hiki kinatumia token ya majaribio na data ya mfano. Kinaonekana kwenye debug build pekee.';
 
   @override
   String get sessionExpiredNotice =>
@@ -343,4 +343,186 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get languageDialogTitle => 'Chagua lugha';
+
+  @override
+  String get loginErrorInvalid => 'Namba ya simu au nenosiri si sahihi.';
+
+  @override
+  String get loginErrorNetwork =>
+      'Imeshindikana kuunganisha na server. Angalia mtandao na ujaribu tena.';
+
+  @override
+  String get loginErrorGeneric => 'Kuingia hakukufanikiwa. Jaribu tena.';
+
+  @override
+  String get loginDevButton => 'Ingia kwa hali ya majaribio (DEV)';
+
+  @override
+  String get roleUnsupportedTitle => 'Akaunti hii bado haitumiki';
+
+  @override
+  String get roleUnsupportedBody =>
+      'Ukurasa wa akaunti hii utaongezwa hatua zijazo. Kwa sasa unaweza kuingia kama mzazi au dereva.';
+
+  @override
+  String get roleLabel => 'Aina ya akaunti';
+
+  @override
+  String get roleLabelParent => 'Mzazi';
+
+  @override
+  String get roleLabelDriver => 'Dereva';
+
+  @override
+  String get roleLabelMatron => 'Matron';
+
+  @override
+  String get roleLabelSchoolAdmin => 'Msimamizi wa shule';
+
+  @override
+  String get roleLabelSuperAdmin => 'Msimamizi mkuu';
+
+  @override
+  String get roleLabelUnknown => 'Haijulikani';
+
+  @override
+  String get driverHomeTitle => 'Safari ya dereva';
+
+  @override
+  String get driverHomeSubtitle => 'Safari uliyopangiwa leo';
+
+  @override
+  String driverGreeting(String name) {
+    return 'Karibu, $name';
+  }
+
+  @override
+  String get driverLoadingTrip => 'Inapakia safari...';
+
+  @override
+  String get driverNoTripTitle => 'Hakuna safari iliyopangwa';
+
+  @override
+  String get driverNoTripSubtitle =>
+      'Hakuna safari inayoendelea au iliyopangwa kwako kwa sasa. Vuta chini kuonyesha upya.';
+
+  @override
+  String get driverTripStatus => 'Hali ya safari';
+
+  @override
+  String get driverStatusPending => 'Imepangwa';
+
+  @override
+  String get driverStatusActive => 'Inaendelea';
+
+  @override
+  String get driverStatusCompleted => 'Imekamilika';
+
+  @override
+  String get driverStatusCancelled => 'Imeghairiwa';
+
+  @override
+  String get driverTripType => 'Aina ya safari';
+
+  @override
+  String get driverTripTypeMorning => 'Asubuhi';
+
+  @override
+  String get driverTripTypeAfternoon => 'Mchana';
+
+  @override
+  String get driverBus => 'Basi';
+
+  @override
+  String get driverRoute => 'Route';
+
+  @override
+  String get driverScheduledFor => 'Imeundwa';
+
+  @override
+  String get driverStartedAt => 'Ilianza';
+
+  @override
+  String get driverEndedAt => 'Ilikamilika';
+
+  @override
+  String get driverNoBus => 'Basi halijulikani';
+
+  @override
+  String get driverNoRoute => 'Route haijulikani';
+
+  @override
+  String get driverReadiness => 'Utayari wa safari';
+
+  @override
+  String get driverReadyDriver => 'Wewe umepewa safari hii';
+
+  @override
+  String get driverReadyBus => 'Basi limepangwa';
+
+  @override
+  String get driverReadyRoute => 'Route imepakiwa';
+
+  @override
+  String get driverReadyStops => 'Vituo vimepakiwa';
+
+  @override
+  String get driverReadyStatus => 'Safari iko tayari kuanza';
+
+  @override
+  String get driverReadyActive => 'Safari inaendelea';
+
+  @override
+  String get driverStartTrip => 'Anza safari';
+
+  @override
+  String get driverEndTrip => 'Maliza safari';
+
+  @override
+  String get driverViewStops => 'Vituo vya route';
+
+  @override
+  String get driverStopsTitle => 'Vituo vya route';
+
+  @override
+  String driverStopsCount(int count) {
+    return 'Vituo $count';
+  }
+
+  @override
+  String get driverNoStops => 'Hakuna vituo vilivyowekwa kwenye route hii.';
+
+  @override
+  String get driverStopNoCoordinates =>
+      'Kituo hiki hakina mahali (GPS) kilichowekwa.';
+
+  @override
+  String get driverTripConflict =>
+      'Dereva ana safari nyingine inayoendelea. Maliza au ghairi kwanza.';
+
+  @override
+  String get driverTripStarted => 'Safari imeanza.';
+
+  @override
+  String get driverTripEnded => 'Safari imekamilika. Asante.';
+
+  @override
+  String get driverTripCompletedNote =>
+      'Safari hii imekamilika. Onyesha upya kama kuna safari mpya.';
+
+  @override
+  String get driverTripCancelledNote => 'Safari hii imeghairiwa.';
+
+  @override
+  String get driverErrorNetwork =>
+      'Imeshindikana kuunganisha na server. Angalia mtandao.';
+
+  @override
+  String get driverErrorForbidden => 'Huna ruhusa kuona safari hii.';
+
+  @override
+  String get driverErrorNotFound => 'Safari, basi au route haipatikani.';
+
+  @override
+  String get driverServerError => 'Server imeshindikana. Jaribu tena.';
 }

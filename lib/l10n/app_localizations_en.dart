@@ -74,7 +74,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loginDevNotice =>
-      'TEST mode (DEV): the real server is not built yet. This login only saves a test session.';
+      'TEST mode (DEV): this button uses a test token and sample data. It only appears in debug builds.';
 
   @override
   String get sessionExpiredNotice =>
@@ -343,4 +343,186 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageDialogTitle => 'Choose a language';
+
+  @override
+  String get loginErrorInvalid => 'Phone number or password is incorrect.';
+
+  @override
+  String get loginErrorNetwork =>
+      'Could not reach the server. Check your connection and try again.';
+
+  @override
+  String get loginErrorGeneric => 'Sign in failed. Please try again.';
+
+  @override
+  String get loginDevButton => 'Sign in in test mode (DEV)';
+
+  @override
+  String get roleUnsupportedTitle => 'This account is not supported yet';
+
+  @override
+  String get roleUnsupportedBody =>
+      'The page for this account will arrive in a later phase. For now you can sign in as a parent or driver.';
+
+  @override
+  String get roleLabel => 'Account type';
+
+  @override
+  String get roleLabelParent => 'Parent';
+
+  @override
+  String get roleLabelDriver => 'Driver';
+
+  @override
+  String get roleLabelMatron => 'Matron';
+
+  @override
+  String get roleLabelSchoolAdmin => 'School admin';
+
+  @override
+  String get roleLabelSuperAdmin => 'Super admin';
+
+  @override
+  String get roleLabelUnknown => 'Unknown';
+
+  @override
+  String get driverHomeTitle => 'Driver trips';
+
+  @override
+  String get driverHomeSubtitle => 'Your assigned trip for today';
+
+  @override
+  String driverGreeting(String name) {
+    return 'Welcome, $name';
+  }
+
+  @override
+  String get driverLoadingTrip => 'Loading trip...';
+
+  @override
+  String get driverNoTripTitle => 'No trip scheduled';
+
+  @override
+  String get driverNoTripSubtitle =>
+      'There is no active or scheduled trip for you right now. Pull down to refresh.';
+
+  @override
+  String get driverTripStatus => 'Trip status';
+
+  @override
+  String get driverStatusPending => 'Scheduled';
+
+  @override
+  String get driverStatusActive => 'In progress';
+
+  @override
+  String get driverStatusCompleted => 'Completed';
+
+  @override
+  String get driverStatusCancelled => 'Cancelled';
+
+  @override
+  String get driverTripType => 'Trip type';
+
+  @override
+  String get driverTripTypeMorning => 'Morning';
+
+  @override
+  String get driverTripTypeAfternoon => 'Afternoon';
+
+  @override
+  String get driverBus => 'Bus';
+
+  @override
+  String get driverRoute => 'Route';
+
+  @override
+  String get driverScheduledFor => 'Created';
+
+  @override
+  String get driverStartedAt => 'Started';
+
+  @override
+  String get driverEndedAt => 'Ended';
+
+  @override
+  String get driverNoBus => 'Bus unknown';
+
+  @override
+  String get driverNoRoute => 'Route unknown';
+
+  @override
+  String get driverReadiness => 'Trip readiness';
+
+  @override
+  String get driverReadyDriver => 'This trip is assigned to you';
+
+  @override
+  String get driverReadyBus => 'Bus is assigned';
+
+  @override
+  String get driverReadyRoute => 'Route is loaded';
+
+  @override
+  String get driverReadyStops => 'Stops are loaded';
+
+  @override
+  String get driverReadyStatus => 'Trip is ready to start';
+
+  @override
+  String get driverReadyActive => 'Trip is in progress';
+
+  @override
+  String get driverStartTrip => 'Start trip';
+
+  @override
+  String get driverEndTrip => 'End trip';
+
+  @override
+  String get driverViewStops => 'Route stops';
+
+  @override
+  String get driverStopsTitle => 'Route stops';
+
+  @override
+  String driverStopsCount(int count) {
+    return 'Stops: $count';
+  }
+
+  @override
+  String get driverNoStops => 'No stops have been set on this route.';
+
+  @override
+  String get driverStopNoCoordinates => 'This stop has no location (GPS) set.';
+
+  @override
+  String get driverTripConflict =>
+      'The driver already has another active trip. End or cancel it first.';
+
+  @override
+  String get driverTripStarted => 'Trip started.';
+
+  @override
+  String get driverTripEnded => 'Trip completed. Thank you.';
+
+  @override
+  String get driverTripCompletedNote =>
+      'This trip is complete. Refresh to check for a new trip.';
+
+  @override
+  String get driverTripCancelledNote => 'This trip was cancelled.';
+
+  @override
+  String get driverErrorNetwork =>
+      'Could not reach the server. Check your connection.';
+
+  @override
+  String get driverErrorForbidden => 'You are not allowed to view this trip.';
+
+  @override
+  String get driverErrorNotFound =>
+      'The trip, bus or route could not be found.';
+
+  @override
+  String get driverServerError => 'The server failed. Please try again.';
 }

@@ -276,6 +276,49 @@ Format: date, decision, reason, files affected.
   key/IV in `Util::encrypt_decrypt` should move to environment configuration; live
   authorization tests must be repeated once XAMPP is running.
 
+## 2026-10-25 — Phase 8 driver trip flow and real Flutter login
+
+- **Decision:** Finish the Phase 7 mobile login loop before starting Phase 8 UI: `LoginScreen`
+  now calls `/users/login`, saves the token through `AuthController.signIn`, loads
+  `/users/user` and calls `AuthController.attachProfile`. `StoredSession` persists
+  `role`, `userId` and `displayName`; `RoleHome` sends `parent` to `ParentShell`, `driver`
+  to `DriverHomeScreen`, and matron/school_admin/super_admin to an explicit
+  `UnsupportedRoleScreen` (never silently to the parent UI). Legacy DEV sessions are
+  treated as `parent` for backward compatibility. The DEV login button is debug-only and
+  clearly labelled.
+- **Why two steps for login:** `ApiClient` reads the token from `AuthController.session`,
+  so the token must be saved before the profile request. If the profile request fails,
+  the partial session is cleared; a session without a role is not left behind.
+- **Driver data:** `DriverService` first asks for the active trip
+  (`/trips/active_by_driver/{id}`), otherwise the latest pending trip
+  (`/trips/by_driver/{id}`), then loads the assigned bus, route and stops. A new endpoint
+  `GET /routes/stops/{route_id}` (`Routes::stops` + module/controller methods) returns
+  `route_stops` ordered by `stop_order` with the same parent/school scoping as
+  `Routes::get`. The client checks `trips.driver_id` as an extra guard, but the server
+  remains the source of truth.
+- **Trip transitions:** `Trips::transition` now allows only `pending -> active`,
+  `active -> completed` and `pending/active -> cancelled`; anything else returns `409`.
+  Starting is rejected with `409` when the driver already has another active trip. After
+  every update the row is re-read to confirm the status actually changed (guards races),
+  and `cancel_trip` now has a status constraint too. `get`/`transition`/`delete` reject
+  non-numeric trip ids — previously an id like `12abc` produced an empty `WHERE` and
+  could act on the first row.
+- **UI:** `DriverHomeScreen` shows the trip type, bus, route, stops, a readiness checklist,
+  the current status and a clear start/end action. Errors from the server are localized
+  (`409` conflict, `403`, `404`, network, generic) and shown both as a banner and a
+  SnackBar. No GPS or sample trip data is used; an empty server result shows an explicit
+  "no trip scheduled" state. A trip with no stops shows a warning but does not fake data.
+- **Tests:** `flutter test` passes 55 tests. New coverage: `test/models_test.dart`,
+  `test/driver_controller_test.dart` (fake `DriverRepository`: pending, active, not-owned,
+  empty, start, `409`, end) and `test/driver_home_test.dart` (readiness, start, stops page,
+  empty state). `test/auth_session_expiry_test.dart` now also covers role persistence and
+  `attachProfile`. Existing widget tests use the debug DEV button because the real API is
+  not reachable offline.
+- **Known limitation:** `trips` has no dedicated trip-date column, so "today" is derived
+  from `created_at`. Add `trip_date` before scheduling more than one trip per day.
+- **Still blocked:** the live transition/conflict/authorization matrix and on-device check
+  need XAMPP (Apache/MySQL) running; only `php -l` and offline Flutter tests were possible.
+
 ## Known bugs / unfinished
 
 - NDK 28.2.13676358 is **installed** (2.12 GB) and `flutter build apk --debug`
@@ -286,7 +329,8 @@ Format: date, decision, reason, files affected.
   before Phase 4 is signed off.
 - Login screen still offers a clearly-labelled DEV shortcut, but real
   authentication (API-issued token, server password check, token expiry) is
-  implemented as of Phase 7; the DEV shortcut must be removed/hidden for release.
+  implemented as of Phase 7; the DEV shortcut is compiled only in debug builds
+  (`kDebugMode`) and must not be enabled for release.
 - Windows Developer Mode is now ON (registry
   `AllowDevelopmentWithoutDevLicense = 1`); plugin builds (symlinks) work.
 - Parent screens use labelled DEV fixtures. Real children, bus, GPS and map

@@ -219,5 +219,78 @@
 
   "profileSettingsSection": "Settings",
 
-  "languageDialogTitle": "Choose a language"
+  "languageDialogTitle": "Choose a language",
+
+  "loginErrorInvalid": "Phone number or password is incorrect.",
+  "loginErrorNetwork": "Could not reach the server. Check your connection and try again.",
+  "loginErrorGeneric": "Sign in failed. Please try again.",
+  "loginDevButton": "Sign in in test mode (DEV)",
+  "loginDevNotice": "TEST mode (DEV): this button uses a test token and sample data. It only appears in debug builds.",
+
+  "roleUnsupportedTitle": "This account is not supported yet",
+  "roleUnsupportedBody": "The page for this account will arrive in a later phase. For now you can sign in as a parent or driver.",
+  "roleLabel": "Account type",
+  "roleLabelParent": "Parent",
+  "roleLabelDriver": "Driver",
+  "roleLabelMatron": "Matron",
+  "roleLabelSchoolAdmin": "School admin",
+  "roleLabelSuperAdmin": "Super admin",
+  "roleLabelUnknown": "Unknown",
+
+  "driverHomeTitle": "Driver trips",
+  "driverHomeSubtitle": "Your assigned trip for today",
+  "driverGreeting": "Welcome, {name}",
+  "@driverGreeting": {
+    "description": "Greeting for the driver.",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "driverLoadingTrip": "Loading trip...",
+  "driverNoTripTitle": "No trip scheduled",
+  "driverNoTripSubtitle": "There is no active or scheduled trip for you right now. Pull down to refresh.",
+  "driverTripStatus": "Trip status",
+  "driverStatusPending": "Scheduled",
+  "driverStatusActive": "In progress",
+  "driverStatusCompleted": "Completed",
+  "driverStatusCancelled": "Cancelled",
+  "driverTripType": "Trip type",
+  "driverTripTypeMorning": "Morning",
+  "driverTripTypeAfternoon": "Afternoon",
+  "driverBus": "Bus",
+  "driverRoute": "Route",
+  "driverScheduledFor": "Created",
+  "driverStartedAt": "Started",
+  "driverEndedAt": "Ended",
+  "driverNoBus": "Bus unknown",
+  "driverNoRoute": "Route unknown",
+  "driverReadiness": "Trip readiness",
+  "driverReadyDriver": "This trip is assigned to you",
+  "driverReadyBus": "Bus is assigned",
+  "driverReadyRoute": "Route is loaded",
+  "driverReadyStops": "Stops are loaded",
+  "driverReadyStatus": "Trip is ready to start",
+  "driverReadyActive": "Trip is in progress",
+  "driverStartTrip": "Start trip",
+  "driverEndTrip": "End trip",
+  "driverViewStops": "Route stops",
+  "driverStopsTitle": "Route stops",
+  "driverStopsCount": "Stops: {count}",
+  "@driverStopsCount": {
+    "description": "Number of stops on the route.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "driverNoStops": "No stops have been set on this route.",
+  "driverStopNoCoordinates": "This stop has no location (GPS) set.",
+  "driverTripConflict": "The driver already has another active trip. End or cancel it first.",
+  "driverTripStarted": "Trip started.",
+  "driverTripEnded": "Trip completed. Thank you.",
+  "driverTripCompletedNote": "This trip is complete. Refresh to check for a new trip.",
+  "driverTripCancelledNote": "This trip was cancelled.",
+  "driverErrorNetwork": "Could not reach the server. Check your connection.",
+  "driverErrorForbidden": "You are not allowed to view this trip.",
+  "driverErrorNotFound": "The trip, bus or route could not be found.",
+  "driverServerError": "The server failed. Please try again."
 }

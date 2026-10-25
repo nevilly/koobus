@@ -12,8 +12,6 @@ import 'package:koobus/core/storage/language_service.dart';
 import 'package:koobus/core/storage/secure_session_service.dart';
 import 'package:koobus/core/storage/session_service.dart';
 import 'package:koobus/l10n/app_localizations.dart';
-import 'package:koobus/l10n/app_localizations_sw.dart';
-import 'package:koobus/l10n/app_localizations_en.dart';
 import 'package:koobus/features/parent/screens/parent_shell.dart';
 import 'package:koobus/features/parent/screens/tabs/home_tab.dart';
 import 'package:koobus/features/parent/screens/tabs/profile_tab.dart';

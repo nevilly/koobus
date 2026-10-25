@@ -521,5 +521,78 @@
   "languageDialogTitle": "Chagua lugha",
   "@languageDialogTitle": {
     "description": "Kichwa cha dialog ya kuchagua lugha."
-  }
+  },
+
+  "loginErrorInvalid": "Namba ya simu au nenosiri si sahihi.",
+  "loginErrorNetwork": "Imeshindikana kuunganisha na server. Angalia mtandao na ujaribu tena.",
+  "loginErrorGeneric": "Kuingia hakukufanikiwa. Jaribu tena.",
+  "loginDevButton": "Ingia kwa hali ya majaribio (DEV)",
+  "loginDevNotice": "Hali ya MAJARIBIO (DEV): kitufe hiki kinatumia token ya majaribio na data ya mfano. Kinaonekana kwenye debug build pekee.",
+
+  "roleUnsupportedTitle": "Akaunti hii bado haitumiki",
+  "roleUnsupportedBody": "Ukurasa wa akaunti hii utaongezwa hatua zijazo. Kwa sasa unaweza kuingia kama mzazi au dereva.",
+  "roleLabel": "Aina ya akaunti",
+  "roleLabelParent": "Mzazi",
+  "roleLabelDriver": "Dereva",
+  "roleLabelMatron": "Matron",
+  "roleLabelSchoolAdmin": "Msimamizi wa shule",
+  "roleLabelSuperAdmin": "Msimamizi mkuu",
+  "roleLabelUnknown": "Haijulikani",
+
+  "driverHomeTitle": "Safari ya dereva",
+  "driverHomeSubtitle": "Safari uliyopangiwa leo",
+  "driverGreeting": "Karibu, {name}",
+  "@driverGreeting": {
+    "description": "Salamu kwa dereva.",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "driverLoadingTrip": "Inapakia safari...",
+  "driverNoTripTitle": "Hakuna safari iliyopangwa",
+  "driverNoTripSubtitle": "Hakuna safari inayoendelea au iliyopangwa kwako kwa sasa. Vuta chini kuonyesha upya.",
+  "driverTripStatus": "Hali ya safari",
+  "driverStatusPending": "Imepangwa",
+  "driverStatusActive": "Inaendelea",
+  "driverStatusCompleted": "Imekamilika",
+  "driverStatusCancelled": "Imeghairiwa",
+  "driverTripType": "Aina ya safari",
+  "driverTripTypeMorning": "Asubuhi",
+  "driverTripTypeAfternoon": "Mchana",
+  "driverBus": "Basi",
+  "driverRoute": "Route",
+  "driverScheduledFor": "Imeundwa",
+  "driverStartedAt": "Ilianza",
+  "driverEndedAt": "Ilikamilika",
+  "driverNoBus": "Basi halijulikani",
+  "driverNoRoute": "Route haijulikani",
+  "driverReadiness": "Utayari wa safari",
+  "driverReadyDriver": "Wewe umepewa safari hii",
+  "driverReadyBus": "Basi limepangwa",
+  "driverReadyRoute": "Route imepakiwa",
+  "driverReadyStops": "Vituo vimepakiwa",
+  "driverReadyStatus": "Safari iko tayari kuanza",
+  "driverReadyActive": "Safari inaendelea",
+  "driverStartTrip": "Anza safari",
+  "driverEndTrip": "Maliza safari",
+  "driverViewStops": "Vituo vya route",
+  "driverStopsTitle": "Vituo vya route",
+  "driverStopsCount": "Vituo {count}",
+  "@driverStopsCount": {
+    "description": "Idadi ya vituo kwenye route.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "driverNoStops": "Hakuna vituo vilivyowekwa kwenye route hii.",
+  "driverStopNoCoordinates": "Kituo hiki hakina mahali (GPS) kilichowekwa.",
+  "driverTripConflict": "Dereva ana safari nyingine inayoendelea. Maliza au ghairi kwanza.",
+  "driverTripStarted": "Safari imeanza.",
+  "driverTripEnded": "Safari imekamilika. Asante.",
+  "driverTripCompletedNote": "Safari hii imekamilika. Onyesha upya kama kuna safari mpya.",
+  "driverTripCancelledNote": "Safari hii imeghairiwa.",
+  "driverErrorNetwork": "Imeshindikana kuunganisha na server. Angalia mtandao.",
+  "driverErrorForbidden": "Huna ruhusa kuona safari hii.",
+  "driverErrorNotFound": "Safari, basi au route haipatikani.",
+  "driverServerError": "Server imeshindikana. Jaribu tena."
 }

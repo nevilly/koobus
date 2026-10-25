@@ -15,10 +15,12 @@ class StoredSession {
     required this.token,
     required this.phone,
     this.expiresAt,
+    this.role,
+    this.userId,
+    this.displayName,
   });
 
-  /// Token ya kuingia. Kwa sasa ni thamani ya majaribio (DEV ONLY) —
-  /// baada ya Phase 7 kutoka kwenye API halisi.
+  /// Token ya kuingia kutoka API (au token ya majaribio ya DEV).
   final String token;
 
   /// Namba ya simu ya mtumiaji (kwa kuonyesha home screen).
@@ -28,6 +30,17 @@ class StoredSession {
   ///
   /// `null` = haijulikani; tunategemea jibu la 401 kutoka API.
   final DateTime? expiresAt;
+
+  /// Role ya mtumiaji (`parent`, `driver`, `matron`, `school_admin`,
+  /// `super_admin`). Inahifadhiwa ili app ijue pa kumpeleka mtumiaji
+  /// bila kuomba API kila inapofunguliwa.
+  final String? role;
+
+  /// `users.id` — dereva anaitumia kuomba safari zake.
+  final int? userId;
+
+  /// Jina la kuonyesha kwenye salamu.
+  final String? displayName;
 
   /// Je, token imeisha muda kwa wakati huu?
   bool get isExpired {
@@ -40,16 +53,23 @@ class StoredSession {
         'token': token,
         'phone': phone,
         if (expiresAt != null) 'expiresAt': expiresAt!.toUtc().toIso8601String(),
+        if (role != null) 'role': role,
+        if (userId != null) 'userId': userId,
+        if (displayName != null) 'displayName': displayName,
       };
 
   factory StoredSession.fromJson(Map<String, dynamic> json) {
     final rawExpiry = json['expiresAt'] as String?;
+    final rawUserId = json['userId'];
     return StoredSession(
       // as String? to '?? ''': kama field haipo, tusipate crash —
       // session itachukuliwa kama si sahihi na mtu atafanywa aingie tena.
       token: json['token'] as String? ?? '',
       phone: json['phone'] as String? ?? '',
       expiresAt: rawExpiry == null ? null : DateTime.tryParse(rawExpiry)?.toUtc(),
+      role: json['role'] as String?,
+      userId: rawUserId is num ? rawUserId.toInt() : int.tryParse('$rawUserId'),
+      displayName: json['displayName'] as String?,
     );
   }
 }

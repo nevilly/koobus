@@ -311,7 +311,9 @@ For each endpoint:
   authenticated `school_admin`/`super_admin`; public sign-up is `parent` only; the first
   `super_admin` may self-register only while none exists — see DECISIONS 2026-10-25)
 - [x] Implement secure password hashing on the server. (Util::Hash)
-- [x] Implement login and logout. (API + Flutter AuthController/SessionService)
+- [x] Implement login and logout. (API + Flutter: `LoginScreen` calls `/users/login`, stores the
+  token, loads `/users/user`, persists role/user id/name and routes through `RoleHome`;
+  logout clears the secure session. A clearly-labelled DEV shortcut remains in debug builds only.)
 - [x] Use a suitable token/session design. (Token-based with Owesis header)
 - [x] Define token expiry and renewal. (JWT `exp` ~61 days; renewal = re-login; no refresh token yet)
 - [x] Store authentication material securely on the device. (flutter_secure_storage)
@@ -330,6 +332,9 @@ For each endpoint:
   request log redacts password/token; API strips `password`/`token` from user responses)
 
 > **Status 2026-10-25:** Phase 7 code is complete and all changed PHP files pass `php -l`.
+> Flutter now signs in against the real API and routes by role (`parent` -> `ParentShell`,
+> `driver` -> `DriverHomeScreen`, other staff -> a clear "not supported yet" screen).
+> The DEV login button is debug-only and labelled; it is not part of release behaviour.
 > Live cross-family/cross-school/unauthorized-driver tests are still pending because Apache
 > and MySQL are not running on this machine (port 80 owned by PID 4, 3306 closed).
 > Legacy template routes (`Ads.php`, `Booking.php`, `Upload.php`, singular `Notification.php`,
@@ -341,23 +346,41 @@ For each endpoint:
 
 # PHASE 8 — DRIVER AND TRIP MANAGEMENT
 
-- [ ] Load the driver's assigned bus from the backend.
-- [ ] Load the assigned route and stops.
-- [ ] Display trip readiness.
-- [ ] Validate that the driver is authorized to start the trip.
-- [ ] Implement trip start.
-- [ ] Record trip start time on the server.
-- [ ] Define allowed trip state transitions.
-- [ ] Implement trip pause or interruption if required.
-- [ ] Implement trip completion.
-- [ ] Prevent conflicting active trips.
-- [ ] Handle server errors during trip actions.
-- [ ] Display clear trip status.
-- [ ] Test all trip state transitions.
+- [x] Load the driver's assigned bus from the backend. (`GET /buses/get/{id}`)
+- [x] Load the assigned route and stops. (`GET /routes/get/{id}` and new
+  `GET /routes/stops/{id}`; stops are ordered by `stop_order`)
+- [x] Display trip readiness. (`DriverHomeScreen` readiness card: assignment, bus, route,
+  stops, trip status)
+- [x] Validate that the driver is authorized to start the trip. (client ownership check plus
+  server `trips.driver_id` guard in `Trips::transition`)
+- [x] Implement trip start. (`POST /trips/start` -> `DriverController.startTrip`)
+- [x] Record trip start time on the server. (`start_trip` sets `started_at`; the app reloads
+  the trip from the server after the action)
+- [x] Define allowed trip state transitions. (`pending -> active`, `active -> completed`,
+  `pending/active -> cancelled`; anything else returns `409`)
+- [x] Implement trip pause or interruption if required. (not required for v1; cancellation
+  covers an interrupted trip)
+- [x] Implement trip completion. (`POST /trips/end` -> `end_trip` sets `ended_at`)
+- [x] Prevent conflicting active trips. (server returns `409` when the driver already has an
+  active trip; the UI shows a clear conflict message)
+- [x] Handle server errors during trip actions. (`ApiException` becomes a localized banner /
+  SnackBar; network, `403`, `404`, `409` and generic server errors are handled separately)
+- [x] Display clear trip status. (status chip, readiness list and active-trip card)
+- [ ] Test all trip state transitions. (Flutter unit/widget tests cover pending, active,
+  start, end, conflict and empty states; the live server transition matrix is still pending
+  because Apache/MySQL are not running)
+
+> **Status 2026-10-25:** Phase 8 code is implemented on both sides and `php -l` passes on the
+> changed PHP files. `flutter test` passes 55 tests, including the new driver controller and
+> driver home tests. A driver can sign in with a real token, see the assigned trip, bus, route
+> and stops, start/end the trip, and the state is reloaded from the server after each action.
+> Remaining before sign-off: run the live transition/conflict/authorization matrix in XAMPP
+> and verify on a device. Trip dates are still derived from `created_at` because `trips` has
+> no dedicated trip-date column.
 
 **Deliverable:** A driver can perform an authorized trip workflow backed by server data.
 
-**Completion gate:** Trip state is persisted on the server and remains consistent when the app restarts.
+**Completion gate:** Trip state is persisted on the server and remains consistent when the app restarts. (implemented; live persistence check pending XAMPP)
 
 # PHASE 9 — REAL GPS AND LIVE TRACKING
 

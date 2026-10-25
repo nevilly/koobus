@@ -114,6 +114,38 @@ class Routes extends RoutesController
         return array('status'=>404,'payload'=>"Not found");
     }
 
+    /**
+     * KOO_BUS_ADAPT: vituo vya route (route_stops) kwa dereva/mzazi.
+     * URL: /api/v1/routes/stops/{route_id}
+     */
+    public function stops($params=''){
+        if($this->clean->Method() !== "GET")
+            return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $resUser) = AuthGuard::requireAny();
+        if(!$ok) return $resUser;
+        $user = $resUser;
+
+        $p = parent::decode($params);
+        $id = isset($p->page) ? $p->page : '';
+        if($id === '' || !is_numeric($id))
+            return array('status'=>400,'payload'=>"route_id is required");
+
+        if($this->roleOf($user) == 'parent' && isset($user->id)){
+            $routeIds = $this->parentRouteIds($user->id);
+            if(!in_array(intval($id), $routeIds)){
+                return array('status'=>403,'payload'=>"Forbidden");
+            }
+        } elseif(!Tenant::isSuperAdmin($user)){
+            $scope = Tenant::schoolIdOfUser($user);
+            if($scope <= 0 || Tenant::routeSchoolId($id) !== $scope)
+                return array('status'=>403,'payload'=>"Forbidden");
+        }
+
+        $res = parent::get_stops($id);
+        if($res) return array('status'=>200,'payload'=>$res);
+        return array('status'=>204,'payload'=>http::message(204));
+    }
+
     public function by_school($params=''){
         if($this->clean->Method() !== "GET")
             return array('status'=>403,'payload'=>"Unauthorized Access");
