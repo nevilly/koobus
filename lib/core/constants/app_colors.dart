@@ -49,4 +49,23 @@ class AppColors {
 
   /// Kosa / hatari / basi halipo.
   static const Color danger = Color(0xFFC62828);
+
+  // ---- Rangi za dashibodi ya dereva ----
+  // Dashibodi ya dereva inatumia mandhari ya giza (kama ramani ya usiku)
+  // ili dereva aweze kuiona kwa haraka wakati wa safari.
+
+  /// Background ya dashibodi ya dereva.
+  static const Color driverBackground = Color(0xFF0B1220);
+
+  /// Kadi na bottom navigation ya dereva.
+  static const Color driverSurface = Color(0xFF161F2E);
+
+  /// Rangi nyepesi kwa vitu vilivyoinuliwa kwenye dashibodi ya dereva.
+  static const Color driverSurfaceLight = Color(0xFF243044);
+
+  /// Maandishi kwenye mandhari ya giza ya dereva.
+  static const Color driverOnSurface = Color(0xFFF8FAFC);
+
+  /// Maandishi ya pili kwenye mandhari ya giza ya dereva.
+  static const Color driverOnSurfaceMuted = Color(0xFFB6C2D2);
 }

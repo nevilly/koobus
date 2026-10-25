@@ -548,6 +548,35 @@
       "name": { "type": "String" }
     }
   },
+  "driverNavHome": "Nyumbani",
+  "@driverNavHome": {
+    "description": "Tab ya nyumbani kwenye bottom navigation ya dereva."
+  },
+  "driverNavStudents": "Wanafunzi",
+  "@driverNavStudents": {
+    "description": "Tab ya wanafunzi kwenye bottom navigation ya dereva."
+  },
+  "driverNavMap": "Ramani",
+  "@driverNavMap": {
+    "description": "Tab ya ramani kwenye bottom navigation ya dereva."
+  },
+  "driverNavProfile": "Wasifu",
+  "@driverNavProfile": {
+    "description": "Tab ya wasifu kwenye bottom navigation ya dereva."
+  },
+  "driverNextStop": "Kituo kifuatacho",
+  "driverNoNextStop": "Hakuna kituo kilichowekwa",
+  "driverStopsShort": "Vituo",
+  "driverTripTypeShort": "Aina",
+  "driverTripDetails": "Taarifa za safari",
+  "driverStudentsEmptyTitle": "Orodha ya wanafunzi inakuja",
+  "driverStudentsEmptySubtitle": "Tutaunganisha wanafunzi wa safari hii na API ya manifest. Hakuna orodha ya mfano.",
+  "driverStudentsOrderNote": "Wanafunzi watapangwa kwa kituo cha kushuka: wa kwanza kushuka aonekane kwanza.",
+  "driverMapEmptyTitle": "Ramani na GPS inakuja",
+  "driverMapEmptySubtitle": "Tutaunganisha eneo halisi la basi na vituo. Hakuna GPS ya kufikirika.",
+  "driverMapNote": "Ramani itatumia data halisi ya route na eneo la basi.",
+  "driverProfileSection": "Taarifa za dereva",
+  "driverProfileNotice": "Taarifa hizi zinatoka kwenye akaunti yako ya dereva.",
   "driverLoadingTrip": "Inapakia safari...",
   "driverNoTripTitle": "Hakuna safari iliyopangwa",
   "driverNoTripSubtitle": "Hakuna safari inayoendelea au iliyopangwa kwako kwa sasa. Vuta chini kuonyesha upya.",

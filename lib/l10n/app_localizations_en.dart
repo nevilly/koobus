@@ -398,6 +398,62 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get driverNavHome => 'Home';
+
+  @override
+  String get driverNavStudents => 'Students';
+
+  @override
+  String get driverNavMap => 'Map';
+
+  @override
+  String get driverNavProfile => 'Profile';
+
+  @override
+  String get driverNextStop => 'Next stop';
+
+  @override
+  String get driverNoNextStop => 'No stop set';
+
+  @override
+  String get driverStopsShort => 'Stops';
+
+  @override
+  String get driverTripTypeShort => 'Type';
+
+  @override
+  String get driverTripDetails => 'Trip details';
+
+  @override
+  String get driverStudentsEmptyTitle => 'Student list coming next';
+
+  @override
+  String get driverStudentsEmptySubtitle =>
+      'We will connect this trip\'s students to the manifest API. There is no sample list.';
+
+  @override
+  String get driverStudentsOrderNote =>
+      'Students will be ordered by drop-off stop: the next student off appears first.';
+
+  @override
+  String get driverMapEmptyTitle => 'Map and GPS coming next';
+
+  @override
+  String get driverMapEmptySubtitle =>
+      'We will connect the real bus location and stops. There is no simulated GPS.';
+
+  @override
+  String get driverMapNote =>
+      'The map will use real route and bus location data.';
+
+  @override
+  String get driverProfileSection => 'Driver details';
+
+  @override
+  String get driverProfileNotice =>
+      'These details come from your driver account.';
+
+  @override
   String get driverLoadingTrip => 'Loading trip...';
 
   @override

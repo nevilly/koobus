@@ -3,6 +3,10 @@
 // Hii ni sehemu ya DriverHomeScreen (si route tofauti) kwa sababu
 // inahitaji controller moja: muda wa kuanza, hali, na kitendo cha
 // kumaliza safari.
+//
+// Kitufe cha kumaliza safari sasa kiko kwenye sticky action bar ya
+// DriverHomeScreen. Kadi hii inaonyesha muhtasari tu; `onEnd` inabaki
+// kama hiari kwa screen nyingine zinazotaka kitufe ndani ya kadi.
 
 import 'package:flutter/material.dart';
 
@@ -59,14 +63,16 @@ class ActiveTripCard extends StatelessWidget {
             '${l10n.driverStartedAt}: ${formatDateTime(trip.startedAt)}',
             style: textTheme.bodyMedium,
           ),
-          const SizedBox(height: AppSpacing.md),
-          AppButton(
-            key: const Key('end_trip_button'),
-            label: l10n.driverEndTrip,
-            icon: Icons.stop_circle_outlined,
-            loading: busy,
-            onPressed: busy ? null : onEnd,
-          ),
+          if (onEnd != null) ...[
+            const SizedBox(height: AppSpacing.md),
+            AppButton(
+              key: const Key('end_trip_button'),
+              label: l10n.driverEndTrip,
+              icon: Icons.stop_circle_outlined,
+              loading: busy,
+              onPressed: busy ? null : onEnd,
+            ),
+          ],
         ],
       ),
     );

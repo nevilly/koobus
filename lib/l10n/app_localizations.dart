@@ -770,6 +770,108 @@ abstract class AppLocalizations {
   /// **'Karibu, {name}'**
   String driverGreeting(String name);
 
+  /// Tab ya nyumbani kwenye bottom navigation ya dereva.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nyumbani'**
+  String get driverNavHome;
+
+  /// Tab ya wanafunzi kwenye bottom navigation ya dereva.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wanafunzi'**
+  String get driverNavStudents;
+
+  /// Tab ya ramani kwenye bottom navigation ya dereva.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ramani'**
+  String get driverNavMap;
+
+  /// Tab ya wasifu kwenye bottom navigation ya dereva.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wasifu'**
+  String get driverNavProfile;
+
+  /// No description provided for @driverNextStop.
+  ///
+  /// In sw, this message translates to:
+  /// **'Kituo kifuatacho'**
+  String get driverNextStop;
+
+  /// No description provided for @driverNoNextStop.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna kituo kilichowekwa'**
+  String get driverNoNextStop;
+
+  /// No description provided for @driverStopsShort.
+  ///
+  /// In sw, this message translates to:
+  /// **'Vituo'**
+  String get driverStopsShort;
+
+  /// No description provided for @driverTripTypeShort.
+  ///
+  /// In sw, this message translates to:
+  /// **'Aina'**
+  String get driverTripTypeShort;
+
+  /// No description provided for @driverTripDetails.
+  ///
+  /// In sw, this message translates to:
+  /// **'Taarifa za safari'**
+  String get driverTripDetails;
+
+  /// No description provided for @driverStudentsEmptyTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Orodha ya wanafunzi inakuja'**
+  String get driverStudentsEmptyTitle;
+
+  /// No description provided for @driverStudentsEmptySubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tutaunganisha wanafunzi wa safari hii na API ya manifest. Hakuna orodha ya mfano.'**
+  String get driverStudentsEmptySubtitle;
+
+  /// No description provided for @driverStudentsOrderNote.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wanafunzi watapangwa kwa kituo cha kushuka: wa kwanza kushuka aonekane kwanza.'**
+  String get driverStudentsOrderNote;
+
+  /// No description provided for @driverMapEmptyTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ramani na GPS inakuja'**
+  String get driverMapEmptyTitle;
+
+  /// No description provided for @driverMapEmptySubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tutaunganisha eneo halisi la basi na vituo. Hakuna GPS ya kufikirika.'**
+  String get driverMapEmptySubtitle;
+
+  /// No description provided for @driverMapNote.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ramani itatumia data halisi ya route na eneo la basi.'**
+  String get driverMapNote;
+
+  /// No description provided for @driverProfileSection.
+  ///
+  /// In sw, this message translates to:
+  /// **'Taarifa za dereva'**
+  String get driverProfileSection;
+
+  /// No description provided for @driverProfileNotice.
+  ///
+  /// In sw, this message translates to:
+  /// **'Taarifa hizi zinatoka kwenye akaunti yako ya dereva.'**
+  String get driverProfileNotice;
+
   /// No description provided for @driverLoadingTrip.
   ///
   /// In sw, this message translates to:

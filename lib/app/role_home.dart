@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import 'package:koobus/controllers/auth_controller.dart';
 import 'package:koobus/features/auth/screens/unsupported_role_screen.dart';
-import 'package:koobus/features/driver/screens/driver_home_screen.dart';
+import 'package:koobus/features/driver/screens/driver_shell.dart';
 import 'package:koobus/features/parent/screens/parent_shell.dart';
 import 'package:koobus/models/user_model.dart';
 
@@ -25,7 +25,7 @@ class RoleHome extends StatelessWidget {
       case UserRole.parent:
         return const ParentShell();
       case UserRole.driver:
-        return const DriverHomeScreen();
+        return const DriverShell();
       case UserRole.matron:
       case UserRole.schoolAdmin:
       case UserRole.superAdmin:

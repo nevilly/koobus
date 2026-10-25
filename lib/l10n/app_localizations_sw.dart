@@ -398,6 +398,62 @@ class AppLocalizationsSw extends AppLocalizations {
   }
 
   @override
+  String get driverNavHome => 'Nyumbani';
+
+  @override
+  String get driverNavStudents => 'Wanafunzi';
+
+  @override
+  String get driverNavMap => 'Ramani';
+
+  @override
+  String get driverNavProfile => 'Wasifu';
+
+  @override
+  String get driverNextStop => 'Kituo kifuatacho';
+
+  @override
+  String get driverNoNextStop => 'Hakuna kituo kilichowekwa';
+
+  @override
+  String get driverStopsShort => 'Vituo';
+
+  @override
+  String get driverTripTypeShort => 'Aina';
+
+  @override
+  String get driverTripDetails => 'Taarifa za safari';
+
+  @override
+  String get driverStudentsEmptyTitle => 'Orodha ya wanafunzi inakuja';
+
+  @override
+  String get driverStudentsEmptySubtitle =>
+      'Tutaunganisha wanafunzi wa safari hii na API ya manifest. Hakuna orodha ya mfano.';
+
+  @override
+  String get driverStudentsOrderNote =>
+      'Wanafunzi watapangwa kwa kituo cha kushuka: wa kwanza kushuka aonekane kwanza.';
+
+  @override
+  String get driverMapEmptyTitle => 'Ramani na GPS inakuja';
+
+  @override
+  String get driverMapEmptySubtitle =>
+      'Tutaunganisha eneo halisi la basi na vituo. Hakuna GPS ya kufikirika.';
+
+  @override
+  String get driverMapNote =>
+      'Ramani itatumia data halisi ya route na eneo la basi.';
+
+  @override
+  String get driverProfileSection => 'Taarifa za dereva';
+
+  @override
+  String get driverProfileNotice =>
+      'Taarifa hizi zinatoka kwenye akaunti yako ya dereva.';
+
+  @override
   String get driverLoadingTrip => 'Inapakia safari...';
 
   @override

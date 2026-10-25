@@ -83,22 +83,10 @@ void main() {
     expect(find.text('Utayari wa safari'), findsOneWidget);
     expect(find.text('Vituo vimepakiwa'), findsOneWidget);
 
-    // Kitufe kiko chini ya orodha — sogeza hadi kionekane.
-    await tester.scrollUntilVisible(
-      find.byKey(const Key('start_trip_button')),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-
+    // Start/End route ziko kwenye sticky action bar — zinaonekana
+    // bila kusogeza list.
+    expect(find.byKey(const Key('start_trip_button')), findsOneWidget);
     await tester.tap(find.byKey(const Key('start_trip_button')));
-    await tester.pumpAndSettle();
-
-    await tester.scrollUntilVisible(
-      find.text('Maliza safari'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
     await tester.pumpAndSettle();
 
     expect(find.text('Maliza safari'), findsOneWidget);
@@ -123,13 +111,6 @@ void main() {
     );
 
     await tester.pumpWidget(_wrap(controller));
-    await tester.pumpAndSettle();
-
-    await tester.scrollUntilVisible(
-      find.byKey(const Key('end_trip_button')),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('end_trip_button')));
