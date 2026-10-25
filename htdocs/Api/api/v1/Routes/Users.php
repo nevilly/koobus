@@ -21,7 +21,7 @@ class Users extends UsersController
         $this->clean = new Util();
         $this->data = parent::decode(file_get_contents("php://input"));
 
-        $this->key = getenv("SECRET");
+        $this->key = koobus_env("SECRET");
     }
 
     /**
@@ -470,8 +470,8 @@ class Users extends UsersController
 
                 try {
                     $new_password = substr(Util::generate_key(),0,8);
-                    $appName = getenv("APP_NAME") ?: 'KooBus';
-                    $from = getenv("mail") ?: '';
+                    $appName = koobus_env("APP_NAME") ?: 'KooBus';
+                    $from = koobus_env("mail") ?: '';
 
                     if(parent::reset_password(parent::encode(array('p'=>Util::Hash($new_password),'u'=>$id)))){
                         $sub = "Password reset request!";

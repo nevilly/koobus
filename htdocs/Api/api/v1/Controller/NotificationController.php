@@ -17,8 +17,8 @@ private $apiUrl, $apiKey;
     {
         parent::__construct();
 
-        $this->apiUrl = getenv("apiUrl");
-        $this->apiKey = getenv("apiKey");
+        $this->apiUrl = koobus_env("apiUrl");
+        $this->apiKey = koobus_env("apiKey");
     }
 
     /**

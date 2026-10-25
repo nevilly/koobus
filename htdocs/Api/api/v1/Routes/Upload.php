@@ -10,7 +10,7 @@ class Upload {
         $this->clean = new Util();
         $this->data = isset($_FILES) && count($_FILES) > 0 ? $_FILES : '';
 
-        $this->key = getenv("SECRET");
+        $this->key = koobus_env("SECRET");
     }
 
     public function upload(){

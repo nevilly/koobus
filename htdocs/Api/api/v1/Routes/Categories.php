@@ -17,7 +17,7 @@ class Categories extends CategoriesController
         $this->clean = new Util();
         $this->data = isset($_POST) && count($_POST) > 0 ? parent::decode(parent::encode($_POST)) : parent::decode(file_get_contents("php://input"));
 
-        $this->key = getenv("SECRET");
+        $this->key = koobus_env("SECRET");
     }
 
     public function add_category(){

@@ -2,6 +2,24 @@
 
 include_once __DIR__ . "/../Controller/CartController.php";
 
+// KOO_BUS_ADAPT: env helper inayotumia request-level values kutoka DotRD.
+// getenv() pekee haifai kwenye Apache ya Windows yenye threads.
+if (!function_exists('koobus_env')) {
+    function koobus_env($key, $default = null) {
+        if (array_key_exists($key, $GLOBALS['KOO_ENV'] ?? array())) {
+            return $GLOBALS['KOO_ENV'][$key];
+        }
+        if (array_key_exists($key, $_ENV)) {
+            return $_ENV[$key];
+        }
+        if (array_key_exists($key, $_SERVER)) {
+            return $_SERVER[$key];
+        }
+        $value = getenv($key);
+        return $value === false ? $default : $value;
+    }
+}
+
 class Util
 {
     public static $token;
@@ -412,7 +430,7 @@ class Util
     public static function tokenValidate($token = ''){
 
       // get the local secret key
-        $secret = getenv('SECRET');
+        $secret = koobus_env('SECRET');
 
         $token = !empty($token) ? $token : Util::getToken();
 
@@ -541,7 +559,7 @@ class Util
      * @return array|false|string
      */
     public static function app(){
-        return getenv('app_name');
+        return koobus_env('app_name');
     }
 
     /**
@@ -558,7 +576,7 @@ class Util
     public static function Mailer($from,$email,$subject,$message,$username = '',
                            $file ='',$filename = "fr.pdf",$ccc = false){
 
-        $appName = getenv('APP_NAME');
+        $appName = koobus_env('APP_NAME');
         include_once __DIR__.'/../PHPMailer/src/Exception.php';
         include_once __DIR__.'/../PHPMailer/src/PHPMailer.php';
         include_once __DIR__.'/../PHPMailer/src/SMTP.php';

@@ -25,12 +25,12 @@ class Payment extends PaymentController
         $this->clean = new Util();
         $this->data = isset($_POST) && count($_POST) > 0 ? parent::decode(parent::encode($_POST)) : parent::decode(file_get_contents("php://input"));
 
-        $this->key = getenv("SECRET");
-        $this->vendor = getenv("pay_bill");
-        $this->api = getenv("api");
-        $this->api1 = getenv("api2");
-        $this->private_key = getenv("private_key");
-        $this->public_key = getenv("public_key");
+        $this->key = koobus_env("SECRET");
+        $this->vendor = koobus_env("pay_bill");
+        $this->api = koobus_env("api");
+        $this->api1 = koobus_env("api2");
+        $this->private_key = koobus_env("private_key");
+        $this->public_key = koobus_env("public_key");
     }
 
     public function make_payment(){

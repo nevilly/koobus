@@ -247,7 +247,7 @@ class HTTP{
         // kwenye request.txt. Sasa:
         //  - production haifanyi verbose logging kabisa;
         //  - fields nyeti zinabadilishwa kuwa `***`.
-        $appEnv = getenv('APP_ENV') ?: 'development';
+        $appEnv = koobus_env('APP_ENV') ?: 'development';
         $isProduction = $appEnv === 'production';
 
         if(!$isProduction){

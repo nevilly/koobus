@@ -14,7 +14,7 @@ use DotRD\DotRD;
 
 // KOO_BUS_ADAPT: APP_ENV inasomwa BAADA ya .rd kupakiwa, ili
 // APP_ENV=production kwenye .rd ifanye kazi.
-$appEnv = getenv('APP_ENV') ?: 'development';
+$appEnv = koobus_env('APP_ENV') ?: 'development';
 error_reporting(E_ALL);
 ini_set('log_errors', '1');
 ini_set('display_errors', $appEnv === 'production' ? '0' : '1');

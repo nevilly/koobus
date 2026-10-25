@@ -38,11 +38,17 @@ class DotRD
             $name = trim($name);
             $value = trim($value);
 
+            // KOO_BUS_ADAPT: HATUTUMII putenv() hapa.
+            // Apache/Windows hutumia threads; putenv() ni process-wide na
+            // inaweza kusababisha getenv() kurudisha tupu kwa request nyingine
+            // inayotumika kwa wakati mmoja. Tunahifadhi values kwenye
+            // request-level superglobals + KOO_ENV, na koobus_env() ndiyo
+            // inayosoma. Hii inaondoa race ya 401 za nasibu.
             if (!array_key_exists($name, $_SERVER) && !array_key_exists($name, $_ENV)) {
-                putenv(sprintf('%s=%s', $name, $value));
                 $_ENV[$name] = $value;
                 $_SERVER[$name] = $value;
             }
+            $GLOBALS['KOO_ENV'][$name] = $value;
         }
     }
 }
