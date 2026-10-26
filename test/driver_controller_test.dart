@@ -32,6 +32,9 @@ TripModel _trip({
   int driverId = 7,
   TripStatus status = TripStatus.pending,
   DateTime? createdAt,
+  DateTime? scheduledAt,
+  bool startedEarly = false,
+  String? earlyStartReason,
 }) {
   return TripModel(
     id: id,
@@ -41,6 +44,9 @@ TripModel _trip({
     tripType: 'morning',
     status: status,
     createdAt: createdAt ?? DateTime.now(),
+    scheduledAt: scheduledAt,
+    startedEarly: startedEarly,
+    earlyStartReason: earlyStartReason,
   );
 }
 
@@ -155,6 +161,132 @@ void main() {
     expect(controller.trip?.isActive, isTrue);
     expect(controller.trip?.startedAt, isNotNull);
     expect(controller.canEnd, isTrue);
+  });
+
+  test('safari ya baadaye inafunguka saa moja kabla', () async {
+    final now = DateTime(2026, 10, 27, 6, 30);
+    final repository = FakeDriverRepository(
+      trips: [_trip(scheduledAt: DateTime(2026, 10, 27, 8, 0))],
+      route: _route,
+      bus: _bus,
+      stops: _stops,
+    );
+    final controller = DriverController(
+      repository: repository,
+      driverId: 7,
+      clock: () => now,
+    );
+    await controller.load();
+
+    expect(controller.canStart, isFalse);
+    expect(controller.canEmergencyStart, isTrue);
+    expect(controller.startWindowAt, DateTime(2026, 10, 27, 7, 0));
+    expect(controller.timeUntilStartWindow, const Duration(minutes: 30));
+
+    final atWindow = DriverController(
+      repository: repository,
+      driverId: 7,
+      clock: () => DateTime(2026, 10, 27, 7, 1),
+    );
+    await atWindow.load();
+    expect(atWindow.canStart, isTrue);
+    expect(atWindow.canEmergencyStart, isFalse);
+  });
+
+  test('kuanza kwa dharura kunatuma sababu kwa server', () async {
+    final repository = FakeDriverRepository(
+      trips: [_trip(scheduledAt: DateTime(2026, 10, 27, 8, 0))],
+      route: _route,
+      bus: _bus,
+      stops: _stops,
+    );
+    final controller = DriverController(
+      repository: repository,
+      driverId: 7,
+      clock: () => DateTime(2026, 10, 27, 6, 0),
+    );
+    await controller.load();
+
+    expect(controller.canStart, isFalse);
+    expect(controller.canEmergencyStart, isTrue);
+
+    final ok = await controller.startTrip(
+      emergency: true,
+      reason: 'Wanafunzi wametolewa mapema',
+    );
+
+    expect(ok, isTrue);
+    expect(repository.startCalls, 1);
+    expect(repository.lastStartEmergency, isTrue);
+    expect(repository.lastStartReason, 'Wanafunzi wametolewa mapema');
+    expect(controller.trip?.isActive, isTrue);
+    expect(controller.trip?.startedEarly, isTrue);
+  });
+
+  test('kuanza kwa dharura hakuruhusiwi siku nyingine', () async {
+    final repository = FakeDriverRepository(
+      trips: [_trip(scheduledAt: DateTime(2026, 10, 28, 8, 0))],
+      route: _route,
+      bus: _bus,
+      stops: _stops,
+    );
+    final controller = DriverController(
+      repository: repository,
+      driverId: 7,
+      clock: () => DateTime(2026, 10, 27, 8, 0),
+    );
+    await controller.load();
+
+    expect(controller.canStart, isFalse);
+    expect(controller.canEmergencyStart, isFalse);
+    final ok = await controller.startTrip(emergency: true, reason: 'Dharura');
+    expect(ok, isFalse);
+    expect(repository.startCalls, 0);
+  });
+
+  test('baada ya kumaliza, dereva anaona safari inayofuata', () async {
+    final now = DateTime(2026, 10, 27, 7, 0);
+    final repository = FakeDriverRepository(
+      trips: [
+        _trip(id: 10, scheduledAt: DateTime(2026, 10, 27, 7, 30)),
+        _trip(id: 11, scheduledAt: DateTime(2026, 10, 27, 14, 0)),
+      ],
+      route: _route,
+      bus: _bus,
+      stops: _stops,
+    );
+    final controller = DriverController(
+      repository: repository,
+      driverId: 7,
+      clock: () => now,
+    );
+    await controller.load();
+    expect(controller.trip?.id, 10);
+
+    await controller.startTrip();
+    expect(controller.trip?.isActive, isTrue);
+
+    await controller.endTrip();
+    expect(controller.trip?.id, 11);
+    expect(controller.trip?.isPending, isTrue);
+  });
+
+  test('safari ya jana iliyoachwa pending haionyeshwi', () async {
+    final repository = FakeDriverRepository(
+      trips: [_trip(id: 10, scheduledAt: DateTime(2026, 10, 26, 7, 0))],
+      route: _route,
+      bus: _bus,
+      stops: _stops,
+    );
+    final controller = DriverController(
+      repository: repository,
+      driverId: 7,
+      clock: () => DateTime(2026, 10, 27, 7, 0),
+    );
+    await controller.load();
+
+    expect(controller.state, DriverViewState.empty);
+    expect(controller.trip, isNull);
   });
 
   test(

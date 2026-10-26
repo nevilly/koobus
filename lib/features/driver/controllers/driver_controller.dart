@@ -31,13 +31,18 @@ class DriverController extends ChangeNotifier {
     required this.repository,
     required this.driverId,
     this.driverName = '',
-  });
+    DateTime Function()? clock,
+  }) : _clock = clock ?? DateTime.now;
 
   final DriverRepository repository;
 
   /// `users.id` ya dereva aliyeingia. 0 = haijulikani (legacy session).
   final int driverId;
   final String driverName;
+
+  /// Chanzo cha muda; tests zinaweza kuweka saa maalum.
+  final DateTime Function() _clock;
+  DateTime get now => _clock();
 
   DriverViewState _state = DriverViewState.loading;
   TripModel? _trip;
@@ -84,7 +89,7 @@ class DriverController extends ChangeNotifier {
   bool get hasRoute => _route != null;
   bool get hasStops => _stops.isNotEmpty;
 
-  bool get canStart =>
+  bool get _hasStartResources =>
       _state == DriverViewState.ready &&
       !_busy &&
       isAssignedToMe &&
@@ -92,6 +97,23 @@ class DriverController extends ChangeNotifier {
       _trip!.isPending &&
       hasBus &&
       hasRoute;
+
+  /// Kitufe cha kawaida cha kuanza: dirisha la saa moja lazima lifunguke.
+  bool get canStart => _hasStartResources && _trip!.startWindowOpenAt(_clock());
+
+  /// Kuanza kwa dharura: kabla ya dirisha, siku ya safari.
+  bool get canEmergencyStart =>
+      _hasStartResources && _trip!.canEmergencyStartAt(_clock());
+
+  /// Ratiba ya safari ya sasa.
+  DateTime? get scheduledAt => _trip?.scheduledAt;
+  DateTime? get startWindowAt => _trip?.startWindowAt;
+  bool get hasSchedule => _trip?.hasScheduledTime ?? false;
+  bool get isStartWindowOpen =>
+      _trip != null && _trip!.startWindowOpenAt(_clock());
+  bool get isScheduledTimeReached =>
+      _trip != null && _trip!.scheduledTimeReachedAt(_clock());
+  Duration? get timeUntilStartWindow => _trip?.timeUntilStartWindow(_clock());
 
   bool get canEnd =>
       _state == DriverViewState.ready &&
@@ -265,16 +287,31 @@ class DriverController extends ChangeNotifier {
   }
 
   /// Anzisha safari. Inarudisha `true` kama server ilikubali.
-  Future<bool> startTrip() async {
-    if (!canStart) return false;
+  ///
+  /// `emergency` inatumika pale dereva anapoona wanafunzi wametolewa
+  /// mapema. Server ndiyo inathibitisha na kurekodi dharura.
+  Future<bool> startTrip({bool emergency = false, String? reason}) async {
+    if (!_hasStartResources) return false;
     final trip = _trip!;
+    final time = _clock();
+    final windowOpen = trip.startWindowOpenAt(time);
+    if (!windowOpen && !(emergency && trip.canEmergencyStartAt(time))) {
+      return false;
+    }
+    final isEmergency = !windowOpen;
+    final normalizedReason = (reason ?? '').trim();
+
     _busy = true;
     _errorMessage = null;
     _errorStatusCode = null;
     _notify();
 
     try {
-      await repository.startTrip(trip.id);
+      await repository.startTrip(
+        trip.id,
+        emergency: isEmergency,
+        reason: isEmergency ? normalizedReason : null,
+      );
       await load();
       return true;
     } on ApiException catch (error) {
@@ -310,13 +347,35 @@ class DriverController extends ChangeNotifier {
     }
   }
 
-  /// Chagua safari: ile ya leo kwanza, kisha ya hivi karibuni.
+  /// Chagua safari inayofuata: leo/baadaye kwa ratiba, sio ya siku zilizopita.
+  ///
+  /// Safari za zamani zisizo na ratiba zinaachwa kama hazina effective time;
+  /// hii inaendelea kuunga mkono data ya DB ya awali.
   TripModel? _pickNext(List<TripModel> trips) {
+    final now = _clock();
+    final startOfToday = DateTime(now.year, now.month, now.day);
     final pending = trips.where((trip) => trip.isPending).toList();
     if (pending.isEmpty) return null;
 
-    final today = pending.where((trip) => trip.isToday).toList();
-    return today.isNotEmpty ? today.first : pending.first;
+    final candidates = pending.where((trip) {
+      final when = trip.effectiveScheduledAt;
+      return when == null || !when.isBefore(startOfToday);
+    }).toList();
+
+    // Kama server ina pending za zamani pekee, usianze safari ya jana
+    // kimya kimya. Dereva anaona "hakuna safari" hadi shule ipange mpya.
+    if (candidates.isEmpty) return null;
+
+    candidates.sort((a, b) {
+      final at = a.effectiveScheduledAt;
+      final bt = b.effectiveScheduledAt;
+      if (at == null && bt == null) return a.id.compareTo(b.id);
+      if (at == null) return 1;
+      if (bt == null) return -1;
+      final byTime = at.compareTo(bt);
+      return byTime != 0 ? byTime : a.id.compareTo(b.id);
+    });
+    return candidates.first;
   }
 
   void _setState(DriverViewState next) {

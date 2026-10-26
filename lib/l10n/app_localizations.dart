@@ -1211,7 +1211,7 @@ abstract class AppLocalizations {
   /// No description provided for @driverScheduledFor.
   ///
   /// In sw, this message translates to:
-  /// **'Imeundwa'**
+  /// **'Muda uliopangwa'**
   String get driverScheduledFor;
 
   /// No description provided for @driverStartedAt.
@@ -1747,6 +1747,246 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Shule haijaweka nafasi bado.'**
   String get coordinatesSchoolNoCoordinate;
+
+  /// No description provided for @actionView.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ona'**
+  String get actionView;
+
+  /// No description provided for @staffNavAlerts.
+  ///
+  /// In sw, this message translates to:
+  /// **'Taarifa'**
+  String get staffNavAlerts;
+
+  /// No description provided for @notificationsLoading.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inapakia taarifa...'**
+  String get notificationsLoading;
+
+  /// No description provided for @notificationsLoadError.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeshindikana kupakia taarifa.'**
+  String get notificationsLoadError;
+
+  /// No description provided for @notificationsMarkAll.
+  ///
+  /// In sw, this message translates to:
+  /// **'Soma zote'**
+  String get notificationsMarkAll;
+
+  /// No description provided for @notificationsUnread.
+  ///
+  /// In sw, this message translates to:
+  /// **'Taarifa {count} mpya'**
+  String notificationsUnread(int count);
+
+  /// No description provided for @notificationsInAppNotice.
+  ///
+  /// In sw, this message translates to:
+  /// **'Taarifa hizi zinaonekana app ikiwa wazi. Push ya mbali (FCM) bado haijawekwa.'**
+  String get notificationsInAppNotice;
+
+  /// No description provided for @notificationsTripStartedTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari imeanza'**
+  String get notificationsTripStartedTitle;
+
+  /// No description provided for @notificationsTripStartedEarlyTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari imeanza mapema'**
+  String get notificationsTripStartedEarlyTitle;
+
+  /// No description provided for @notificationsTripStartedBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari ya {route} imeanza. Fungua app kuona basi.'**
+  String notificationsTripStartedBody(String route);
+
+  /// No description provided for @notificationsTripStartedEarlyBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari ya {route} imeanzishwa mapema kwa dharura.'**
+  String notificationsTripStartedEarlyBody(String route);
+
+  /// No description provided for @driverNoScheduleTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ratiba haijapangwa'**
+  String get driverNoScheduleTitle;
+
+  /// No description provided for @driverNoScheduleBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari hii haina muda uliopangwa. Wasiliana na shule kabla ya kuanza.'**
+  String get driverNoScheduleBody;
+
+  /// No description provided for @driverScheduleReachedTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Muda wa safari umefika'**
+  String get driverScheduleReachedTitle;
+
+  /// No description provided for @driverScheduleReachedBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari ilipangwa kuanza {scheduled}. Anza sasa ili wazazi wapate taarifa.'**
+  String driverScheduleReachedBody(String scheduled);
+
+  /// No description provided for @driverScheduleWindowOpenTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari iko tayari kuanza'**
+  String get driverScheduleWindowOpenTitle;
+
+  /// No description provided for @driverScheduleWindowOpenBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Dirisha la kuanza limefunguka. Safari ilipangwa {scheduled}.'**
+  String driverScheduleWindowOpenBody(String scheduled);
+
+  /// No description provided for @driverScheduleLockedTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bado hujaweza kuanza'**
+  String get driverScheduleLockedTitle;
+
+  /// No description provided for @driverScheduleLockedBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Dirisha la kawaida linafunguka {window} ({duration} kutoka sasa).'**
+  String driverScheduleLockedBody(String window, String duration);
+
+  /// No description provided for @driverEmergencyHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Kama wanafunzi wametolewa mapema, tumia \"Anza kwa dharura\". Sababu itarekodiwa.'**
+  String get driverEmergencyHint;
+
+  /// No description provided for @driverStartWindowAt.
+  ///
+  /// In sw, this message translates to:
+  /// **'Dirisha linafunguka'**
+  String get driverStartWindowAt;
+
+  /// No description provided for @driverEarlyStartLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeanza kwa dharura'**
+  String get driverEarlyStartLabel;
+
+  /// No description provided for @driverEarlyStartNoReason.
+  ///
+  /// In sw, this message translates to:
+  /// **'Sababu haikuandikwa'**
+  String get driverEarlyStartNoReason;
+
+  /// No description provided for @driverScheduleDueStatus.
+  ///
+  /// In sw, this message translates to:
+  /// **'Muda wa safari umefika — anza sasa'**
+  String get driverScheduleDueStatus;
+
+  /// No description provided for @driverStartWindowOpenStatus.
+  ///
+  /// In sw, this message translates to:
+  /// **'Dirisha la kuanza limefunguka'**
+  String get driverStartWindowOpenStatus;
+
+  /// No description provided for @driverStartWindowLockedStatus.
+  ///
+  /// In sw, this message translates to:
+  /// **'Linafunguka baada ya {duration}'**
+  String driverStartWindowLockedStatus(String duration);
+
+  /// No description provided for @driverDurationMinutes.
+  ///
+  /// In sw, this message translates to:
+  /// **'dakika {minutes}'**
+  String driverDurationMinutes(int minutes);
+
+  /// No description provided for @driverDurationHours.
+  ///
+  /// In sw, this message translates to:
+  /// **'saa {hours}'**
+  String driverDurationHours(int hours);
+
+  /// No description provided for @driverDurationHoursMinutes.
+  ///
+  /// In sw, this message translates to:
+  /// **'saa {hours} na dakika {minutes}'**
+  String driverDurationHoursMinutes(int hours, int minutes);
+
+  /// No description provided for @driverScheduleAlert.
+  ///
+  /// In sw, this message translates to:
+  /// **'Muda wa safari umefika. Anza safari sasa ili wazazi na shule wapate taarifa.'**
+  String get driverScheduleAlert;
+
+  /// No description provided for @driverEmergencyStart.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anza kwa dharura'**
+  String get driverEmergencyStart;
+
+  /// No description provided for @driverEmergencyStarted.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari imeanza kwa dharura na imerekodiwa.'**
+  String get driverEmergencyStarted;
+
+  /// No description provided for @driverEmergencyDialogTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anza safari mapema?'**
+  String get driverEmergencyDialogTitle;
+
+  /// No description provided for @driverEmergencyDialogBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari haijafikia dirisha la kawaida la kuanza. Kuanza sasa kutarekodiwa kama dharura na shule itaona sababu.'**
+  String get driverEmergencyDialogBody;
+
+  /// No description provided for @driverEmergencyScheduled.
+  ///
+  /// In sw, this message translates to:
+  /// **'Muda uliopangwa: {scheduledAt}'**
+  String driverEmergencyScheduled(String scheduledAt);
+
+  /// No description provided for @driverEmergencyWindow.
+  ///
+  /// In sw, this message translates to:
+  /// **'Dirisha la kawaida: {windowAt}'**
+  String driverEmergencyWindow(String windowAt);
+
+  /// No description provided for @driverEmergencyReasonLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Sababu ya dharura (lazima)'**
+  String get driverEmergencyReasonLabel;
+
+  /// No description provided for @driverEmergencyReasonHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Mfano: Wanafunzi wametolewa mapema leo'**
+  String get driverEmergencyReasonHint;
+
+  /// No description provided for @driverEmergencyCancel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Bado'**
+  String get driverEmergencyCancel;
+
+  /// No description provided for @driverEmergencyConfirm.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anza kwa dharura'**
+  String get driverEmergencyConfirm;
 }
 
 class _AppLocalizationsDelegate

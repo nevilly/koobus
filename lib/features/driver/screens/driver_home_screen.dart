@@ -6,7 +6,10 @@
 // Data yote inatoka API. Hakuna GPS ya kufikirika na hakuna safari ya
 // mfano hapa: kama server haina safari, tunaonyesha "hakuna safari".
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 
@@ -26,11 +29,19 @@ import 'package:koobus/l10n/app_localizations.dart';
 import 'package:koobus/models/trip_model.dart';
 
 class DriverHomeScreen extends StatefulWidget {
-  const DriverHomeScreen({super.key, this.controller});
+  const DriverHomeScreen({
+    super.key,
+    this.controller,
+    this.enableScheduleTicker = true,
+  });
 
   /// Kwa test: controller iliyotengenezwa tayari (inaweza kutumia
   /// repository ya kufikirika). Kwenye app halisi ni `null`.
   final DriverController? controller;
+
+  /// Timer ya countdown/tahadhari. Test zinaweza kuzima ili timer
+  /// isibaki baada ya widget kupotea.
+  final bool enableScheduleTicker;
 
   @override
   State<DriverHomeScreen> createState() => _DriverHomeScreenState();
@@ -41,6 +52,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   late final bool _ownsController;
   final GlobalKey<ScaffoldMessengerState> _messengerKey =
       GlobalKey<ScaffoldMessengerState>();
+
+  /// Timer ndogo kwa countdown na tahadhari ya muda wa safari.
+  Timer? _clockTimer;
+
+  /// Safari ambazo tumeshaonyesha tahadhari ya muda; zisirudiwe kila sekunde.
+  final Set<int> _scheduleAlertedTripIds = <int>{};
 
   @override
   void initState() {
@@ -60,11 +77,62 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
       _ownsController = true;
     }
 
+    _controller.addListener(_onControllerChanged);
     _controller.load();
+    _ensureScheduleTimer();
+  }
+
+  void _onControllerChanged() {
+    _ensureScheduleTimer();
+    _maybeAlertScheduledTime();
+  }
+
+  /// Timer inaanza tu kama safari ina ratiba; safari zisizo na ratiba
+  /// hazihitaji countdown wala tahadhari.
+  void _ensureScheduleTimer() {
+    if (!widget.enableScheduleTicker) return;
+    if (_clockTimer != null) return;
+    if (_controller.trip?.hasScheduledTime != true) return;
+    _clockTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      if (!mounted) return;
+      setState(() {});
+      _maybeAlertScheduledTime();
+    });
+  }
+
+  /// Tahadhari ya muda halisi wa safari: dereva asikose kuanza.
+  void _maybeAlertScheduledTime() {
+    if (!mounted) return;
+    final trip = _controller.trip;
+    if (trip == null || !trip.isPending) return;
+    if (!trip.scheduledTimeReachedAt(_controller.now)) return;
+    if (_scheduleAlertedTripIds.contains(trip.id)) return;
+    _scheduleAlertedTripIds.add(trip.id);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
+      HapticFeedback.heavyImpact();
+      SystemSound.play(SystemSoundType.alert);
+      _messengerKey.currentState?.showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 8),
+          content: Text(l10n.driverScheduleAlert),
+          action: SnackBarAction(
+            label: l10n.driverStartTrip,
+            onPressed: () {
+              if (_controller.canStart) _start();
+            },
+          ),
+        ),
+      );
+    });
   }
 
   @override
   void dispose() {
+    _clockTimer?.cancel();
+    _controller.removeListener(_onControllerChanged);
     if (_ownsController) _controller.dispose();
     super.dispose();
   }
@@ -91,6 +159,35 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     _messengerKey.currentState?.showSnackBar(
       SnackBar(content: Text(ok ? l10n.driverTripStarted : _errorText(l10n))),
     );
+  }
+
+  Future<void> _startEmergency() async {
+    final trip = _controller.trip;
+    if (trip == null) return;
+
+    final reason = await showDialog<String>(
+      context: context,
+      builder: (_) => _EmergencyStartDialog(
+        scheduledAt: trip.scheduledAt,
+        windowAt: trip.startWindowAt,
+      ),
+    );
+    if (reason == null || !mounted) return;
+
+    final ok = await _controller.startTrip(emergency: true, reason: reason);
+    if (!mounted) return;
+    final currentL10n = AppLocalizations.of(context);
+    _messengerKey.currentState?.showSnackBar(
+      SnackBar(
+        content: Text(
+          ok ? currentL10n.driverEmergencyStarted : _errorText(currentL10n),
+        ),
+      ),
+    );
+    if (ok) {
+      // Safari ya dharura imerekodiwa; tahadhari ya muda haihitajiki tena.
+      _scheduleAlertedTripIds.add(trip.id);
+    }
   }
 
   Future<void> _end() async {
@@ -233,6 +330,11 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
         _tripHero(context, l10n, trip, nextStop),
 
+        if (trip.isPending) ...[
+          const SizedBox(height: AppSpacing.md),
+          _scheduleCard(context, l10n, trip),
+        ],
+
         if (_controller.errorMessage != null) ...[
           const SizedBox(height: AppSpacing.md),
           _ActionError(message: _errorText(l10n)),
@@ -278,14 +380,34 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     if (trip == null) return const SizedBox.shrink();
 
     if (trip.isPending) {
+      final statusText = !_controller.hasSchedule
+          ? l10n.driverStatusPending
+          : _controller.isScheduledTimeReached
+          ? l10n.driverScheduleDueStatus
+          : _controller.isStartWindowOpen
+          ? l10n.driverStartWindowOpenStatus
+          : l10n.driverStartWindowLockedStatus(
+              _durationLabel(
+                l10n,
+                _controller.timeUntilStartWindow ?? Duration.zero,
+              ),
+            );
+
       return _DriverActionBar(
         buttonKey: const Key('start_trip_button'),
         buttonLabel: l10n.driverStartTrip,
         buttonIcon: Icons.play_arrow_rounded,
         buttonColor: AppColors.success,
-        statusText: l10n.driverStatusPending,
+        statusText: statusText,
         loading: _controller.busy,
         onPressed: _controller.canStart ? _start : null,
+        secondaryKey: const Key('emergency_start_button'),
+        secondaryLabel: _controller.canEmergencyStart
+            ? l10n.driverEmergencyStart
+            : null,
+        onSecondaryPressed: _controller.canEmergencyStart
+            ? _startEmergency
+            : null,
       );
     }
 
@@ -457,6 +579,129 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     );
   }
 
+  String _durationLabel(AppLocalizations l10n, Duration duration) {
+    final totalMinutes = duration.inMinutes < 0 ? 0 : duration.inMinutes;
+    final hours = totalMinutes ~/ 60;
+    final minutes = totalMinutes % 60;
+    if (hours > 0 && minutes > 0) {
+      return l10n.driverDurationHoursMinutes(hours, minutes);
+    }
+    if (hours > 0) return l10n.driverDurationHours(hours);
+    return l10n.driverDurationMinutes(minutes);
+  }
+
+  Widget _scheduleCard(
+    BuildContext context,
+    AppLocalizations l10n,
+    TripModel trip,
+  ) {
+    final textTheme = Theme.of(context).textTheme;
+    final scheduled = trip.scheduledAt;
+    final window = trip.startWindowAt;
+
+    if (scheduled == null || window == null) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.info_outline, color: AppColors.warning),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.driverNoScheduleTitle,
+                      style: textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(l10n.driverNoScheduleBody, style: textTheme.bodySmall),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final reached = _controller.isScheduledTimeReached;
+    final open = _controller.isStartWindowOpen;
+    final color = reached
+        ? AppColors.danger
+        : open
+        ? AppColors.success
+        : AppColors.warning;
+    final title = reached
+        ? l10n.driverScheduleReachedTitle
+        : open
+        ? l10n.driverScheduleWindowOpenTitle
+        : l10n.driverScheduleLockedTitle;
+    final body = reached
+        ? l10n.driverScheduleReachedBody(formatDateTime(scheduled))
+        : open
+        ? l10n.driverScheduleWindowOpenBody(formatDateTime(scheduled))
+        : l10n.driverScheduleLockedBody(
+            formatDateTime(window),
+            _durationLabel(
+              l10n,
+              _controller.timeUntilStartWindow ?? Duration.zero,
+            ),
+          );
+
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: color.withValues(alpha: 0.4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                reached
+                    ? Icons.notifications_active
+                    : open
+                    ? Icons.lock_open
+                    : Icons.lock_clock,
+                color: color,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: textTheme.titleMedium?.copyWith(color: color),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(body, style: textTheme.bodySmall),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (!open) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l10n.driverEmergencyHint,
+              style: textTheme.bodySmall?.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _tripTimesCard(
     BuildContext context,
     AppLocalizations l10n,
@@ -476,8 +721,20 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
             _InfoRow(
               icon: Icons.calendar_today,
               label: l10n.driverScheduledFor,
-              value: formatDateTime(trip.createdAt),
+              value: formatDateTime(trip.scheduledAt ?? trip.createdAt),
             ),
+            if (trip.isPending && trip.startWindowAt != null)
+              _InfoRow(
+                icon: Icons.lock_open,
+                label: l10n.driverStartWindowAt,
+                value: formatDateTime(trip.startWindowAt),
+              ),
+            if (trip.startedEarly)
+              _InfoRow(
+                icon: Icons.bolt,
+                label: l10n.driverEarlyStartLabel,
+                value: trip.earlyStartReason ?? l10n.driverEarlyStartNoReason,
+              ),
             if (trip.startedAt != null)
               _InfoRow(
                 icon: Icons.play_arrow,
@@ -608,6 +865,9 @@ class _DriverActionBar extends StatelessWidget {
     required this.statusText,
     required this.loading,
     required this.onPressed,
+    this.secondaryKey,
+    this.secondaryLabel,
+    this.onSecondaryPressed,
   });
 
   final Key buttonKey;
@@ -617,6 +877,9 @@ class _DriverActionBar extends StatelessWidget {
   final String statusText;
   final bool loading;
   final VoidCallback? onPressed;
+  final Key? secondaryKey;
+  final String? secondaryLabel;
+  final VoidCallback? onSecondaryPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -697,6 +960,22 @@ class _DriverActionBar extends StatelessWidget {
                     label: Text(buttonLabel),
                   ),
                 ),
+                if (secondaryLabel != null && onSecondaryPressed != null) ...[
+                  const SizedBox(height: 4),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 44,
+                    child: TextButton.icon(
+                      key: secondaryKey,
+                      onPressed: loading ? null : onSecondaryPressed,
+                      icon: const Icon(Icons.bolt, size: 20),
+                      label: Text(secondaryLabel!),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.warning,
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -889,6 +1168,96 @@ class _FinishedNote extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Dialog ya kuanza kwa dharura.
+///
+/// Sababu ni lazima ili server irekodi ni kwa nini safari ilianza kabla
+/// ya dirisha la saa moja. Hii inalinda shule na dereva.
+class _EmergencyStartDialog extends StatefulWidget {
+  const _EmergencyStartDialog({
+    required this.scheduledAt,
+    required this.windowAt,
+  });
+
+  final DateTime? scheduledAt;
+  final DateTime? windowAt;
+
+  @override
+  State<_EmergencyStartDialog> createState() => _EmergencyStartDialogState();
+}
+
+class _EmergencyStartDialogState extends State<_EmergencyStartDialog> {
+  final TextEditingController _reasonController = TextEditingController();
+  String _reason = '';
+
+  @override
+  void dispose() {
+    _reasonController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    return AlertDialog(
+      icon: const Icon(Icons.bolt, color: AppColors.warning),
+      title: Text(l10n.driverEmergencyDialogTitle),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.driverEmergencyDialogBody),
+            const SizedBox(height: AppSpacing.sm),
+            if (widget.scheduledAt != null)
+              Text(
+                l10n.driverEmergencyScheduled(
+                  formatDateTime(widget.scheduledAt),
+                ),
+              ),
+            if (widget.windowAt != null)
+              Text(l10n.driverEmergencyWindow(formatDateTime(widget.windowAt))),
+            const SizedBox(height: AppSpacing.md),
+            TextField(
+              key: const Key('emergency_reason_field'),
+              controller: _reasonController,
+              autofocus: true,
+              maxLength: 160,
+              minLines: 2,
+              maxLines: 3,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                labelText: l10n.driverEmergencyReasonLabel,
+                hintText: l10n.driverEmergencyReasonHint,
+              ),
+              onChanged: (value) {
+                final trimmed = value.trim();
+                if (trimmed == _reason) return;
+                setState(() => _reason = trimmed);
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.driverEmergencyCancel),
+        ),
+        FilledButton.icon(
+          key: const Key('confirm_emergency_start_button'),
+          style: FilledButton.styleFrom(backgroundColor: AppColors.warning),
+          onPressed: _reason.isEmpty
+              ? null
+              : () => Navigator.of(context).pop(_reason),
+          icon: const Icon(Icons.bolt),
+          label: Text(l10n.driverEmergencyConfirm),
+        ),
+      ],
     );
   }
 }

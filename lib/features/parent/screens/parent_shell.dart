@@ -4,27 +4,35 @@
 //   Nyumbani  — hali ya safari leo (ETA, basi)
 //   Watoto    — orodha ya watoto + historia ya kupanda/kushuka
 //   Historia  — safari zote za hivi karibuni
-//   Taarifa   — alerts
+//   Taarifa   — alerts halisi kutoka notifications API
 //   Wasifu    — taarifa za mzazi, walioidhinishwa, logout
 //
 // IndexedStack inahifadhi hali ya kila tab (scroll position n.k.) badala
 // ya kuijenga upya kila tunapobadilisha tab.
-//
-// NOTE YA LUGHA: majina ya tabs HAYAWEKI kwenye `const` list tena, kwa
-// sababu yanatoka kwenye kamusi (l10n) ambayo inategemea lugha ya sasa.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-import 'package:koobus/features/parent/dev/parent_demo_data.dart';
+import 'package:provider/provider.dart';
+
+import 'package:koobus/controllers/auth_controller.dart';
+import 'package:koobus/core/network/api_client.dart';
+import 'package:koobus/features/notifications/controllers/notifications_controller.dart';
+import 'package:koobus/features/notifications/services/notification_service.dart';
 import 'package:koobus/features/parent/screens/tabs/alerts_tab.dart';
 import 'package:koobus/features/parent/screens/tabs/children_tab.dart';
 import 'package:koobus/features/parent/screens/tabs/history_tab.dart';
 import 'package:koobus/features/parent/screens/tabs/home_tab.dart';
 import 'package:koobus/features/parent/screens/tabs/profile_tab.dart';
 import 'package:koobus/l10n/app_localizations.dart';
+import 'package:koobus/models/notification_model.dart';
 
 class ParentShell extends StatefulWidget {
-  const ParentShell({super.key});
+  const ParentShell({super.key, this.notificationsController});
+
+  /// Kwa test: controller iliyotengenezwa tayari. Kwenye app halisi ni
+  /// `null`; shell itaunda controller kutoka `ApiClient`.
+  final NotificationsController? notificationsController;
 
   @override
   State<ParentShell> createState() => _ParentShellState();
@@ -32,19 +40,88 @@ class ParentShell extends StatefulWidget {
 
 class _ParentShellState extends State<ParentShell> {
   int _index = 0;
+  late final NotificationsController _notifications;
+  late final bool _ownsNotifications;
+  late final List<Widget> _tabs;
 
-  static const _tabs = <Widget>[
-    ParentHomeTab(),
-    ChildrenTab(),
-    HistoryTab(),
-    AlertsTab(),
-    ProfileTab(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+
+    final provided = widget.notificationsController;
+    if (provided != null) {
+      _notifications = provided;
+      _ownsNotifications = false;
+    } else {
+      final auth = context.read<AuthController>();
+      _notifications = NotificationsController(
+        repository: NotificationService(context.read<ApiClient>()),
+        userId: auth.userId ?? 0,
+        onNewNotification: _onNewNotification,
+      );
+      _ownsNotifications = true;
+    }
+
+    _tabs = <Widget>[
+      const ParentHomeTab(),
+      const ChildrenTab(),
+      const HistoryTab(),
+      AlertsTab(controller: _notifications),
+      const ProfileTab(),
+    ];
+
+    _notifications.addListener(_onNotificationsChanged);
+    _notifications.start();
+  }
+
+  void _onNotificationsChanged() {
+    if (mounted) setState(() {});
+  }
+
+  void _onNewNotification(NotificationModel notification) {
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
+    final title = notification.isEarlyStart
+        ? l10n.notificationsTripStartedEarlyTitle
+        : notification.isTripStarted
+        ? l10n.notificationsTripStartedTitle
+        : notification.title;
+    final body = notification.isTripStarted
+        ? (notification.isEarlyStart
+              ? l10n.notificationsTripStartedEarlyBody(
+                  notification.routeName ?? l10n.driverNoRoute,
+                )
+              : l10n.notificationsTripStartedBody(
+                  notification.routeName ?? l10n.driverNoRoute,
+                ))
+        : notification.body;
+
+    HapticFeedback.heavyImpact();
+    SystemSound.play(SystemSoundType.alert);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 6),
+        content: Text('$title\n$body'),
+        action: SnackBarAction(
+          label: l10n.actionView,
+          onPressed: () => setState(() => _index = 3),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _notifications.removeListener(_onNotificationsChanged);
+    _notifications.stop();
+    if (_ownsNotifications) _notifications.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final unread = demoAlerts.where((a) => !a.read).length;
+    final unread = _notifications.unreadCount;
 
     // Vichwa vya AppBar kwa kila tab.
     final titles = <String>[
@@ -84,6 +161,7 @@ class _ParentShellState extends State<ParentShell> {
           NavigationDestination(
             icon: Badge.count(
               count: unread,
+              isLabelVisible: unread > 0,
               child: const Icon(Icons.notifications_outlined),
             ),
             selectedIcon: const Icon(Icons.notifications),

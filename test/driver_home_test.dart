@@ -37,6 +37,19 @@ TripModel _pendingTrip() {
   );
 }
 
+TripModel _scheduledTrip({DateTime? scheduledAt}) {
+  return TripModel(
+    id: 12,
+    routeId: 3,
+    busId: 2,
+    driverId: 7,
+    tripType: 'morning',
+    status: TripStatus.pending,
+    scheduledAt: scheduledAt ?? DateTime(2026, 10, 27, 8, 0),
+    createdAt: DateTime(2026, 10, 27, 5, 0),
+  );
+}
+
 TripModel _activeTrip() {
   return TripModel(
     id: 11,
@@ -56,7 +69,7 @@ Widget _wrap(DriverController controller) {
     locale: const Locale('sw'),
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
-    home: DriverHomeScreen(controller: controller),
+    home: DriverHomeScreen(controller: controller, enableScheduleTicker: false),
   );
 }
 
@@ -80,6 +93,13 @@ void main() {
     expect(find.text('Karibu, Juma'), findsOneWidget);
     expect(find.text('Route A'), findsWidgets);
     expect(find.text('T 123 ABC'), findsWidgets);
+
+    await tester.scrollUntilVisible(
+      find.text('Utayari wa safari'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
     expect(find.text('Utayari wa safari'), findsOneWidget);
     expect(find.text('Vituo vimepakiwa'), findsOneWidget);
 
@@ -93,6 +113,52 @@ void main() {
     expect(find.text('Safari imeanza.'), findsOneWidget);
 
     // Acha SnackBar itokee ili kuondoa timer inayosubiri.
+    await tester.pump(const Duration(seconds: 5));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('safari ya baadaye inaonyesha dirisha na kuanza kwa dharura', (
+    tester,
+  ) async {
+    final repository = FakeDriverRepository(
+      trips: [_scheduledTrip()],
+      route: _route,
+      bus: _bus,
+      stops: _stops,
+    );
+    final controller = DriverController(
+      repository: repository,
+      driverId: 7,
+      driverName: 'Juma',
+      clock: () => DateTime(2026, 10, 27, 6, 0),
+    );
+
+    await tester.pumpWidget(_wrap(controller));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Bado hujaweza kuanza'), findsOneWidget);
+    expect(find.byKey(const Key('emergency_start_button')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('emergency_start_button')));
+    await tester.pumpAndSettle();
+    expect(find.text('Anza safari mapema?'), findsOneWidget);
+
+    await tester.enterText(
+      find.byKey(const Key('emergency_reason_field')),
+      'Wanafunzi wametolewa mapema',
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('confirm_emergency_start_button')));
+    await tester.pumpAndSettle();
+
+    expect(repository.lastStartEmergency, isTrue);
+    expect(repository.lastStartReason, 'Wanafunzi wametolewa mapema');
+    expect(
+      find.text('Safari imeanza kwa dharura na imerekodiwa.'),
+      findsOneWidget,
+    );
+    expect(find.text('Maliza safari'), findsOneWidget);
+
     await tester.pump(const Duration(seconds: 5));
     await tester.pumpAndSettle();
   });

@@ -17,6 +17,131 @@ class Trips extends TripsController
         $this->data = parent::decode(file_get_contents("php://input"));
     }
 
+    /**
+     * KOO_BUS_ADAPT: ratiba inakubali datetime ya ISO au `Y-m-d H:i:s`.
+     * Tunarudisha muda wa app (Africa/Dar_es_Salaam) tayari kwa MySQL.
+     */
+    private function normalizeScheduledAt($raw)
+    {
+        if($raw === null || trim((string) $raw) === '') return false;
+        try {
+            $date = new DateTime((string) $raw);
+            return $date->format('Y-m-d H:i:s');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function scheduledAtOf($trip)
+    {
+        $raw = $this->fieldOf($trip, 'scheduled_at');
+        if($raw === null || trim((string) $raw) === '') return null;
+        try {
+            return new DateTime((string) $raw);
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * KOO_BUS_ADAPT: kanuni ya muda wa kuanza.
+     *
+     * Safari ya kawaida inafunguka saa moja kabla ya muda uliopangwa.
+     * Kabla ya hapo dereva anaweza kuanza kwa dharura tu, na ni safari
+     * ya siku hiyo. Sababu ya dharura ni lazima ili ikarekodiwe.
+     */
+    private function checkStartWindow($trip, &$startedEarly, &$reason)
+    {
+        $startedEarly = false;
+        $reason = '';
+        $scheduled = $this->scheduledAtOf($trip);
+        if($scheduled === null) return array(true, null);
+
+        $now = new DateTime('now');
+        $window = clone $scheduled;
+        $window->modify('-60 minutes');
+
+        if($now < $window){
+            $emergency = isset($this->data->emergency) ? $this->data->emergency : false;
+            if(!$emergency){
+                return array(false, array(
+                    'status'=>409,
+                    'payload'=>"Route start window opens at ".$window->format('H:i')." on ".$window->format('Y-m-d')
+                ));
+            }
+
+            if($scheduled->format('Y-m-d') !== $now->format('Y-m-d')){
+                return array(false, array(
+                    'status'=>409,
+                    'payload'=>"Emergency start is only allowed on the scheduled day"
+                ));
+            }
+
+            $reasonText = isset($this->data->reason) ? trim((string) $this->data->reason) : '';
+            if($reasonText === ''){
+                return array(false, array(
+                    'status'=>400,
+                    'payload'=>"A reason is required for an emergency start"
+                ));
+            }
+
+            $startedEarly = true;
+            $reason = $reasonText;
+        }
+
+        return array(true, null);
+    }
+
+    /**
+     * KOO_BUS_ADAPT: taarifa halisi kwa wazazi, shule na matron.
+     */
+    private function notifyTripStarted($trip, $startedEarly, $reason)
+    {
+        include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/NotificationsController.php';
+
+        $routeId = isset($trip->route_id) ? intval($trip->route_id) : 0;
+        $schoolId = $routeId > 0 ? Tenant::routeSchoolId($routeId) : 0;
+        $matronId = isset($trip->matron_id) ? intval($trip->matron_id) : 0;
+        $recipients = parent::get_start_recipients($routeId, $schoolId, $matronId);
+        if(empty($recipients)) return 0;
+
+        $routeName = parent::get_route_name($routeId);
+        if($routeName === '') $routeName = 'Route';
+        $tripType = isset($trip->trip_type) ? $trip->trip_type : '';
+        $typeLabel = $tripType === 'afternoon' ? 'mchana' : 'asubuhi';
+        $type = $startedEarly ? 'trip_started_early' : 'trip_started';
+
+        $title = $startedEarly ? 'Safari imeanza mapema' : 'Safari imeanza';
+        $body = $startedEarly
+            ? "Safari ya $typeLabel ya $routeName imeanzishwa mapema kwa dharura."
+            : "Safari ya $typeLabel ya $routeName imeanza.";
+
+        $data = json_encode(array(
+            'trip_id'=>intval($trip->id),
+            'route_id'=>$routeId,
+            'route_name'=>$routeName,
+            'trip_type'=>$tripType,
+            'scheduled_at'=>isset($trip->scheduled_at) ? $trip->scheduled_at : null,
+            'started_at'=>isset($trip->started_at) ? $trip->started_at : null,
+            'early'=>$startedEarly ? 1 : 0,
+            'reason'=>$startedEarly ? $reason : null,
+        ));
+
+        $notifications = new NotificationsController();
+        $sent = 0;
+        foreach($recipients as $uid){
+            $n = array(
+                'user_id'=>intval($uid),
+                'title'=>$title,
+                'body'=>$body,
+                'type'=>$type,
+                'data'=>$data,
+            );
+            if($notifications->add($this->encode($n))) $sent++;
+        }
+        return $sent;
+    }
+
     private function roleOf($user)
     {
         return isset($user->role) ? $user->role : (isset($user->privilege) ? $user->privilege : '');
@@ -396,6 +521,12 @@ class Trips extends TripsController
         if(!in_array($tripType, array('morning','afternoon'), true))
             return array('status'=>400,'payload'=>"Invalid trip_type");
 
+        // KOO_BUS_ADAPT: kila safari mpya inapaswa kuwa na muda uliopangwa.
+        $scheduledAt = $this->normalizeScheduledAt(isset($this->data->scheduled_at) ? $this->data->scheduled_at : null);
+        if($scheduledAt === false)
+            return array('status'=>400,'payload'=>"scheduled_at is required and must be a valid date/time");
+        $this->data->scheduled_at = $scheduledAt;
+
         $schoolId = Tenant::routeSchoolId($rid);
         if($schoolId <= 0) return array('status'=>400,'payload'=>"Invalid route");
 
@@ -438,6 +569,26 @@ class Trips extends TripsController
 
         if(!$this->canManageTrip($trip, $resUser))
             return array('status'=>403,'payload'=>"Forbidden");
+
+        // Safari inayoendelea/iliyokamilika hairuhusiwi kubadilishwa ratiba
+        // au rasilimali zake; hii inalinda historia na taarifa za wazazi.
+        $lockedFields = array('route_id','bus_id','driver_id','matron_id','trip_type','scheduled_at');
+        if(isset($trip->status) && $trip->status !== 'pending'){
+            foreach($lockedFields as $field){
+                if(property_exists($this->data, $field))
+                    return array('status'=>409,'payload'=>"Only a pending trip can be rescheduled or reassigned");
+            }
+        }
+
+        if(property_exists($this->data, 'trip_type') && !in_array($this->data->trip_type, array('morning','afternoon'), true))
+            return array('status'=>400,'payload'=>"Invalid trip_type");
+
+        if(property_exists($this->data, 'scheduled_at')){
+            $scheduledAt = $this->normalizeScheduledAt($this->data->scheduled_at);
+            if($scheduledAt === false)
+                return array('status'=>400,'payload'=>"scheduled_at must be a valid date/time");
+            $this->data->scheduled_at = $scheduledAt;
+        }
 
         // Route mpya (kama ipo) lazima iwe ya shule hiyo hiyo.
         $rid = isset($this->data->route_id) && $this->data->route_id !== ''
@@ -493,6 +644,8 @@ class Trips extends TripsController
         //   active  -> completed   (end)
         //   pending/active -> cancelled
         $current = isset($trip->status) ? $trip->status : '';
+        $startedEarly = false;
+        $earlyReason = '';
         if($newStatus === 'active'){
             if($current !== 'pending')
                 return array('status'=>409,'payload'=>"Trip cannot be started from status '$current'");
@@ -505,6 +658,9 @@ class Trips extends TripsController
                         return array('status'=>409,'payload'=>"Driver already has an active trip");
                 }
             }
+
+            list($windowOk, $windowError) = $this->checkStartWindow($trip, $startedEarly, $earlyReason);
+            if(!$windowOk) return $windowError;
         } elseif($newStatus === 'completed'){
             if($current !== 'active')
                 return array('status'=>409,'payload'=>"Trip cannot be completed from status '$current'");
@@ -513,15 +669,27 @@ class Trips extends TripsController
                 return array('status'=>409,'payload'=>"Trip cannot be cancelled from status '$current'");
         }
 
-        if($newStatus === 'active') $sql = parent::start_trip($id);
+        if($newStatus === 'active') $sql = parent::start_trip($id, $startedEarly, $earlyReason);
         elseif($newStatus === 'completed') $sql = parent::end_trip($id);
         else $sql = parent::cancel_trip($id);
 
         if($sql){
             // Hakikisha hali imebadilika kweli (kuzuia race au update iliyoshindikana).
             $after = parent::get($id);
-            if($after && is_object($after) && isset($after->status) && $after->status === $newStatus)
+            if($after && is_object($after) && isset($after->status) && $after->status === $newStatus){
+                if($newStatus === 'active'){
+                    $notified = $this->notifyTripStarted($after, $startedEarly, $earlyReason);
+                    return array('status'=>200,'payload'=>array(
+                        'trip_id'=>intval($id),
+                        'status'=>'active',
+                        'started_early'=>$startedEarly ? 1 : 0,
+                        'early_start_reason'=>$startedEarly ? $earlyReason : null,
+                        'started_at'=>isset($after->started_at) ? $after->started_at : null,
+                        'notified'=>$notified,
+                    ));
+                }
                 return array('status'=>200,'payload'=>"Trip ".$newStatus);
+            }
         }
         return array('status'=>500,'payload'=>"Failed");
     }

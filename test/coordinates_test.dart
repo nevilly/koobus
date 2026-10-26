@@ -18,12 +18,14 @@ import 'package:koobus/core/storage/secure_session_service.dart';
 import 'package:koobus/core/storage/session_service.dart';
 import 'package:koobus/features/coordinates/controllers/coordinates_controller.dart';
 import 'package:koobus/features/coordinates/screens/parent_coordinates_screen.dart';
+import 'package:koobus/features/notifications/controllers/notifications_controller.dart';
 import 'package:koobus/features/parent/screens/tabs/children_tab.dart';
 import 'package:koobus/features/staff/screens/staff_shell.dart';
 import 'package:koobus/l10n/app_localizations.dart';
 import 'package:koobus/models/coordinate_model.dart';
 
 import 'helpers/fake_coordinate_repository.dart';
+import 'helpers/fake_notification_repository.dart';
 
 CoordinateOverview _overview({
   CoordinateModel? childCoordinate,
@@ -102,6 +104,14 @@ Widget _wrap({required Widget home, required AuthController auth}) {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       home: home,
     ),
+  );
+}
+
+NotificationsController _notifications() {
+  return NotificationsController(
+    repository: FakeNotificationRepository(),
+    userId: 4,
+    pollInterval: Duration.zero,
   );
 }
 
@@ -257,7 +267,7 @@ void main() {
   });
 
   group('StaffShell', () {
-    testWidgets('Matron/Patron anaona tabs tatu na data ya shule', (
+    testWidgets('Matron/Patron anaona tabs nne na data ya shule', (
       tester,
     ) async {
       final fake = FakeCoordinateRepository(overview: _overview());
@@ -271,7 +281,10 @@ void main() {
       await tester.pumpWidget(
         _wrap(
           auth: auth,
-          home: StaffShell(controller: controller),
+          home: StaffShell(
+            controller: controller,
+            notificationsController: _notifications(),
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -279,12 +292,16 @@ void main() {
       expect(find.byType(NavigationBar), findsOneWidget);
       expect(find.text('Wanafunzi'), findsOneWidget);
       expect(find.text('Shule'), findsOneWidget);
+      expect(find.text('Taarifa'), findsOneWidget);
       expect(find.text('Wasifu'), findsOneWidget);
       expect(find.text('Amina Juma'), findsOneWidget);
 
       await _tapStaffTab(tester, 'Shule');
       expect(find.text('KooBus Test School'), findsOneWidget);
       expect(find.text('Weka nafasi'), findsOneWidget);
+
+      await _tapStaffTab(tester, 'Taarifa');
+      expect(find.text('Hakuna taarifa kwa sasa.'), findsOneWidget);
 
       await _tapStaffTab(tester, 'Wasifu');
       expect(find.text('Taarifa za mfanyakazi'), findsOneWidget);

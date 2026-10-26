@@ -12,6 +12,12 @@ include_once __DIR__."/Util/Util.php";
 use DotRD\DotRD;
 (new DotRD(__DIR__ . '/.rd'))->load();
 
+// KOO_BUS_ADAPT: saa Moja ya app. PHP ya XAMPP ilikuwa Europe/Berlin
+// wakati MySQL/system iko EAT. Hii ilifanya `started_at` na ratiba
+// zitofautiane kwa saa. Tunatumia saa ya Tanzania; inaweza kubadilishwa
+// kupitia APP_TIMEZONE kwenye .rd.
+date_default_timezone_set(koobus_env('APP_TIMEZONE') ?: 'Africa/Dar_es_Salaam');
+
 // KOO_BUS_ADAPT: APP_ENV inasomwa BAADA ya .rd kupakiwa, ili
 // APP_ENV=production kwenye .rd ifanye kazi.
 $appEnv = koobus_env('APP_ENV') ?: 'development';

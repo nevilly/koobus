@@ -43,6 +43,8 @@ class FakeDriverRepository implements DriverRepository {
   int startCalls = 0;
   int endCalls = 0;
   int manifestCalls = 0;
+  bool lastStartEmergency = false;
+  String? lastStartReason;
   final List<Map<String, Object?>> events = [];
   final List<Map<String, Object?>> locations = [];
 
@@ -74,8 +76,14 @@ class FakeDriverRepository implements DriverRepository {
   Future<List<RouteStopModel>> loadStops(int routeId) async => List.of(stops);
 
   @override
-  Future<void> startTrip(int tripId) async {
+  Future<void> startTrip(
+    int tripId, {
+    bool emergency = false,
+    String? reason,
+  }) async {
     startCalls++;
+    lastStartEmergency = emergency;
+    lastStartReason = reason;
     final error = startError;
     if (error != null) throw error;
 
@@ -85,6 +93,8 @@ class FakeDriverRepository implements DriverRepository {
     active = found.copyWith(
       status: TripStatus.active,
       startedAt: DateTime.now(),
+      startedEarly: emergency,
+      earlyStartReason: emergency ? reason : null,
     );
     trips = trips.where((trip) => trip.id != tripId).toList();
   }

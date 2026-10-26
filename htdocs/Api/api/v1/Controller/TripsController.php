@@ -25,7 +25,7 @@ class TripsController extends TripsModule
     public function get_active_by_driver($driver_id){ $res=parent::get_active_by_driver($driver_id); if($res&&$res->num_rows>0) return $res->fetch_all(MYSQLI_ASSOC); return false; }
     public function get_manifest($trip_id, $route_id, $trip_type){ return parent::get_manifest($trip_id, $route_id, $trip_type); }
     public function get_active(){ $res=parent::get_active(); if($res&&$res->num_rows>0) return $res->fetch_all(MYSQLI_ASSOC); return false; }
-    public function start_trip($id){ return parent::start_trip($id); }
+    public function start_trip($id, $started_early = false, $reason = null){ return parent::start_trip($id, $started_early, $reason); }
     public function end_trip($id){ return parent::end_trip($id); }
     public function cancel_trip($id){ return parent::cancel_trip($id); }
     public function delete_trip($id){ return parent::delete_trip($id); }

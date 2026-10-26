@@ -639,7 +639,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverRoute => 'Route';
 
   @override
-  String get driverScheduledFor => 'Created';
+  String get driverScheduledFor => 'Scheduled';
 
   @override
   String get driverStartedAt => 'Started';
@@ -932,4 +932,155 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get coordinatesSchoolNoCoordinate =>
       'The school has not set a location yet.';
+
+  @override
+  String get actionView => 'View';
+
+  @override
+  String get staffNavAlerts => 'Alerts';
+
+  @override
+  String get notificationsLoading => 'Loading alerts...';
+
+  @override
+  String get notificationsLoadError => 'Could not load alerts.';
+
+  @override
+  String get notificationsMarkAll => 'Mark all read';
+
+  @override
+  String notificationsUnread(int count) {
+    return '$count new alerts';
+  }
+
+  @override
+  String get notificationsInAppNotice =>
+      'These alerts appear while the app is open. Remote push (FCM) is not configured yet.';
+
+  @override
+  String get notificationsTripStartedTitle => 'Trip started';
+
+  @override
+  String get notificationsTripStartedEarlyTitle => 'Trip started early';
+
+  @override
+  String notificationsTripStartedBody(String route) {
+    return 'The $route trip has started. Open the app to view the bus.';
+  }
+
+  @override
+  String notificationsTripStartedEarlyBody(String route) {
+    return 'The $route trip started early due to an emergency.';
+  }
+
+  @override
+  String get driverNoScheduleTitle => 'No schedule set';
+
+  @override
+  String get driverNoScheduleBody =>
+      'This trip has no scheduled time. Contact the school before starting.';
+
+  @override
+  String get driverScheduleReachedTitle => 'Trip time has arrived';
+
+  @override
+  String driverScheduleReachedBody(String scheduled) {
+    return 'This trip was scheduled for $scheduled. Start now so parents are notified.';
+  }
+
+  @override
+  String get driverScheduleWindowOpenTitle => 'Trip is ready to start';
+
+  @override
+  String driverScheduleWindowOpenBody(String scheduled) {
+    return 'The start window is open. This trip was scheduled for $scheduled.';
+  }
+
+  @override
+  String get driverScheduleLockedTitle => 'Not ready to start yet';
+
+  @override
+  String driverScheduleLockedBody(String window, String duration) {
+    return 'The normal start window opens at $window ($duration from now).';
+  }
+
+  @override
+  String get driverEmergencyHint =>
+      'If students were released early, use \"Start early\". The reason will be recorded.';
+
+  @override
+  String get driverStartWindowAt => 'Window opens';
+
+  @override
+  String get driverEarlyStartLabel => 'Started early';
+
+  @override
+  String get driverEarlyStartNoReason => 'No reason recorded';
+
+  @override
+  String get driverScheduleDueStatus => 'Trip time has arrived — start now';
+
+  @override
+  String get driverStartWindowOpenStatus => 'The start window is open';
+
+  @override
+  String driverStartWindowLockedStatus(String duration) {
+    return 'Opens in $duration';
+  }
+
+  @override
+  String driverDurationMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String driverDurationHours(int hours) {
+    return '$hours hr';
+  }
+
+  @override
+  String driverDurationHoursMinutes(int hours, int minutes) {
+    return '$hours hr $minutes min';
+  }
+
+  @override
+  String get driverScheduleAlert =>
+      'Trip time has arrived. Start the trip now so parents and the school are notified.';
+
+  @override
+  String get driverEmergencyStart => 'Start early';
+
+  @override
+  String get driverEmergencyStarted =>
+      'The trip started early and the emergency was recorded.';
+
+  @override
+  String get driverEmergencyDialogTitle => 'Start the trip early?';
+
+  @override
+  String get driverEmergencyDialogBody =>
+      'This trip has not reached the normal start window. Starting now will be recorded as an emergency and the school will see the reason.';
+
+  @override
+  String driverEmergencyScheduled(String scheduledAt) {
+    return 'Scheduled time: $scheduledAt';
+  }
+
+  @override
+  String driverEmergencyWindow(String windowAt) {
+    return 'Normal window: $windowAt';
+  }
+
+  @override
+  String get driverEmergencyReasonLabel => 'Emergency reason (required)';
+
+  @override
+  String get driverEmergencyReasonHint =>
+      'Example: Students were released early today';
+
+  @override
+  String get driverEmergencyCancel => 'Not now';
+
+  @override
+  String get driverEmergencyConfirm => 'Start early';
 }

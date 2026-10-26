@@ -657,7 +657,7 @@
   "driverTripTypeAfternoon": "Mchana",
   "driverBus": "Basi",
   "driverRoute": "Route",
-  "driverScheduledFor": "Imeundwa",
+  "driverScheduledFor": "Muda uliopangwa",
   "driverStartedAt": "Ilianza",
   "driverEndedAt": "Ilikamilika",
   "driverNoBus": "Basi halijulikani",
@@ -772,5 +772,107 @@
   "coordinatesGpsWeak": "GPS signal ni hafifu. Jaribu tena.",
   "coordinatesGpsError": "Imeshindikana kupata eneo la GPS.",
   "coordinatesOpenSettings": "Fungua mipangilio",
-  "coordinatesSchoolNoCoordinate": "Shule haijaweka nafasi bado."
+  "coordinatesSchoolNoCoordinate": "Shule haijaweka nafasi bado.",
+  "actionView": "Ona",
+  "staffNavAlerts": "Taarifa",
+  "notificationsLoading": "Inapakia taarifa...",
+  "notificationsLoadError": "Imeshindikana kupakia taarifa.",
+  "notificationsMarkAll": "Soma zote",
+  "notificationsUnread": "Taarifa {count} mpya",
+  "@notificationsUnread": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notificationsInAppNotice": "Taarifa hizi zinaonekana app ikiwa wazi. Push ya mbali (FCM) bado haijawekwa.",
+  "notificationsTripStartedTitle": "Safari imeanza",
+  "notificationsTripStartedEarlyTitle": "Safari imeanza mapema",
+  "notificationsTripStartedBody": "Safari ya {route} imeanza. Fungua app kuona basi.",
+  "@notificationsTripStartedBody": {
+    "placeholders": {
+      "route": { "type": "String" }
+    }
+  },
+  "notificationsTripStartedEarlyBody": "Safari ya {route} imeanzishwa mapema kwa dharura.",
+  "@notificationsTripStartedEarlyBody": {
+    "placeholders": {
+      "route": { "type": "String" }
+    }
+  },
+  "driverNoScheduleTitle": "Ratiba haijapangwa",
+  "driverNoScheduleBody": "Safari hii haina muda uliopangwa. Wasiliana na shule kabla ya kuanza.",
+  "driverScheduleReachedTitle": "Muda wa safari umefika",
+  "driverScheduleReachedBody": "Safari ilipangwa kuanza {scheduled}. Anza sasa ili wazazi wapate taarifa.",
+  "@driverScheduleReachedBody": {
+    "placeholders": {
+      "scheduled": { "type": "String" }
+    }
+  },
+  "driverScheduleWindowOpenTitle": "Safari iko tayari kuanza",
+  "driverScheduleWindowOpenBody": "Dirisha la kuanza limefunguka. Safari ilipangwa {scheduled}.",
+  "@driverScheduleWindowOpenBody": {
+    "placeholders": {
+      "scheduled": { "type": "String" }
+    }
+  },
+  "driverScheduleLockedTitle": "Bado hujaweza kuanza",
+  "driverScheduleLockedBody": "Dirisha la kawaida linafunguka {window} ({duration} kutoka sasa).",
+  "@driverScheduleLockedBody": {
+    "placeholders": {
+      "window": { "type": "String" },
+      "duration": { "type": "String" }
+    }
+  },
+  "driverEmergencyHint": "Kama wanafunzi wametolewa mapema, tumia \"Anza kwa dharura\". Sababu itarekodiwa.",
+  "driverStartWindowAt": "Dirisha linafunguka",
+  "driverEarlyStartLabel": "Imeanza kwa dharura",
+  "driverEarlyStartNoReason": "Sababu haikuandikwa",
+  "driverScheduleDueStatus": "Muda wa safari umefika — anza sasa",
+  "driverStartWindowOpenStatus": "Dirisha la kuanza limefunguka",
+  "driverStartWindowLockedStatus": "Linafunguka baada ya {duration}",
+  "@driverStartWindowLockedStatus": {
+    "placeholders": {
+      "duration": { "type": "String" }
+    }
+  },
+  "driverDurationMinutes": "dakika {minutes}",
+  "@driverDurationMinutes": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "driverDurationHours": "saa {hours}",
+  "@driverDurationHours": {
+    "placeholders": {
+      "hours": { "type": "int" }
+    }
+  },
+  "driverDurationHoursMinutes": "saa {hours} na dakika {minutes}",
+  "@driverDurationHoursMinutes": {
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "driverScheduleAlert": "Muda wa safari umefika. Anza safari sasa ili wazazi na shule wapate taarifa.",
+  "driverEmergencyStart": "Anza kwa dharura",
+  "driverEmergencyStarted": "Safari imeanza kwa dharura na imerekodiwa.",
+  "driverEmergencyDialogTitle": "Anza safari mapema?",
+  "driverEmergencyDialogBody": "Safari haijafikia dirisha la kawaida la kuanza. Kuanza sasa kutarekodiwa kama dharura na shule itaona sababu.",
+  "driverEmergencyScheduled": "Muda uliopangwa: {scheduledAt}",
+  "@driverEmergencyScheduled": {
+    "placeholders": {
+      "scheduledAt": { "type": "String" }
+    }
+  },
+  "driverEmergencyWindow": "Dirisha la kawaida: {windowAt}",
+  "@driverEmergencyWindow": {
+    "placeholders": {
+      "windowAt": { "type": "String" }
+    }
+  },
+  "driverEmergencyReasonLabel": "Sababu ya dharura (lazima)",
+  "driverEmergencyReasonHint": "Mfano: Wanafunzi wametolewa mapema leo",
+  "driverEmergencyCancel": "Bado",
+  "driverEmergencyConfirm": "Anza kwa dharura"
 }

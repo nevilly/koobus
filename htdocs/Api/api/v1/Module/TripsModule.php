@@ -56,7 +56,9 @@ class TripsModule extends Database
     public function get_by_driver($driver_id){
         if(empty($driver_id)) return false;
         $driver_id = intval($driver_id);
-        return parent::select(parent::encode(['table'=>$this->table,'where'=>"driver_id='$driver_id' ORDER BY id DESC"]));
+        // Safari zilizopangwa huja kwanza kwa muda; zisizo na ratiba
+        // (data ya zamani) zinawekwa mwisho.
+        return parent::select(parent::encode(['table'=>$this->table,'where'=>"driver_id='$driver_id' ORDER BY CASE WHEN scheduled_at IS NULL THEN 1 ELSE 0 END ASC, scheduled_at ASC, id ASC"]));
     }
 
     public function get_by_route($route_id){
@@ -128,11 +130,77 @@ class TripsModule extends Database
         return parent::select(parent::encode(['table'=>$this->table,'where'=>"status='active' ORDER BY started_at DESC"]));
     }
 
-    public function start_trip($id){
+    /**
+     * KOO_BUS_ADAPT: jina la route kwa taarifa za safari.
+     */
+    public function get_route_name($route_id){
+        $route_id = intval($route_id);
+        if($route_id <= 0) return '';
+        $res = $this->con->query("SELECT name FROM routes WHERE id='$route_id' LIMIT 1");
+        if(!$res || $res->num_rows === 0) return '';
+        $row = $res->fetch_object();
+        return $row && isset($row->name) ? $row->name : '';
+    }
+
+    /**
+     * KOO_BUS_ADAPT: wapokeaji wa taarifa ya kuanza safari.
+     *
+     * - wazazi waliounganishwa na watoto walio kwenye route
+     * - school_admin wa shule
+     * - matron/patron aliyepangiwa safari
+     *
+     * Tunatumia `users.status='1'` ili akaunti zilizozimwa zisipate taarifa.
+     */
+    public function get_start_recipients($route_id, $school_id, $matron_id = 0){
+        $route_id = intval($route_id);
+        $school_id = intval($school_id);
+        $matron_id = intval($matron_id);
+        $ids = array();
+
+        if($route_id > 0){
+            $sql = "SELECT DISTINCT pc.parent_id AS uid
+                    FROM parent_children pc
+                    INNER JOIN children c ON c.id = pc.child_id
+                    INNER JOIN users u ON u.id = pc.parent_id
+                    WHERE c.route_id='$route_id'
+                      AND c.status='active'
+                      AND u.status='1'";
+            $res = $this->con->query($sql);
+            if($res){
+                while($row = $res->fetch_object()){
+                    if(isset($row->uid) && intval($row->uid) > 0) $ids[] = intval($row->uid);
+                }
+            }
+        }
+
+        if($school_id > 0){
+            $res = $this->con->query("SELECT id FROM users
+                WHERE role='school_admin' AND school_id='$school_id' AND status='1'");
+            if($res){
+                while($row = $res->fetch_object()){
+                    if(isset($row->id) && intval($row->id) > 0) $ids[] = intval($row->id);
+                }
+            }
+        }
+
+        if($matron_id > 0) $ids[] = $matron_id;
+
+        return array_values(array_unique($ids));
+    }
+
+    public function start_trip($id, $started_early = false, $reason = null){
         if(empty($id)) return false;
         $id = intval($id);
         $now = date('Y-m-d H:i:s');
-        return parent::update(parent::encode(array("table"=>$this->table,"data"=>"status='active', started_at='$now'","where"=>"id='$id' AND status='pending'")));
+        $early = $started_early ? 1 : 0;
+        $reasonSql = "NULL";
+        if($early === 1){
+            $reasonText = trim((string) $reason);
+            if($reasonText === '') $reasonText = 'Dharura ya shule';
+            $reasonSql = "'".$this->con->real_escape_string($reasonText)."'";
+        }
+        $data = "status='active', started_at='$now', started_early='$early', early_start_reason=$reasonSql";
+        return parent::update(parent::encode(array("table"=>$this->table,"data"=>$data,"where"=>"id='$id' AND status='pending'")));
     }
 
     public function end_trip($id){

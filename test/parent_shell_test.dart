@@ -12,9 +12,12 @@ import 'package:koobus/core/storage/language_service.dart';
 import 'package:koobus/core/storage/secure_session_service.dart';
 import 'package:koobus/core/storage/session_service.dart';
 import 'package:koobus/l10n/app_localizations.dart';
+import 'package:koobus/features/notifications/controllers/notifications_controller.dart';
 import 'package:koobus/features/parent/screens/parent_shell.dart';
 import 'package:koobus/features/parent/screens/tabs/home_tab.dart';
 import 'package:koobus/features/parent/screens/tabs/profile_tab.dart';
+
+import 'helpers/fake_notification_repository.dart';
 
 /// Tengeneza AuthController iliyoingia tayari (kwa test).
 Future<AuthController> _loggedInAuth() async {
@@ -27,7 +30,14 @@ Future<AuthController> _loggedInAuth() async {
   return auth;
 }
 
-Widget _wrap(AuthController auth) {
+Widget _wrap(AuthController auth, {NotificationsController? notifications}) {
+  final controller =
+      notifications ??
+      NotificationsController(
+        repository: FakeNotificationRepository(),
+        userId: 7,
+        pollInterval: Duration.zero,
+      );
   return MultiProvider(
     providers: [
       ChangeNotifierProvider<AuthController>.value(value: auth),
@@ -42,7 +52,7 @@ Widget _wrap(AuthController auth) {
       locale: const Locale('sw'),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      home: const ParentShell(),
+      home: ParentShell(notificationsController: controller),
     ),
   );
 }
@@ -50,17 +60,15 @@ Widget _wrap(AuthController auth) {
 /// Bonyeza tab kwenye NavigationBar pekee (si maandishi mengine ya screen).
 Future<void> _tapTab(WidgetTester tester, String label) async {
   await tester.tap(
-    find.descendant(
-      of: find.byType(NavigationBar),
-      matching: find.text(label),
-    ),
+    find.descendant(of: find.byType(NavigationBar), matching: find.text(label)),
   );
   await tester.pumpAndSettle();
 }
 
 void main() {
-  testWidgets('Nyumbani: inaonyesha salamu, ETA na taarifa ya basi',
-      (tester) async {
+  testWidgets('Nyumbani: inaonyesha salamu, ETA na taarifa ya basi', (
+    tester,
+  ) async {
     final auth = await _loggedInAuth();
     await tester.pumpWidget(_wrap(auth));
 
@@ -108,17 +116,27 @@ void main() {
     expect(find.text('Watoto wako'), findsOneWidget);
   });
 
-  testWidgets('Historia na Taarifa zinaonyesha data ya mfano',
-      (tester) async {
+  testWidgets('Historia na Taarifa zinaonyesha data halisi', (tester) async {
     final auth = await _loggedInAuth();
-    await tester.pumpWidget(_wrap(auth));
+    final notifications = NotificationsController(
+      repository: FakeNotificationRepository(items: [testNotification(id: 4)]),
+      userId: 7,
+      pollInterval: Duration.zero,
+    );
+    await tester.pumpWidget(_wrap(auth, notifications: notifications));
 
     await _tapTab(tester, 'Historia');
     expect(find.text('Historia ya safari'), findsOneWidget);
 
     await _tapTab(tester, 'Taarifa');
-    expect(find.text('Amina amepanda basi'), findsOneWidget);
-    expect(find.textContaining('Push notifications halisi'), findsOneWidget);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Safari imeanza'), findsOneWidget);
+    expect(find.textContaining('Safari ya Route A'), findsOneWidget);
+    expect(
+      find.textContaining('Push ya mbali (FCM) bado haijawekwa'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Wasifu: taarifa, walioidhinishwa na logout', (tester) async {

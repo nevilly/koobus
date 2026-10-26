@@ -640,7 +640,7 @@ class AppLocalizationsSw extends AppLocalizations {
   String get driverRoute => 'Route';
 
   @override
-  String get driverScheduledFor => 'Imeundwa';
+  String get driverScheduledFor => 'Muda uliopangwa';
 
   @override
   String get driverStartedAt => 'Ilianza';
@@ -932,4 +932,155 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get coordinatesSchoolNoCoordinate => 'Shule haijaweka nafasi bado.';
+
+  @override
+  String get actionView => 'Ona';
+
+  @override
+  String get staffNavAlerts => 'Taarifa';
+
+  @override
+  String get notificationsLoading => 'Inapakia taarifa...';
+
+  @override
+  String get notificationsLoadError => 'Imeshindikana kupakia taarifa.';
+
+  @override
+  String get notificationsMarkAll => 'Soma zote';
+
+  @override
+  String notificationsUnread(int count) {
+    return 'Taarifa $count mpya';
+  }
+
+  @override
+  String get notificationsInAppNotice =>
+      'Taarifa hizi zinaonekana app ikiwa wazi. Push ya mbali (FCM) bado haijawekwa.';
+
+  @override
+  String get notificationsTripStartedTitle => 'Safari imeanza';
+
+  @override
+  String get notificationsTripStartedEarlyTitle => 'Safari imeanza mapema';
+
+  @override
+  String notificationsTripStartedBody(String route) {
+    return 'Safari ya $route imeanza. Fungua app kuona basi.';
+  }
+
+  @override
+  String notificationsTripStartedEarlyBody(String route) {
+    return 'Safari ya $route imeanzishwa mapema kwa dharura.';
+  }
+
+  @override
+  String get driverNoScheduleTitle => 'Ratiba haijapangwa';
+
+  @override
+  String get driverNoScheduleBody =>
+      'Safari hii haina muda uliopangwa. Wasiliana na shule kabla ya kuanza.';
+
+  @override
+  String get driverScheduleReachedTitle => 'Muda wa safari umefika';
+
+  @override
+  String driverScheduleReachedBody(String scheduled) {
+    return 'Safari ilipangwa kuanza $scheduled. Anza sasa ili wazazi wapate taarifa.';
+  }
+
+  @override
+  String get driverScheduleWindowOpenTitle => 'Safari iko tayari kuanza';
+
+  @override
+  String driverScheduleWindowOpenBody(String scheduled) {
+    return 'Dirisha la kuanza limefunguka. Safari ilipangwa $scheduled.';
+  }
+
+  @override
+  String get driverScheduleLockedTitle => 'Bado hujaweza kuanza';
+
+  @override
+  String driverScheduleLockedBody(String window, String duration) {
+    return 'Dirisha la kawaida linafunguka $window ($duration kutoka sasa).';
+  }
+
+  @override
+  String get driverEmergencyHint =>
+      'Kama wanafunzi wametolewa mapema, tumia \"Anza kwa dharura\". Sababu itarekodiwa.';
+
+  @override
+  String get driverStartWindowAt => 'Dirisha linafunguka';
+
+  @override
+  String get driverEarlyStartLabel => 'Imeanza kwa dharura';
+
+  @override
+  String get driverEarlyStartNoReason => 'Sababu haikuandikwa';
+
+  @override
+  String get driverScheduleDueStatus => 'Muda wa safari umefika — anza sasa';
+
+  @override
+  String get driverStartWindowOpenStatus => 'Dirisha la kuanza limefunguka';
+
+  @override
+  String driverStartWindowLockedStatus(String duration) {
+    return 'Linafunguka baada ya $duration';
+  }
+
+  @override
+  String driverDurationMinutes(int minutes) {
+    return 'dakika $minutes';
+  }
+
+  @override
+  String driverDurationHours(int hours) {
+    return 'saa $hours';
+  }
+
+  @override
+  String driverDurationHoursMinutes(int hours, int minutes) {
+    return 'saa $hours na dakika $minutes';
+  }
+
+  @override
+  String get driverScheduleAlert =>
+      'Muda wa safari umefika. Anza safari sasa ili wazazi na shule wapate taarifa.';
+
+  @override
+  String get driverEmergencyStart => 'Anza kwa dharura';
+
+  @override
+  String get driverEmergencyStarted =>
+      'Safari imeanza kwa dharura na imerekodiwa.';
+
+  @override
+  String get driverEmergencyDialogTitle => 'Anza safari mapema?';
+
+  @override
+  String get driverEmergencyDialogBody =>
+      'Safari haijafikia dirisha la kawaida la kuanza. Kuanza sasa kutarekodiwa kama dharura na shule itaona sababu.';
+
+  @override
+  String driverEmergencyScheduled(String scheduledAt) {
+    return 'Muda uliopangwa: $scheduledAt';
+  }
+
+  @override
+  String driverEmergencyWindow(String windowAt) {
+    return 'Dirisha la kawaida: $windowAt';
+  }
+
+  @override
+  String get driverEmergencyReasonLabel => 'Sababu ya dharura (lazima)';
+
+  @override
+  String get driverEmergencyReasonHint =>
+      'Mfano: Wanafunzi wametolewa mapema leo';
+
+  @override
+  String get driverEmergencyCancel => 'Bado';
+
+  @override
+  String get driverEmergencyConfirm => 'Anza kwa dharura';
 }

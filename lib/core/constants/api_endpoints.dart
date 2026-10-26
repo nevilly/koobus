@@ -28,6 +28,12 @@ class ApiEndpoints {
   static String routeStops(int id) => '/routes/stops/$id';
   static String bus(int id) => '/buses/get/$id';
 
+  // ---- Notifications (in-app alerts; FCM pending) ----
+  static String notificationsByUser(int userId) =>
+      '/notifications/by_user/$userId';
+  static const String notificationMarkRead = '/notifications/mark_read';
+  static const String notificationMarkAllRead = '/notifications/mark_all_read';
+
   // ---- Coordinates (GPS + dual confirmation) ----
   static const String coordinatesOverview = '/coordinates/overview';
   static String childCoordinate(int childId) => '/coordinates/child/$childId';

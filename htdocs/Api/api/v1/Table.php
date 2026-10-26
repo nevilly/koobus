@@ -170,6 +170,9 @@ class Table extends  Database
             matron_id int(11) null,
             trip_type enum('morning','afternoon') not null,
             status enum('pending','active','completed','cancelled') default 'pending',
+            scheduled_at datetime null,
+            started_early tinyint(1) not null default 0,
+            early_start_reason varchar(255) null,
             started_at datetime null,
             ended_at datetime null,
             created_at datetime not null default current_timestamp,
@@ -180,6 +183,11 @@ class Table extends  Database
             foreign key(matron_id) references users(id) on delete set null
             "
         )));
+
+        // KOO_BUS_ADAPT: DB ya zamani haina ratiba ya safari. Tunaongeza
+        // columns bila kufuta data; trips za zamani zinabaki scheduled_at=NULL
+        // ili dereva asizuiwe na data ya kihistoria.
+        $this->ensureTripsScheduleColumns();
 
         // trip_events (boarding/alighting/absent etc)
         parent::createTable($this->encode(array(
@@ -330,6 +338,40 @@ class Table extends  Database
                 $this->con->query("ALTER TABLE children ADD CONSTRAINT $fk
                     FOREIGN KEY ($column) REFERENCES route_stops(id) ON DELETE SET NULL");
             }
+        }
+    }
+
+    /**
+     * KOO_BUS_ADAPT: ratiba ya safari kwa DB ya zamani.
+     *
+     * - scheduled_at: muda uliopangwa (NULL = safari ya kizamani).
+     * - started_early / early_start_reason: ukaguzi wa kuanza kwa dharura.
+     */
+    private function ensureTripsScheduleColumns(){
+        $db = $this->con->query("SELECT DATABASE() AS db")->fetch_object();
+        $schema = $db ? $db->db : '';
+        $schemaEsc = $this->con->real_escape_string($schema);
+
+        $columns = array(
+            'scheduled_at' => "datetime null",
+            'started_early' => "tinyint(1) not null default 0",
+            'early_start_reason' => "varchar(255) null",
+        );
+
+        foreach ($columns as $column => $definition) {
+            $col = $this->con->query("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE TABLE_SCHEMA='$schemaEsc'
+                AND TABLE_NAME='trips' AND COLUMN_NAME='$column'");
+            if($col && $col->num_rows === 0){
+                $this->con->query("ALTER TABLE trips ADD COLUMN $column $definition");
+            }
+        }
+
+        $idx = $this->con->query("SELECT INDEX_NAME FROM INFORMATION_SCHEMA.STATISTICS
+            WHERE TABLE_SCHEMA='$schemaEsc'
+            AND TABLE_NAME='trips' AND INDEX_NAME='idx_trips_driver_schedule'");
+        if($idx && $idx->num_rows === 0){
+            $this->con->query("ALTER TABLE trips ADD INDEX idx_trips_driver_schedule (driver_id, scheduled_at)");
         }
     }
 

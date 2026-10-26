@@ -99,7 +99,7 @@ class Notifications extends NotificationsController
 
         $p = parent::decode($params);
         $uid = isset($p->page) ? $p->page : '';
-        $limit = isset($p->page1) ? intval($p->page1) : 50;
+        $limit = isset($p->page1) && $p->page1 !== '' ? intval($p->page1) : 50;
 
         // KOO_BUS_ADAPT: mtumiaji wa kawaida anaona zake tu.
         if(!$this->isAdmin($user)){
@@ -154,15 +154,15 @@ class Notifications extends NotificationsController
         return array('status'=>500,'payload'=>"Failed");
     }
 
-    public function mark_read(){
+    public function mark_read($id = '', $user_id = ''){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
         list($ok, $resUser) = AuthGuard::requireAny();
         if(!$ok) return $resUser;
         $user = $resUser;
 
-        $id = isset($this->data->id) ? $this->data->id : '';
-        $uid = isset($this->data->user_id) ? $this->data->user_id : '';
+        $id = isset($this->data->id) ? $this->data->id : $id;
+        $uid = isset($this->data->user_id) ? $this->data->user_id : $user_id;
 
         // KOO_BUS_ADAPT: mtu anaweza ku-mark notification yake tu.
         // Hii pia inazuia ku-mark notification ya mtu mwingine.
@@ -181,14 +181,14 @@ class Notifications extends NotificationsController
         return array('status'=>500,'payload'=>"Failed");
     }
 
-    public function mark_all_read(){
+    public function mark_all_read($user_id = ''){
         if($this->clean->Method() !== "POST")
             return array('status'=>403,'payload'=>"Unauthorized Access");
         list($ok, $resUser) = AuthGuard::requireAny();
         if(!$ok) return $resUser;
         $user = $resUser;
 
-        $uid = isset($this->data->user_id) ? $this->data->user_id : '';
+        $uid = isset($this->data->user_id) ? $this->data->user_id : $user_id;
 
         if(!$this->isAdmin($user)){
             $uid = $user->id;

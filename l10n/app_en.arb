@@ -343,7 +343,7 @@
   "driverTripTypeAfternoon": "Afternoon",
   "driverBus": "Bus",
   "driverRoute": "Route",
-  "driverScheduledFor": "Created",
+  "driverScheduledFor": "Scheduled",
   "driverStartedAt": "Started",
   "driverEndedAt": "Ended",
   "driverNoBus": "Bus unknown",
@@ -458,5 +458,107 @@
   "coordinatesGpsWeak": "The GPS signal is weak. Try again.",
   "coordinatesGpsError": "Could not get the GPS location.",
   "coordinatesOpenSettings": "Open settings",
-  "coordinatesSchoolNoCoordinate": "The school has not set a location yet."
+  "coordinatesSchoolNoCoordinate": "The school has not set a location yet.",
+  "actionView": "View",
+  "staffNavAlerts": "Alerts",
+  "notificationsLoading": "Loading alerts...",
+  "notificationsLoadError": "Could not load alerts.",
+  "notificationsMarkAll": "Mark all read",
+  "notificationsUnread": "{count} new alerts",
+  "@notificationsUnread": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notificationsInAppNotice": "These alerts appear while the app is open. Remote push (FCM) is not configured yet.",
+  "notificationsTripStartedTitle": "Trip started",
+  "notificationsTripStartedEarlyTitle": "Trip started early",
+  "notificationsTripStartedBody": "The {route} trip has started. Open the app to view the bus.",
+  "@notificationsTripStartedBody": {
+    "placeholders": {
+      "route": { "type": "String" }
+    }
+  },
+  "notificationsTripStartedEarlyBody": "The {route} trip started early due to an emergency.",
+  "@notificationsTripStartedEarlyBody": {
+    "placeholders": {
+      "route": { "type": "String" }
+    }
+  },
+  "driverNoScheduleTitle": "No schedule set",
+  "driverNoScheduleBody": "This trip has no scheduled time. Contact the school before starting.",
+  "driverScheduleReachedTitle": "Trip time has arrived",
+  "driverScheduleReachedBody": "This trip was scheduled for {scheduled}. Start now so parents are notified.",
+  "@driverScheduleReachedBody": {
+    "placeholders": {
+      "scheduled": { "type": "String" }
+    }
+  },
+  "driverScheduleWindowOpenTitle": "Trip is ready to start",
+  "driverScheduleWindowOpenBody": "The start window is open. This trip was scheduled for {scheduled}.",
+  "@driverScheduleWindowOpenBody": {
+    "placeholders": {
+      "scheduled": { "type": "String" }
+    }
+  },
+  "driverScheduleLockedTitle": "Not ready to start yet",
+  "driverScheduleLockedBody": "The normal start window opens at {window} ({duration} from now).",
+  "@driverScheduleLockedBody": {
+    "placeholders": {
+      "window": { "type": "String" },
+      "duration": { "type": "String" }
+    }
+  },
+  "driverEmergencyHint": "If students were released early, use \"Start early\". The reason will be recorded.",
+  "driverStartWindowAt": "Window opens",
+  "driverEarlyStartLabel": "Started early",
+  "driverEarlyStartNoReason": "No reason recorded",
+  "driverScheduleDueStatus": "Trip time has arrived — start now",
+  "driverStartWindowOpenStatus": "The start window is open",
+  "driverStartWindowLockedStatus": "Opens in {duration}",
+  "@driverStartWindowLockedStatus": {
+    "placeholders": {
+      "duration": { "type": "String" }
+    }
+  },
+  "driverDurationMinutes": "{minutes} min",
+  "@driverDurationMinutes": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "driverDurationHours": "{hours} hr",
+  "@driverDurationHours": {
+    "placeholders": {
+      "hours": { "type": "int" }
+    }
+  },
+  "driverDurationHoursMinutes": "{hours} hr {minutes} min",
+  "@driverDurationHoursMinutes": {
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "driverScheduleAlert": "Trip time has arrived. Start the trip now so parents and the school are notified.",
+  "driverEmergencyStart": "Start early",
+  "driverEmergencyStarted": "The trip started early and the emergency was recorded.",
+  "driverEmergencyDialogTitle": "Start the trip early?",
+  "driverEmergencyDialogBody": "This trip has not reached the normal start window. Starting now will be recorded as an emergency and the school will see the reason.",
+  "driverEmergencyScheduled": "Scheduled time: {scheduledAt}",
+  "@driverEmergencyScheduled": {
+    "placeholders": {
+      "scheduledAt": { "type": "String" }
+    }
+  },
+  "driverEmergencyWindow": "Normal window: {windowAt}",
+  "@driverEmergencyWindow": {
+    "placeholders": {
+      "windowAt": { "type": "String" }
+    }
+  },
+  "driverEmergencyReasonLabel": "Emergency reason (required)",
+  "driverEmergencyReasonHint": "Example: Students were released early today",
+  "driverEmergencyCancel": "Not now",
+  "driverEmergencyConfirm": "Start early"
 }

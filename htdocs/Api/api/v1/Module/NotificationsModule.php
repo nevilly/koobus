@@ -62,7 +62,7 @@ class NotificationsModule extends Database
         if(empty($user_id)) return false;
         $user_id = intval($user_id);
         $now = date('Y-m-d H:i:s');
-        return parent::update(parent::encode(array("table"=>$this->table,"data"=>"read_at='$now'","where'=>"user_id='$user_id' AND read_at IS NULL")));
+        return parent::update(parent::encode(array("table"=>$this->table,"data"=>"read_at='$now'","where"=>"user_id='$user_id' AND read_at IS NULL")));
     }
 
     public function delete_notification($id){

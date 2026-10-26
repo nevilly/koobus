@@ -20,7 +20,7 @@ abstract class DriverRepository {
   Future<RouteModel> loadRoute(int routeId);
   Future<BusModel> loadBus(int busId);
   Future<List<RouteStopModel>> loadStops(int routeId);
-  Future<void> startTrip(int tripId);
+  Future<void> startTrip(int tripId, {bool emergency = false, String? reason});
   Future<void> endTrip(int tripId);
   Future<List<StudentManifestEntry>> loadManifest(int tripId);
   Future<void> addTripEvent({
@@ -84,8 +84,20 @@ class DriverService implements DriverRepository {
   }
 
   @override
-  Future<void> startTrip(int tripId) async {
-    await _api.post(ApiEndpoints.tripStart, body: {'trip_id': tripId});
+  Future<void> startTrip(
+    int tripId, {
+    bool emergency = false,
+    String? reason,
+  }) async {
+    await _api.post(
+      ApiEndpoints.tripStart,
+      body: {
+        'trip_id': tripId,
+        if (emergency) 'emergency': true,
+        if (emergency && reason != null && reason.trim().isNotEmpty)
+          'reason': reason.trim(),
+      },
+    );
   }
 
   @override
