@@ -611,6 +611,37 @@
   "driverMapEmptyTitle": "Ramani na GPS inakuja",
   "driverMapEmptySubtitle": "Tutaunganisha eneo halisi la basi na vituo. Hakuna GPS ya kufikirika.",
   "driverMapNote": "Ramani itatumia data halisi ya route na eneo la basi.",
+  "driverMapTitle": "Ramani",
+  "driverMapLive": "Moja kwa moja",
+  "driverMapStale": "Eneo la zamani",
+  "driverMapLocating": "Inatafuta GPS...",
+  "driverMapInaccurate": "Signal ya GPS ni hafifu",
+  "driverMapGpsOff": "GPS imezimwa",
+  "driverMapPermissionDenied": "Ruhusa ya eneo imekataliwa",
+  "driverMapPermissionDeniedForever": "Ruhusa ya eneo imezuiwa kabisa",
+  "driverMapOpenSettings": "Fungua mipangilio",
+  "driverMapRetry": "Jaribu tena",
+  "driverMapRecenter": "Nionyeshe hapa",
+  "driverMapAccuracy": "Usahihi {meters} m",
+  "@driverMapAccuracy": {
+    "description": "GPS accuracy in metres.",
+    "placeholders": {
+      "meters": { "type": "int" }
+    }
+  },
+  "driverMapLastUpdate": "Ilisasishwa {time}",
+  "@driverMapLastUpdate": {
+    "description": "Time of the last GPS update.",
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "driverMapNoActiveTrip": "Hakuna safari inayoendelea",
+  "driverMapStartToTrack": "GPS huanza safari inapoanzishwa.",
+  "driverMapUploadFailed": "Eneo halijatumwa kwa server. Tutajaribu tena.",
+  "driverMapAttribution": "© OpenStreetMap contributors",
+  "driverMapWaitingTrip": "Safari hii haijaanza. Ramani inaonyesha vituo pekee.",
+  "driverMapNoStopsHint": "Vituo havina mahali (GPS).",
   "driverProfileSection": "Taarifa za dereva",
   "driverProfileNotice": "Taarifa hizi zinatoka kwenye akaunti yako ya dereva.",
   "driverLoadingTrip": "Inapakia safari...",

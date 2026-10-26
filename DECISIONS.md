@@ -389,6 +389,40 @@ Format: date, decision, reason, files affected.
   67/67 zinapita, na `/install` imeongeza columns/indexes/FKs kwenye database
   iliyopo. Live manifest bado inahitaji watoto halisi kwenye route.
 
+## 2026-10-26 - GPS halisi, ramani ya OSM na ufuatiliaji wa mbele
+
+- **Ramani:** tumetumia `flutter_map` + tiles za OpenStreetMap (OSM), bila API
+  key na bila ada ya leseni. Ramani inaonyesha vituo vya route, mstari wa route
+  na nafasi ya dereva. OSM inahitaji attribution; public tiles ni za majaribio
+  na zitahitaji self-hosting au provider wa free-tier kwa matumizi makubwa.
+- **GPS:** `geolocator` inatoa fix halisi. Tunaomba ruhusa ya eneo wakati wa
+  kutumia app tu, tunakagua kama location services zimewashwa, na tunashughulikia
+  denied, permanently denied, disabled, stale na inaccurate.
+- **Mipangilio:** distance filter 10 m, interval 5 s, accuracy ya juu inayokubalika
+  50 m, na fix inachukuliwa stale baada ya 30 s. Ufuatiliaji wa background
+  (foreground service/notification) bado haujaanza; hii ni Phase 9.3.
+- **Upload:** app inatuma kwa `/locations/upload` kwa token ya dereva. Server
+  inakubali tu safari iliyo `active` na inayomilikiwa na dereva (au admin wa
+  shule hiyo/super_admin); `driver_id` inachukuliwa kutoka safari, si kutoka app.
+  Sehemu zinazoruhusiwa ni `trip_id`, `driver_id`, `latitude`, `longitude`,
+  `speed`, `accuracy`.
+- **Uthibitisho:** kwenye simu V2333, dereva `255700000003` alianza safari halisi,
+  akakubali "While using the app", ramani ilionyesha accuracy 15 m na muda wa
+  update wa mwisho, na database ilipokea fixes halisi (accuracy 14.71 m na
+  36.90 m). Safari ilimalizika kwa confirmation na ufuatiliaji ukasimama.
+  Server pia ilikataa latitude isiyo sahihi kwa 400, safari iliyokamilika kwa 409,
+  na dereva asiyehusika kwa 409.
+- **Files:** `lib/services/location_service.dart`,
+  `lib/features/driver/controllers/driver_tracking_controller.dart`,
+  `lib/features/driver/screens/tabs/driver_map_tab.dart`,
+  `lib/features/driver/screens/driver_shell.dart`,
+  `lib/features/driver/services/driver_service.dart`,
+  `htdocs/Api/api/v1/Routes/Locations.php`,
+  `htdocs/Api/api/v1/Module/LocationsModule.php`,
+  `android/app/src/main/AndroidManifest.xml`, `pubspec.yaml`.
+- **Revisit when:** background tracking and parent live-map retrieval are built,
+  or when OSM public tile usage approaches production scale.
+
 ## Known bugs / unfinished
 
 - NDK 28.2.13676358 is **installed** (2.12 GB) and `flutter build apk --debug`

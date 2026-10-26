@@ -1004,6 +1004,120 @@ abstract class AppLocalizations {
   /// **'Ramani itatumia data halisi ya route na eneo la basi.'**
   String get driverMapNote;
 
+  /// No description provided for @driverMapTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ramani'**
+  String get driverMapTitle;
+
+  /// No description provided for @driverMapLive.
+  ///
+  /// In sw, this message translates to:
+  /// **'Moja kwa moja'**
+  String get driverMapLive;
+
+  /// No description provided for @driverMapStale.
+  ///
+  /// In sw, this message translates to:
+  /// **'Eneo la zamani'**
+  String get driverMapStale;
+
+  /// No description provided for @driverMapLocating.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inatafuta GPS...'**
+  String get driverMapLocating;
+
+  /// No description provided for @driverMapInaccurate.
+  ///
+  /// In sw, this message translates to:
+  /// **'Signal ya GPS ni hafifu'**
+  String get driverMapInaccurate;
+
+  /// No description provided for @driverMapGpsOff.
+  ///
+  /// In sw, this message translates to:
+  /// **'GPS imezimwa'**
+  String get driverMapGpsOff;
+
+  /// No description provided for @driverMapPermissionDenied.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ruhusa ya eneo imekataliwa'**
+  String get driverMapPermissionDenied;
+
+  /// No description provided for @driverMapPermissionDeniedForever.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ruhusa ya eneo imezuiwa kabisa'**
+  String get driverMapPermissionDeniedForever;
+
+  /// No description provided for @driverMapOpenSettings.
+  ///
+  /// In sw, this message translates to:
+  /// **'Fungua mipangilio'**
+  String get driverMapOpenSettings;
+
+  /// No description provided for @driverMapRetry.
+  ///
+  /// In sw, this message translates to:
+  /// **'Jaribu tena'**
+  String get driverMapRetry;
+
+  /// No description provided for @driverMapRecenter.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nionyeshe hapa'**
+  String get driverMapRecenter;
+
+  /// GPS accuracy in metres.
+  ///
+  /// In sw, this message translates to:
+  /// **'Usahihi {meters} m'**
+  String driverMapAccuracy(int meters);
+
+  /// Time of the last GPS update.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ilisasishwa {time}'**
+  String driverMapLastUpdate(String time);
+
+  /// No description provided for @driverMapNoActiveTrip.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna safari inayoendelea'**
+  String get driverMapNoActiveTrip;
+
+  /// No description provided for @driverMapStartToTrack.
+  ///
+  /// In sw, this message translates to:
+  /// **'GPS huanza safari inapoanzishwa.'**
+  String get driverMapStartToTrack;
+
+  /// No description provided for @driverMapUploadFailed.
+  ///
+  /// In sw, this message translates to:
+  /// **'Eneo halijatumwa kwa server. Tutajaribu tena.'**
+  String get driverMapUploadFailed;
+
+  /// No description provided for @driverMapAttribution.
+  ///
+  /// In sw, this message translates to:
+  /// **'© OpenStreetMap contributors'**
+  String get driverMapAttribution;
+
+  /// No description provided for @driverMapWaitingTrip.
+  ///
+  /// In sw, this message translates to:
+  /// **'Safari hii haijaanza. Ramani inaonyesha vituo pekee.'**
+  String get driverMapWaitingTrip;
+
+  /// No description provided for @driverMapNoStopsHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Vituo havina mahali (GPS).'**
+  String get driverMapNoStopsHint;
+
   /// No description provided for @driverProfileSection.
   ///
   /// In sw, this message translates to:

@@ -21,6 +21,7 @@ class ApiEndpoints {
   static const String tripEnd = '/trips/end';
   static const String tripCancel = '/trips/cancel';
   static const String tripEventAdd = '/trip_events/add';
+  static const String locationUpload = '/locations/upload';
 
   // ---- Routes / buses ----
   static String route(int id) => '/routes/get/$id';

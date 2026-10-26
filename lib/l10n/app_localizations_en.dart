@@ -529,6 +529,69 @@ class AppLocalizationsEn extends AppLocalizations {
       'The map will use real route and bus location data.';
 
   @override
+  String get driverMapTitle => 'Map';
+
+  @override
+  String get driverMapLive => 'Live';
+
+  @override
+  String get driverMapStale => 'Stale location';
+
+  @override
+  String get driverMapLocating => 'Finding GPS...';
+
+  @override
+  String get driverMapInaccurate => 'Weak GPS signal';
+
+  @override
+  String get driverMapGpsOff => 'GPS is turned off';
+
+  @override
+  String get driverMapPermissionDenied => 'Location permission denied';
+
+  @override
+  String get driverMapPermissionDeniedForever => 'Location permission blocked';
+
+  @override
+  String get driverMapOpenSettings => 'Open settings';
+
+  @override
+  String get driverMapRetry => 'Try again';
+
+  @override
+  String get driverMapRecenter => 'Recenter';
+
+  @override
+  String driverMapAccuracy(int meters) {
+    return 'Accuracy $meters m';
+  }
+
+  @override
+  String driverMapLastUpdate(String time) {
+    return 'Updated $time';
+  }
+
+  @override
+  String get driverMapNoActiveTrip => 'No active trip';
+
+  @override
+  String get driverMapStartToTrack => 'GPS starts when the trip starts.';
+
+  @override
+  String get driverMapUploadFailed =>
+      'Location not sent to the server. Retrying.';
+
+  @override
+  String get driverMapAttribution => '© OpenStreetMap contributors';
+
+  @override
+  String get driverMapWaitingTrip =>
+      'This trip has not started. The map shows stops only.';
+
+  @override
+  String get driverMapNoStopsHint => 'Stops have no GPS location.';
+
+  @override
   String get driverProfileSection => 'Driver details';
 
   @override

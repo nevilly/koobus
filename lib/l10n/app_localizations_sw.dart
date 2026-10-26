@@ -529,6 +529,70 @@ class AppLocalizationsSw extends AppLocalizations {
       'Ramani itatumia data halisi ya route na eneo la basi.';
 
   @override
+  String get driverMapTitle => 'Ramani';
+
+  @override
+  String get driverMapLive => 'Moja kwa moja';
+
+  @override
+  String get driverMapStale => 'Eneo la zamani';
+
+  @override
+  String get driverMapLocating => 'Inatafuta GPS...';
+
+  @override
+  String get driverMapInaccurate => 'Signal ya GPS ni hafifu';
+
+  @override
+  String get driverMapGpsOff => 'GPS imezimwa';
+
+  @override
+  String get driverMapPermissionDenied => 'Ruhusa ya eneo imekataliwa';
+
+  @override
+  String get driverMapPermissionDeniedForever =>
+      'Ruhusa ya eneo imezuiwa kabisa';
+
+  @override
+  String get driverMapOpenSettings => 'Fungua mipangilio';
+
+  @override
+  String get driverMapRetry => 'Jaribu tena';
+
+  @override
+  String get driverMapRecenter => 'Nionyeshe hapa';
+
+  @override
+  String driverMapAccuracy(int meters) {
+    return 'Usahihi $meters m';
+  }
+
+  @override
+  String driverMapLastUpdate(String time) {
+    return 'Ilisasishwa $time';
+  }
+
+  @override
+  String get driverMapNoActiveTrip => 'Hakuna safari inayoendelea';
+
+  @override
+  String get driverMapStartToTrack => 'GPS huanza safari inapoanzishwa.';
+
+  @override
+  String get driverMapUploadFailed =>
+      'Eneo halijatumwa kwa server. Tutajaribu tena.';
+
+  @override
+  String get driverMapAttribution => '© OpenStreetMap contributors';
+
+  @override
+  String get driverMapWaitingTrip =>
+      'Safari hii haijaanza. Ramani inaonyesha vituo pekee.';
+
+  @override
+  String get driverMapNoStopsHint => 'Vituo havina mahali (GPS).';
+
+  @override
   String get driverProfileSection => 'Taarifa za dereva';
 
   @override

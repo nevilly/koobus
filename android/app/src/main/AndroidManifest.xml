@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- KOO_BUS_ADAPT: app inahitaji internet kwa API (release pia). -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Phase 9.1: GPS ya dereva wakati safari inaendelea. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
 
     <application
         android:label="koobus"

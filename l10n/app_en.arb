@@ -297,6 +297,37 @@
   "driverMapEmptyTitle": "Map and GPS coming next",
   "driverMapEmptySubtitle": "We will connect the real bus location and stops. There is no simulated GPS.",
   "driverMapNote": "The map will use real route and bus location data.",
+  "driverMapTitle": "Map",
+  "driverMapLive": "Live",
+  "driverMapStale": "Stale location",
+  "driverMapLocating": "Finding GPS...",
+  "driverMapInaccurate": "Weak GPS signal",
+  "driverMapGpsOff": "GPS is turned off",
+  "driverMapPermissionDenied": "Location permission denied",
+  "driverMapPermissionDeniedForever": "Location permission blocked",
+  "driverMapOpenSettings": "Open settings",
+  "driverMapRetry": "Try again",
+  "driverMapRecenter": "Recenter",
+  "driverMapAccuracy": "Accuracy {meters} m",
+  "@driverMapAccuracy": {
+    "description": "GPS accuracy in metres.",
+    "placeholders": {
+      "meters": { "type": "int" }
+    }
+  },
+  "driverMapLastUpdate": "Updated {time}",
+  "@driverMapLastUpdate": {
+    "description": "Time of the last GPS update.",
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "driverMapNoActiveTrip": "No active trip",
+  "driverMapStartToTrack": "GPS starts when the trip starts.",
+  "driverMapUploadFailed": "Location not sent to the server. Retrying.",
+  "driverMapAttribution": "© OpenStreetMap contributors",
+  "driverMapWaitingTrip": "This trip has not started. The map shows stops only.",
+  "driverMapNoStopsHint": "Stops have no GPS location.",
   "driverProfileSection": "Driver details",
   "driverProfileNotice": "These details come from your driver account.",
   "driverLoadingTrip": "Loading trip...",

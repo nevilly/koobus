@@ -38,11 +38,13 @@ class FakeDriverRepository implements DriverRepository {
   ApiException? endError;
   ApiException? manifestError;
   ApiException? eventError;
+  Object? locationError;
 
   int startCalls = 0;
   int endCalls = 0;
   int manifestCalls = 0;
   final List<Map<String, Object?>> events = [];
+  final List<Map<String, Object?>> locations = [];
 
   @override
   Future<TripModel?> activeTrip(int driverId) async => active;
@@ -119,6 +121,25 @@ class FakeDriverRepository implements DriverRepository {
       'child_id': childId,
       'event_type': eventType,
       'stop_id': stopId,
+    });
+  }
+
+  @override
+  Future<void> uploadLocation({
+    required int tripId,
+    required double latitude,
+    required double longitude,
+    double? speed,
+    double? accuracy,
+  }) async {
+    final error = locationError;
+    if (error != null) throw error;
+    locations.add({
+      'trip_id': tripId,
+      'latitude': latitude,
+      'longitude': longitude,
+      'speed': speed,
+      'accuracy': accuracy,
     });
   }
 }

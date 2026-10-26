@@ -11,11 +11,20 @@ class LocationsModule extends Database
         parent::__construct();
     }
 
+    /**
+     * KOO_BUS_ADAPT: safu zinazoruhusiwa tu. Bila whitelist, key yoyote
+     * ya JSON ingeingizwa kwenye INSERT (SQL injection kupitia key).
+     */
+    private $allowed = array(
+        'trip_id', 'driver_id', 'latitude', 'longitude', 'speed', 'accuracy'
+    );
+
     public function add($data){
         $data = (array) $this->decode($data);
         $vs = '';
         if(is_array($data)){
             foreach ($data as $key => $value) {
+                if(!in_array($key, $this->allowed, true)) continue;
                 if($value === null || $value === '') continue;
                 $vs .= "$key='".$this->con->real_escape_string($value)."',";
             }

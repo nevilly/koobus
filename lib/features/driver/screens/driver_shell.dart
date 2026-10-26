@@ -18,19 +18,24 @@ import 'package:koobus/controllers/auth_controller.dart';
 import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/network/api_client.dart';
 import 'package:koobus/features/driver/controllers/driver_controller.dart';
+import 'package:koobus/features/driver/controllers/driver_tracking_controller.dart';
 import 'package:koobus/features/driver/screens/driver_home_screen.dart';
 import 'package:koobus/features/driver/screens/tabs/driver_map_tab.dart';
 import 'package:koobus/features/driver/screens/tabs/driver_profile_tab.dart';
 import 'package:koobus/features/driver/screens/tabs/driver_students_tab.dart';
 import 'package:koobus/features/driver/services/driver_service.dart';
 import 'package:koobus/l10n/app_localizations.dart';
+import 'package:koobus/services/location_service.dart';
 
 class DriverShell extends StatefulWidget {
-  const DriverShell({super.key, this.controller});
+  const DriverShell({super.key, this.controller, this.trackingController});
 
   /// Kwa test: controller iliyotengenezwa tayari. Kwenye app halisi ni
   /// `null`; DriverHomeScreen itaunda controller yake kutoka AuthController.
   final DriverController? controller;
+
+  /// Kwa test: GPS ya kufikirika. Kwenye app halisi ni `null`.
+  final DriverTrackingController? trackingController;
 
   @override
   State<DriverShell> createState() => _DriverShellState();
@@ -40,7 +45,11 @@ class _DriverShellState extends State<DriverShell> {
   int _index = 0;
   late final DriverController _controller;
   late final bool _ownsController;
+  late final DriverTrackingController _tracking;
+  late final bool _ownsTracking;
   late final List<Widget> _tabs;
+  final Set<int> _loadedTabs = <int>{0};
+  int? _syncedTripId;
 
   @override
   void initState() {
@@ -60,19 +69,53 @@ class _DriverShellState extends State<DriverShell> {
       _ownsController = true;
     }
 
-    // Controller moja inatumiwa na Nyumbani na Wanafunzi. Hivyo safari
-    // iliyopakiwa haipotei tab inapobadilishwa, na attendance inaweza
-    // kupakia manifest upya bila kuunda ombi jipya la trip.
+    final providedTracking = widget.trackingController;
+    if (providedTracking != null) {
+      _tracking = providedTracking;
+      _ownsTracking = false;
+    } else {
+      _tracking = DriverTrackingController(
+        source: const GeolocatorLocationSource(),
+        repository: _controller.repository,
+      );
+      _ownsTracking = true;
+    }
+
+    // Controller moja inatumiwa na Nyumbani, Wanafunzi na Ramani. Hivyo
+    // safari iliyopakiwa haipotei tab inapobadilishwa, na GPS inaweza
+    // kuendelea wakati dereva ako kwenye tab nyingine.
     _tabs = [
       DriverHomeScreen(controller: _controller),
       DriverStudentsTab(controller: _controller),
-      const DriverMapTab(),
+      DriverMapTab(controller: _controller, tracking: _tracking),
       const DriverProfileTab(),
     ];
+
+    _controller.addListener(_syncTracking);
+    _syncTracking();
+  }
+
+  /// GPS huanza safari ikiwa active tu, na huacha safari inapomalizika.
+  void _syncTracking() {
+    final trip = _controller.trip;
+    if (trip != null && trip.isActive) {
+      if (_syncedTripId == trip.id) return;
+      _syncedTripId = trip.id;
+      _tracking.start(trip.id);
+      return;
+    }
+    if (_syncedTripId != null) {
+      _syncedTripId = null;
+      _tracking.stop();
+    }
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_syncTracking);
+    if (_ownsTracking) {
+      _tracking.dispose();
+    }
     if (_ownsController) _controller.dispose();
     super.dispose();
   }
@@ -82,7 +125,13 @@ class _DriverShellState extends State<DriverShell> {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      body: IndexedStack(index: _index, children: _tabs),
+      body: IndexedStack(
+        index: _index,
+        children: [
+          for (var i = 0; i < _tabs.length; i++)
+            if (_loadedTabs.contains(i)) _tabs[i] else const SizedBox.shrink(),
+        ],
+      ),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           backgroundColor: AppColors.driverSurface,
@@ -108,7 +157,10 @@ class _DriverShellState extends State<DriverShell> {
         ),
         child: NavigationBar(
           selectedIndex: _index,
-          onDestinationSelected: (index) => setState(() => _index = index),
+          onDestinationSelected: (index) => setState(() {
+            _index = index;
+            _loadedTabs.add(index);
+          }),
           destinations: [
             NavigationDestination(
               icon: const Icon(Icons.dashboard_outlined),

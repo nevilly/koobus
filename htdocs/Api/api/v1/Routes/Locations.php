@@ -104,20 +104,70 @@ class Locations extends LocationsController
         $user = $res;
         $role = $this->roleOf($user);
 
-        $tripId = isset($this->data->trip_id) ? $this->data->trip_id : '';
+        if(!is_object($this->data)) return array('status'=>400,'payload'=>"Invalid data");
 
-        // KOO_BUS_ADAPT: dereva anapakia location ya trip Yake tu,
-        // na lazima aeleze trip_id (hakuna kupakia "bila trip").
+        $tripId = isset($this->data->trip_id) ? $this->data->trip_id : '';
+        if($tripId === '' || !is_numeric($tripId))
+            return array('status'=>400,'payload'=>"trip_id is required");
+        $tripId = intval($tripId);
+
+        include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/TripsController.php';
+        $tc = new TripsController();
+        $trip = $tc->get($tripId);
+        if(!$trip || !is_object($trip))
+            return array('status'=>404,'payload'=>"Trip not found");
+
+        // KOO_BUS_ADAPT: dereva anapakia location ya trip Yake tu.
         if($role == 'driver'){
-            if($tripId === '' || !$this->driverAllowedTrip($user->id, $tripId)){
+            if(intval($trip->driver_id) !== intval($user->id))
                 return array('status'=>403,'payload'=>"Forbidden");
-            }
         } elseif($role == 'school_admin'){
             // school_admin anapakia location ya trip ya shule yake tu.
-            if($tripId === '' || !$this->schoolAdminAllowedTrip($user, $tripId)){
+            if(!$this->schoolAdminAllowedTrip($user, $tripId))
                 return array('status'=>403,'payload'=>"Forbidden");
-            }
         }
+
+        // KOO_BUS_ADAPT: location inakubalika kwa safari inayoendelea tu.
+        // Hii inazuia pointi za safari ambayo haijaanza au imekwisha.
+        if(!isset($trip->status) || $trip->status !== 'active')
+            return array('status'=>409,'payload'=>"Trip is not active");
+
+        $lat = isset($this->data->latitude) ? $this->data->latitude : null;
+        $lng = isset($this->data->longitude) ? $this->data->longitude : null;
+        if(!is_numeric($lat) || !is_numeric($lng))
+            return array('status'=>400,'payload'=>"latitude and longitude are required");
+        $lat = floatval($lat);
+        $lng = floatval($lng);
+        if($lat < -90 || $lat > 90 || $lng < -180 || $lng > 180)
+            return array('status'=>400,'payload'=>"Invalid coordinates");
+        if(abs($lat) < 0.0000001 && abs($lng) < 0.0000001)
+            return array('status'=>400,'payload'=>"Invalid coordinates");
+
+        $speed = isset($this->data->speed) ? $this->data->speed : null;
+        if($speed !== null && $speed !== ''){
+            if(!is_numeric($speed) || floatval($speed) < 0 || floatval($speed) > 300)
+                return array('status'=>400,'payload'=>"Invalid speed");
+            $speed = floatval($speed);
+        } else {
+            $speed = null;
+        }
+
+        $accuracy = isset($this->data->accuracy) ? $this->data->accuracy : null;
+        if($accuracy !== null && $accuracy !== ''){
+            if(!is_numeric($accuracy) || floatval($accuracy) < 0 || floatval($accuracy) > 10000)
+                return array('status'=>400,'payload'=>"Invalid accuracy");
+            $accuracy = floatval($accuracy);
+        } else {
+            $accuracy = null;
+        }
+
+        // Server ndiyo inaamua driver_id; client hawezi kujitengenezea.
+        $this->data->trip_id = $tripId;
+        $this->data->driver_id = intval($trip->driver_id);
+        $this->data->latitude = $lat;
+        $this->data->longitude = $lng;
+        if($speed === null) unset($this->data->speed); else $this->data->speed = $speed;
+        if($accuracy === null) unset($this->data->accuracy); else $this->data->accuracy = $accuracy;
 
         $sql = parent::add($this->encode($this->data));
         if($sql) return array('status'=>201,'payload'=>array('id'=>$sql));

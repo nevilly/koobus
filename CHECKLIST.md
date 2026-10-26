@@ -391,9 +391,13 @@ For each endpoint:
 # PHASE 9 - REAL GPS AND LIVE TRACKING
 
 > Maendeleo (2026-10-26): UI ya dereva (shell, dashboard, sticky Start/End),
-> manifest ya wanafunzi na mahudhurio zimekamilika kama msingi. GPS halisi,
-> ramani na background tracking bado havijaanza; alama za checklist hapa chini
-> bado ni 0/28.
+> manifest ya wanafunzi na mahudhurio zimekamilika kama msingi. GPS halisi na
+> ramani ya OSM vimeunganishwa: ruhusa, location services, denied/permanently
+> denied, stale/inaccurate, upload yenye uthibitisho wa safari, na map display
+> vimejaribiwa kwenye simu V2333. Background tracking, notification ya
+> ufuatiliaji, upande wa mzazi na jaribio la simu mbili bado havijaanza.
+> Alama rasmi za checklist hapa chini bado ni 0/28 hadi completion gate yote
+> (pamoja na parent retrieval na two-phone test) ikamilike.
 
 ## 9.1 GPS acquisition
 

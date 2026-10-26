@@ -29,6 +29,13 @@ abstract class DriverRepository {
     required String eventType,
     int? stopId,
   });
+  Future<void> uploadLocation({
+    required int tripId,
+    required double latitude,
+    required double longitude,
+    double? speed,
+    double? accuracy,
+  });
 }
 
 class DriverService implements DriverRepository {
@@ -108,6 +115,26 @@ class DriverService implements DriverRepository {
         'child_id': childId,
         'event_type': eventType,
         'stop_id': ?stopId,
+      },
+    );
+  }
+
+  @override
+  Future<void> uploadLocation({
+    required int tripId,
+    required double latitude,
+    required double longitude,
+    double? speed,
+    double? accuracy,
+  }) async {
+    await _api.post(
+      ApiEndpoints.locationUpload,
+      body: {
+        'trip_id': tripId,
+        'latitude': latitude,
+        'longitude': longitude,
+        'speed': ?speed,
+        'accuracy': ?accuracy,
       },
     );
   }

@@ -138,7 +138,10 @@ void main() {
     expect(find.text('Hakuna wanafunzi kwenye route hii'), findsOneWidget);
 
     await _tapTab(tester, 'Ramani');
-    expect(find.text('Ramani na GPS inakuja'), findsOneWidget);
+    expect(
+      find.text('Safari hii haijaanza. Ramani inaonyesha vituo pekee.'),
+      findsOneWidget,
+    );
 
     await _tapTab(tester, 'Wasifu');
     expect(find.text('Taarifa za dereva'), findsOneWidget);
