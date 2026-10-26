@@ -363,7 +363,7 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get roleUnsupportedBody =>
-      'Ukurasa wa akaunti hii utaongezwa hatua zijazo. Kwa sasa unaweza kuingia kama mzazi au dereva.';
+      'Ukurasa wa akaunti hii utaongezwa hatua zijazo. Kwa sasa unaweza kuingia kama mzazi, dereva, Matron/Patron au msimamizi wa shule.';
 
   @override
   String get roleLabel => 'Aina ya akaunti';
@@ -375,7 +375,7 @@ class AppLocalizationsSw extends AppLocalizations {
   String get roleLabelDriver => 'Dereva';
 
   @override
-  String get roleLabelMatron => 'Matron';
+  String get roleLabelMatron => 'Matron/Patron';
 
   @override
   String get roleLabelSchoolAdmin => 'Msimamizi wa shule';
@@ -741,4 +741,195 @@ class AppLocalizationsSw extends AppLocalizations {
 
   @override
   String get driverServerError => 'Server imeshindikana. Jaribu tena.';
+
+  @override
+  String get staffNavChildren => 'Wanafunzi';
+
+  @override
+  String get staffNavSchool => 'Shule';
+
+  @override
+  String get staffNavProfile => 'Wasifu';
+
+  @override
+  String get staffProfileSection => 'Taarifa za mfanyakazi';
+
+  @override
+  String get staffProfileNotice =>
+      'Taarifa hizi zinatoka kwenye akaunti yako ya shule.';
+
+  @override
+  String get staffProfileSchool => 'Shule';
+
+  @override
+  String get staffProfileNoSchool => 'Shule haijulikani';
+
+  @override
+  String get coordinatesTitle => 'Nafasi (GPS)';
+
+  @override
+  String get coordinatesParentEntryTitle => 'Nafasi na uthibitisho';
+
+  @override
+  String get coordinatesParentEntryBody =>
+      'Weka nafasi ya mtoto na uthibitisha nafasi ya shule.';
+
+  @override
+  String get coordinatesChildrenTitle => 'Nafasi za wanafunzi';
+
+  @override
+  String get coordinatesChildrenSubtitle =>
+      'Nafasi ni halali pale mzazi na shule wote wamekubali.';
+
+  @override
+  String get coordinatesSchoolTitle => 'Nafasi ya shule';
+
+  @override
+  String get coordinatesSchoolSubtitle =>
+      'Weka lango au eneo la shule. Mzazi huthibitisha upande wake.';
+
+  @override
+  String get coordinatesInfo =>
+      'Nafasi ya upande mmoja haitumiki kwa route au ETA. Upande wa pili lazima uthibitishe.';
+
+  @override
+  String get coordinatesEmptyTitle => 'Hakuna wanafunzi';
+
+  @override
+  String get coordinatesEmptyBody =>
+      'Wanafunzi wataonekana hapa baada ya kusajiliwa shuleni.';
+
+  @override
+  String get coordinatesEmptyParentTitle => 'Hakuna watoto waliounganishwa';
+
+  @override
+  String get coordinatesEmptyParentBody =>
+      'Nafasi zitaonekana hapa baada ya msimamizi wa shule kuunganisha mtoto na akaunti yako.';
+
+  @override
+  String get coordinatesNoCoordinate => 'Haijawasilishwa';
+
+  @override
+  String get coordinatesParentConfirmed => 'Mzazi amethibitisha';
+
+  @override
+  String get coordinatesSchoolConfirmed => 'Shule imethibitisha';
+
+  @override
+  String get coordinatesValid => 'Imethibitishwa na wote';
+
+  @override
+  String get coordinatesWaitingParent => 'Inasubiri mzazi';
+
+  @override
+  String get coordinatesWaitingSchool => 'Inasubiri shule';
+
+  @override
+  String coordinatesChildSheetTitle(String name) {
+    return 'Nafasi ya $name';
+  }
+
+  @override
+  String get coordinatesSchoolSheetTitle => 'Nafasi ya shule';
+
+  @override
+  String get coordinatesLatitude => 'Latitude';
+
+  @override
+  String get coordinatesLongitude => 'Longitude';
+
+  @override
+  String get coordinatesLabel => 'Maelezo (si lazima)';
+
+  @override
+  String get coordinatesLabelHint => 'Mfano: Nyumbani, lango la shule';
+
+  @override
+  String get coordinatesLatitudeHint => 'Mfano: -6.792354';
+
+  @override
+  String get coordinatesLongitudeHint => 'Mfano: 39.208328';
+
+  @override
+  String get coordinatesUseGps => 'Tumia GPS yangu';
+
+  @override
+  String get coordinatesLocating => 'Inatafuta GPS...';
+
+  @override
+  String get coordinatesSave => 'Hifadhi nafasi';
+
+  @override
+  String get coordinatesEdit => 'Badilisha nafasi';
+
+  @override
+  String get coordinatesSet => 'Weka nafasi';
+
+  @override
+  String get coordinatesConfirm => 'Thibitisha';
+
+  @override
+  String get coordinatesConfirmParentTitle => 'Thibitisha nafasi hii?';
+
+  @override
+  String get coordinatesConfirmParentBody =>
+      'Nafasi hii itatumika kwa route/ETA pale shule pia itakapothibitisha.';
+
+  @override
+  String get coordinatesConfirmSchoolTitle => 'Thibitisha nafasi hii?';
+
+  @override
+  String get coordinatesConfirmSchoolBody =>
+      'Nafasi hii itatumika kwa route/ETA pale mzazi pia atakapothibitisha.';
+
+  @override
+  String get coordinatesSaved =>
+      'Nafasi imehifadhiwa. Inasubiri uthibitisho wa upande wa pili.';
+
+  @override
+  String get coordinatesConfirmed => 'Uthibitisho wako umehifadhiwa.';
+
+  @override
+  String get coordinatesErrorLoad => 'Imeshindikana kupakia nafasi.';
+
+  @override
+  String get coordinatesErrorSave =>
+      'Imeshindikana kuhifadhi nafasi. Jaribu tena.';
+
+  @override
+  String get coordinatesErrorConfirm =>
+      'Imeshindikana kuthibitisha nafasi. Jaribu tena.';
+
+  @override
+  String get coordinatesInvalidLatitude =>
+      'Latitude lazima iwe kati ya -90 na 90.';
+
+  @override
+  String get coordinatesInvalidLongitude =>
+      'Longitude lazima iwe kati ya -180 na 180.';
+
+  @override
+  String get coordinatesRequired => 'Weka latitude na longitude.';
+
+  @override
+  String get coordinatesGpsDenied => 'Ruhusa ya eneo haijatolewa.';
+
+  @override
+  String get coordinatesGpsDeniedForever =>
+      'Ruhusa ya eneo imezuiwa. Fungua mipangilio.';
+
+  @override
+  String get coordinatesGpsOff => 'GPS imezimwa.';
+
+  @override
+  String get coordinatesGpsWeak => 'GPS signal ni hafifu. Jaribu tena.';
+
+  @override
+  String get coordinatesGpsError => 'Imeshindikana kupata eneo la GPS.';
+
+  @override
+  String get coordinatesOpenSettings => 'Fungua mipangilio';
+
+  @override
+  String get coordinatesSchoolNoCoordinate => 'Shule haijaweka nafasi bado.';
 }

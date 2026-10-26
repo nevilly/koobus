@@ -58,6 +58,9 @@ class AuthController extends ChangeNotifier {
   /// `users.id` ya mtumiaji aliyeingia (inahitajika kwa safari za dereva).
   int? get userId => _session?.userId;
 
+  /// `users.school_id` ya mtumiaji aliyeingia (matron/school admin).
+  int? get schoolId => _session?.schoolId;
+
   /// Jina la kuonyesha (kutoka profile ya API).
   String get displayName {
     final name = _session?.displayName;
@@ -115,6 +118,7 @@ class AuthController extends ChangeNotifier {
     required String phone,
     String? role,
     int? userId,
+    int? schoolId,
     String? displayName,
   }) async {
     final session = StoredSession(
@@ -123,6 +127,7 @@ class AuthController extends ChangeNotifier {
       expiresAt: TokenUtils.expiryOf(token),
       role: role,
       userId: userId,
+      schoolId: schoolId,
       displayName: displayName,
     );
     await _sessionService.saveSession(session);
@@ -145,6 +150,7 @@ class AuthController extends ChangeNotifier {
       expiresAt: current.expiresAt,
       role: user.roleValue,
       userId: user.id,
+      schoolId: user.schoolId,
       displayName: user.displayName,
     );
     await _sessionService.saveSession(updated);

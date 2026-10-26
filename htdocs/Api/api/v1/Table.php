@@ -220,6 +220,37 @@ class Table extends  Database
             "
         )));
 
+        // coordinates (nafasi za mtoto/shule + uthibitisho wa pande mbili)
+        // - entity_type='child'  -> entity_id = children.id
+        // - entity_type='school' -> entity_id = schools.id
+        // Nafasi ni halali pale parent_confirmed_at NA school_confirmed_at
+        // zote zipo. Mabadiliko ya lat/lng hufuta uthibitisho wa upande
+        // wa pili (modules/route ndizo zinazolinda kanuni hii).
+        parent::createTable($this->encode(array(
+            'name'=>'coordinates',
+            'value'=>"
+            id int(11) not null auto_increment,
+            entity_type enum('child','school') not null,
+            entity_id int(11) not null,
+            latitude decimal(10,7) not null,
+            longitude decimal(10,7) not null,
+            label varchar(150) null,
+            proposed_by int(11) null,
+            proposed_role enum('parent','matron','school_admin','super_admin') null,
+            parent_confirmed_by int(11) null,
+            parent_confirmed_at datetime null,
+            school_confirmed_by int(11) null,
+            school_confirmed_at datetime null,
+            created_at datetime not null default current_timestamp,
+            updated_at datetime null on update current_timestamp,
+            primary key(id),
+            unique key unique_coordinate_entity (entity_type, entity_id),
+            foreign key(proposed_by) references users(id) on delete set null,
+            foreign key(parent_confirmed_by) references users(id) on delete set null,
+            foreign key(school_confirmed_by) references users(id) on delete set null
+            "
+        )));
+
         // notifications
         parent::createTable($this->encode(array(
             'name'=>'notifications',

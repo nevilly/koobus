@@ -27,4 +27,14 @@ class ApiEndpoints {
   static String route(int id) => '/routes/get/$id';
   static String routeStops(int id) => '/routes/stops/$id';
   static String bus(int id) => '/buses/get/$id';
+
+  // ---- Coordinates (GPS + dual confirmation) ----
+  static const String coordinatesOverview = '/coordinates/overview';
+  static String childCoordinate(int childId) => '/coordinates/child/$childId';
+  static String childCoordinateConfirm(int childId) =>
+      '/coordinates/child/$childId/confirm';
+  static String schoolCoordinate(int schoolId) =>
+      '/coordinates/school/$schoolId';
+  static String schoolCoordinateConfirm(int schoolId) =>
+      '/coordinates/school/$schoolId/confirm';
 }

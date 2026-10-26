@@ -17,6 +17,7 @@ class StoredSession {
     this.expiresAt,
     this.role,
     this.userId,
+    this.schoolId,
     this.displayName,
   });
 
@@ -39,6 +40,9 @@ class StoredSession {
   /// `users.id` — dereva anaitumia kuomba safari zake.
   final int? userId;
 
+  /// `users.school_id` — matron/school admin wanaitumia kwa data ya shule.
+  final int? schoolId;
+
   /// Jina la kuonyesha kwenye salamu.
   final String? displayName;
 
@@ -55,12 +59,14 @@ class StoredSession {
         if (expiresAt != null) 'expiresAt': expiresAt!.toUtc().toIso8601String(),
         if (role != null) 'role': role,
         if (userId != null) 'userId': userId,
+        if (schoolId != null) 'schoolId': schoolId,
         if (displayName != null) 'displayName': displayName,
       };
 
   factory StoredSession.fromJson(Map<String, dynamic> json) {
     final rawExpiry = json['expiresAt'] as String?;
     final rawUserId = json['userId'];
+    final rawSchoolId = json['schoolId'];
     return StoredSession(
       // as String? to '?? ''': kama field haipo, tusipate crash —
       // session itachukuliwa kama si sahihi na mtu atafanywa aingie tena.
@@ -69,6 +75,9 @@ class StoredSession {
       expiresAt: rawExpiry == null ? null : DateTime.tryParse(rawExpiry)?.toUtc(),
       role: json['role'] as String?,
       userId: rawUserId is num ? rawUserId.toInt() : int.tryParse('$rawUserId'),
+      schoolId: rawSchoolId is num
+          ? rawSchoolId.toInt()
+          : int.tryParse('$rawSchoolId'),
       displayName: json['displayName'] as String?,
     );
   }

@@ -363,7 +363,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get roleUnsupportedBody =>
-      'The page for this account will arrive in a later phase. For now you can sign in as a parent or driver.';
+      'The page for this account will arrive in a later phase. For now you can sign in as a parent, driver, Matron/Patron or school admin.';
 
   @override
   String get roleLabel => 'Account type';
@@ -375,7 +375,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get roleLabelDriver => 'Driver';
 
   @override
-  String get roleLabelMatron => 'Matron';
+  String get roleLabelMatron => 'Matron/Patron';
 
   @override
   String get roleLabelSchoolAdmin => 'School admin';
@@ -740,4 +740,196 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get driverServerError => 'The server failed. Please try again.';
+
+  @override
+  String get staffNavChildren => 'Students';
+
+  @override
+  String get staffNavSchool => 'School';
+
+  @override
+  String get staffNavProfile => 'Profile';
+
+  @override
+  String get staffProfileSection => 'Staff details';
+
+  @override
+  String get staffProfileNotice =>
+      'These details come from your school account.';
+
+  @override
+  String get staffProfileSchool => 'School';
+
+  @override
+  String get staffProfileNoSchool => 'School unknown';
+
+  @override
+  String get coordinatesTitle => 'Locations (GPS)';
+
+  @override
+  String get coordinatesParentEntryTitle => 'Locations and confirmation';
+
+  @override
+  String get coordinatesParentEntryBody =>
+      'Set your child\'s location and confirm the school location.';
+
+  @override
+  String get coordinatesChildrenTitle => 'Student locations';
+
+  @override
+  String get coordinatesChildrenSubtitle =>
+      'A location is valid only when both the parent and the school confirm it.';
+
+  @override
+  String get coordinatesSchoolTitle => 'School location';
+
+  @override
+  String get coordinatesSchoolSubtitle =>
+      'Set the school gate or area. A parent confirms their side.';
+
+  @override
+  String get coordinatesInfo =>
+      'A one-sided location is never used for route or ETA. The other side must confirm.';
+
+  @override
+  String get coordinatesEmptyTitle => 'No students';
+
+  @override
+  String get coordinatesEmptyBody =>
+      'Students will appear here once they are registered at the school.';
+
+  @override
+  String get coordinatesEmptyParentTitle => 'No linked children';
+
+  @override
+  String get coordinatesEmptyParentBody =>
+      'Locations will appear here after a school admin links a child to your account.';
+
+  @override
+  String get coordinatesNoCoordinate => 'Not submitted';
+
+  @override
+  String get coordinatesParentConfirmed => 'Parent confirmed';
+
+  @override
+  String get coordinatesSchoolConfirmed => 'School confirmed';
+
+  @override
+  String get coordinatesValid => 'Confirmed by both';
+
+  @override
+  String get coordinatesWaitingParent => 'Waiting for parent';
+
+  @override
+  String get coordinatesWaitingSchool => 'Waiting for school';
+
+  @override
+  String coordinatesChildSheetTitle(String name) {
+    return 'Location for $name';
+  }
+
+  @override
+  String get coordinatesSchoolSheetTitle => 'School location';
+
+  @override
+  String get coordinatesLatitude => 'Latitude';
+
+  @override
+  String get coordinatesLongitude => 'Longitude';
+
+  @override
+  String get coordinatesLabel => 'Label (optional)';
+
+  @override
+  String get coordinatesLabelHint => 'Example: Home, school gate';
+
+  @override
+  String get coordinatesLatitudeHint => 'Example: -6.792354';
+
+  @override
+  String get coordinatesLongitudeHint => 'Example: 39.208328';
+
+  @override
+  String get coordinatesUseGps => 'Use my GPS';
+
+  @override
+  String get coordinatesLocating => 'Getting GPS...';
+
+  @override
+  String get coordinatesSave => 'Save location';
+
+  @override
+  String get coordinatesEdit => 'Update location';
+
+  @override
+  String get coordinatesSet => 'Set location';
+
+  @override
+  String get coordinatesConfirm => 'Confirm';
+
+  @override
+  String get coordinatesConfirmParentTitle => 'Confirm this location?';
+
+  @override
+  String get coordinatesConfirmParentBody =>
+      'This location will be used for route/ETA once the school also confirms it.';
+
+  @override
+  String get coordinatesConfirmSchoolTitle => 'Confirm this location?';
+
+  @override
+  String get coordinatesConfirmSchoolBody =>
+      'This location will be used for route/ETA once the parent also confirms it.';
+
+  @override
+  String get coordinatesSaved =>
+      'Location saved. Waiting for the other side to confirm.';
+
+  @override
+  String get coordinatesConfirmed => 'Your confirmation has been saved.';
+
+  @override
+  String get coordinatesErrorLoad => 'Could not load locations.';
+
+  @override
+  String get coordinatesErrorSave =>
+      'Could not save the location. Please try again.';
+
+  @override
+  String get coordinatesErrorConfirm =>
+      'Could not confirm the location. Please try again.';
+
+  @override
+  String get coordinatesInvalidLatitude =>
+      'Latitude must be between -90 and 90.';
+
+  @override
+  String get coordinatesInvalidLongitude =>
+      'Longitude must be between -180 and 180.';
+
+  @override
+  String get coordinatesRequired => 'Enter latitude and longitude.';
+
+  @override
+  String get coordinatesGpsDenied => 'Location permission was not granted.';
+
+  @override
+  String get coordinatesGpsDeniedForever =>
+      'Location permission is blocked. Open settings.';
+
+  @override
+  String get coordinatesGpsOff => 'GPS is turned off.';
+
+  @override
+  String get coordinatesGpsWeak => 'The GPS signal is weak. Try again.';
+
+  @override
+  String get coordinatesGpsError => 'Could not get the GPS location.';
+
+  @override
+  String get coordinatesOpenSettings => 'Open settings';
+
+  @override
+  String get coordinatesSchoolNoCoordinate =>
+      'The school has not set a location yet.';
 }

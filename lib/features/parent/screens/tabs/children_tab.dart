@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:koobus/core/constants/app_colors.dart';
 import 'package:koobus/core/constants/app_spacing.dart';
 import 'package:koobus/core/widgets/dev_badge.dart';
+import 'package:koobus/features/coordinates/screens/parent_coordinates_screen.dart';
 import 'package:koobus/features/parent/dev/parent_demo_data.dart';
 import 'package:koobus/features/parent/screens/child_history_screen.dart';
 import 'package:koobus/l10n/app_localizations.dart';
@@ -49,6 +50,16 @@ class ChildrenTab extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
+          _CoordinatesEntryCard(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const ParentCoordinatesScreen(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: AppSpacing.md),
           if (children.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
@@ -79,6 +90,57 @@ class ChildrenTab extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _CoordinatesEntryCard extends StatelessWidget {
+  const _CoordinatesEntryCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final textTheme = Theme.of(context).textTheme;
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        key: const Key('parent_coordinates_entry'),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: AppColors.primary.withValues(alpha: 0.12),
+                child: const Icon(Icons.my_location, color: AppColors.primary),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.coordinatesParentEntryTitle,
+                      style: textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      l10n.coordinatesParentEntryBody,
+                      style: textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              const Icon(Icons.chevron_right),
+            ],
+          ),
+        ),
       ),
     );
   }

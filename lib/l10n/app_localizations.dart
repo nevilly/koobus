@@ -707,7 +707,7 @@ abstract class AppLocalizations {
   /// No description provided for @roleUnsupportedBody.
   ///
   /// In sw, this message translates to:
-  /// **'Ukurasa wa akaunti hii utaongezwa hatua zijazo. Kwa sasa unaweza kuingia kama mzazi au dereva.'**
+  /// **'Ukurasa wa akaunti hii utaongezwa hatua zijazo. Kwa sasa unaweza kuingia kama mzazi, dereva, Matron/Patron au msimamizi wa shule.'**
   String get roleUnsupportedBody;
 
   /// No description provided for @roleLabel.
@@ -731,7 +731,7 @@ abstract class AppLocalizations {
   /// No description provided for @roleLabelMatron.
   ///
   /// In sw, this message translates to:
-  /// **'Matron'**
+  /// **'Matron/Patron'**
   String get roleLabelMatron;
 
   /// No description provided for @roleLabelSchoolAdmin.
@@ -1399,6 +1399,354 @@ abstract class AppLocalizations {
   /// In sw, this message translates to:
   /// **'Server imeshindikana. Jaribu tena.'**
   String get driverServerError;
+
+  /// No description provided for @staffNavChildren.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wanafunzi'**
+  String get staffNavChildren;
+
+  /// No description provided for @staffNavSchool.
+  ///
+  /// In sw, this message translates to:
+  /// **'Shule'**
+  String get staffNavSchool;
+
+  /// No description provided for @staffNavProfile.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wasifu'**
+  String get staffNavProfile;
+
+  /// No description provided for @staffProfileSection.
+  ///
+  /// In sw, this message translates to:
+  /// **'Taarifa za mfanyakazi'**
+  String get staffProfileSection;
+
+  /// No description provided for @staffProfileNotice.
+  ///
+  /// In sw, this message translates to:
+  /// **'Taarifa hizi zinatoka kwenye akaunti yako ya shule.'**
+  String get staffProfileNotice;
+
+  /// No description provided for @staffProfileSchool.
+  ///
+  /// In sw, this message translates to:
+  /// **'Shule'**
+  String get staffProfileSchool;
+
+  /// No description provided for @staffProfileNoSchool.
+  ///
+  /// In sw, this message translates to:
+  /// **'Shule haijulikani'**
+  String get staffProfileNoSchool;
+
+  /// No description provided for @coordinatesTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi (GPS)'**
+  String get coordinatesTitle;
+
+  /// No description provided for @coordinatesParentEntryTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi na uthibitisho'**
+  String get coordinatesParentEntryTitle;
+
+  /// No description provided for @coordinatesParentEntryBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka nafasi ya mtoto na uthibitisha nafasi ya shule.'**
+  String get coordinatesParentEntryBody;
+
+  /// No description provided for @coordinatesChildrenTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi za wanafunzi'**
+  String get coordinatesChildrenTitle;
+
+  /// No description provided for @coordinatesChildrenSubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi ni halali pale mzazi na shule wote wamekubali.'**
+  String get coordinatesChildrenSubtitle;
+
+  /// No description provided for @coordinatesSchoolTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi ya shule'**
+  String get coordinatesSchoolTitle;
+
+  /// No description provided for @coordinatesSchoolSubtitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka lango au eneo la shule. Mzazi huthibitisha upande wake.'**
+  String get coordinatesSchoolSubtitle;
+
+  /// No description provided for @coordinatesInfo.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi ya upande mmoja haitumiki kwa route au ETA. Upande wa pili lazima uthibitishe.'**
+  String get coordinatesInfo;
+
+  /// No description provided for @coordinatesEmptyTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna wanafunzi'**
+  String get coordinatesEmptyTitle;
+
+  /// No description provided for @coordinatesEmptyBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wanafunzi wataonekana hapa baada ya kusajiliwa shuleni.'**
+  String get coordinatesEmptyBody;
+
+  /// No description provided for @coordinatesEmptyParentTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna watoto waliounganishwa'**
+  String get coordinatesEmptyParentTitle;
+
+  /// No description provided for @coordinatesEmptyParentBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi zitaonekana hapa baada ya msimamizi wa shule kuunganisha mtoto na akaunti yako.'**
+  String get coordinatesEmptyParentBody;
+
+  /// No description provided for @coordinatesNoCoordinate.
+  ///
+  /// In sw, this message translates to:
+  /// **'Haijawasilishwa'**
+  String get coordinatesNoCoordinate;
+
+  /// No description provided for @coordinatesParentConfirmed.
+  ///
+  /// In sw, this message translates to:
+  /// **'Mzazi amethibitisha'**
+  String get coordinatesParentConfirmed;
+
+  /// No description provided for @coordinatesSchoolConfirmed.
+  ///
+  /// In sw, this message translates to:
+  /// **'Shule imethibitisha'**
+  String get coordinatesSchoolConfirmed;
+
+  /// No description provided for @coordinatesValid.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imethibitishwa na wote'**
+  String get coordinatesValid;
+
+  /// No description provided for @coordinatesWaitingParent.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inasubiri mzazi'**
+  String get coordinatesWaitingParent;
+
+  /// No description provided for @coordinatesWaitingSchool.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inasubiri shule'**
+  String get coordinatesWaitingSchool;
+
+  /// Kichwa cha sheet ya nafasi ya mtoto.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi ya {name}'**
+  String coordinatesChildSheetTitle(String name);
+
+  /// No description provided for @coordinatesSchoolSheetTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi ya shule'**
+  String get coordinatesSchoolSheetTitle;
+
+  /// No description provided for @coordinatesLatitude.
+  ///
+  /// In sw, this message translates to:
+  /// **'Latitude'**
+  String get coordinatesLatitude;
+
+  /// No description provided for @coordinatesLongitude.
+  ///
+  /// In sw, this message translates to:
+  /// **'Longitude'**
+  String get coordinatesLongitude;
+
+  /// No description provided for @coordinatesLabel.
+  ///
+  /// In sw, this message translates to:
+  /// **'Maelezo (si lazima)'**
+  String get coordinatesLabel;
+
+  /// No description provided for @coordinatesLabelHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Mfano: Nyumbani, lango la shule'**
+  String get coordinatesLabelHint;
+
+  /// No description provided for @coordinatesLatitudeHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Mfano: -6.792354'**
+  String get coordinatesLatitudeHint;
+
+  /// No description provided for @coordinatesLongitudeHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Mfano: 39.208328'**
+  String get coordinatesLongitudeHint;
+
+  /// No description provided for @coordinatesUseGps.
+  ///
+  /// In sw, this message translates to:
+  /// **'Tumia GPS yangu'**
+  String get coordinatesUseGps;
+
+  /// No description provided for @coordinatesLocating.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inatafuta GPS...'**
+  String get coordinatesLocating;
+
+  /// No description provided for @coordinatesSave.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hifadhi nafasi'**
+  String get coordinatesSave;
+
+  /// No description provided for @coordinatesEdit.
+  ///
+  /// In sw, this message translates to:
+  /// **'Badilisha nafasi'**
+  String get coordinatesEdit;
+
+  /// No description provided for @coordinatesSet.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka nafasi'**
+  String get coordinatesSet;
+
+  /// No description provided for @coordinatesConfirm.
+  ///
+  /// In sw, this message translates to:
+  /// **'Thibitisha'**
+  String get coordinatesConfirm;
+
+  /// No description provided for @coordinatesConfirmParentTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Thibitisha nafasi hii?'**
+  String get coordinatesConfirmParentTitle;
+
+  /// No description provided for @coordinatesConfirmParentBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi hii itatumika kwa route/ETA pale shule pia itakapothibitisha.'**
+  String get coordinatesConfirmParentBody;
+
+  /// No description provided for @coordinatesConfirmSchoolTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Thibitisha nafasi hii?'**
+  String get coordinatesConfirmSchoolTitle;
+
+  /// No description provided for @coordinatesConfirmSchoolBody.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi hii itatumika kwa route/ETA pale mzazi pia atakapothibitisha.'**
+  String get coordinatesConfirmSchoolBody;
+
+  /// No description provided for @coordinatesSaved.
+  ///
+  /// In sw, this message translates to:
+  /// **'Nafasi imehifadhiwa. Inasubiri uthibitisho wa upande wa pili.'**
+  String get coordinatesSaved;
+
+  /// No description provided for @coordinatesConfirmed.
+  ///
+  /// In sw, this message translates to:
+  /// **'Uthibitisho wako umehifadhiwa.'**
+  String get coordinatesConfirmed;
+
+  /// No description provided for @coordinatesErrorLoad.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeshindikana kupakia nafasi.'**
+  String get coordinatesErrorLoad;
+
+  /// No description provided for @coordinatesErrorSave.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeshindikana kuhifadhi nafasi. Jaribu tena.'**
+  String get coordinatesErrorSave;
+
+  /// No description provided for @coordinatesErrorConfirm.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeshindikana kuthibitisha nafasi. Jaribu tena.'**
+  String get coordinatesErrorConfirm;
+
+  /// No description provided for @coordinatesInvalidLatitude.
+  ///
+  /// In sw, this message translates to:
+  /// **'Latitude lazima iwe kati ya -90 na 90.'**
+  String get coordinatesInvalidLatitude;
+
+  /// No description provided for @coordinatesInvalidLongitude.
+  ///
+  /// In sw, this message translates to:
+  /// **'Longitude lazima iwe kati ya -180 na 180.'**
+  String get coordinatesInvalidLongitude;
+
+  /// No description provided for @coordinatesRequired.
+  ///
+  /// In sw, this message translates to:
+  /// **'Weka latitude na longitude.'**
+  String get coordinatesRequired;
+
+  /// No description provided for @coordinatesGpsDenied.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ruhusa ya eneo haijatolewa.'**
+  String get coordinatesGpsDenied;
+
+  /// No description provided for @coordinatesGpsDeniedForever.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ruhusa ya eneo imezuiwa. Fungua mipangilio.'**
+  String get coordinatesGpsDeniedForever;
+
+  /// No description provided for @coordinatesGpsOff.
+  ///
+  /// In sw, this message translates to:
+  /// **'GPS imezimwa.'**
+  String get coordinatesGpsOff;
+
+  /// No description provided for @coordinatesGpsWeak.
+  ///
+  /// In sw, this message translates to:
+  /// **'GPS signal ni hafifu. Jaribu tena.'**
+  String get coordinatesGpsWeak;
+
+  /// No description provided for @coordinatesGpsError.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeshindikana kupata eneo la GPS.'**
+  String get coordinatesGpsError;
+
+  /// No description provided for @coordinatesOpenSettings.
+  ///
+  /// In sw, this message translates to:
+  /// **'Fungua mipangilio'**
+  String get coordinatesOpenSettings;
+
+  /// No description provided for @coordinatesSchoolNoCoordinate.
+  ///
+  /// In sw, this message translates to:
+  /// **'Shule haijaweka nafasi bado.'**
+  String get coordinatesSchoolNoCoordinate;
 }
 
 class _AppLocalizationsDelegate
