@@ -71,6 +71,59 @@ class TripsModule extends Database
         return parent::select(parent::encode(['table'=>$this->table,'where'=>"driver_id='$driver_id' AND status='active'"]));
     }
 
+    /**
+     * KOO_BUS_ADAPT: manifest ya wanafunzi kwa safari.
+     *
+     * Mpangilio ni kwa kituo cha safari:
+     *  - asubuhi: pickup_stop (wa kwanza kupanda)
+     *  - mchana: dropoff_stop (wa kwanza kushuka)
+     *
+     * `attendance_status` ni event ya mwisho ya mtoto kwenye safari hii.
+     * Watoto wasio na kituo wanawekwa mwisho; hatutengenezi kituo cha mfano.
+     */
+    public function get_manifest($trip_id, $route_id, $trip_type){
+        $trip_id = intval($trip_id);
+        $route_id = intval($route_id);
+        if($trip_id <= 0 || $route_id <= 0) return false;
+
+        $orderExpr = ($trip_type === 'morning')
+            ? 'COALESCE(ps.stop_order, 999999)'
+            : 'COALESCE(ds.stop_order, 999999)';
+
+        $sql = "SELECT c.id,
+                       c.first_name,
+                       c.last_name,
+                       c.class_name,
+                       c.route_id,
+                       c.pickup_stop_id,
+                       ps.name AS pickup_stop_name,
+                       ps.stop_order AS pickup_stop_order,
+                       c.dropoff_stop_id,
+                       ds.name AS dropoff_stop_name,
+                       ds.stop_order AS dropoff_stop_order,
+                       e.event_type AS attendance_status,
+                       e.created_at AS attendance_at
+                FROM children c
+                LEFT JOIN route_stops ps ON ps.id = c.pickup_stop_id
+                LEFT JOIN route_stops ds ON ds.id = c.dropoff_stop_id
+                LEFT JOIN trip_events e ON e.id = (
+                    SELECT e2.id
+                    FROM trip_events e2
+                    WHERE e2.trip_id = $trip_id AND e2.child_id = c.id
+                    ORDER BY e2.created_at DESC, e2.id DESC
+                    LIMIT 1
+                )
+                WHERE c.route_id = $route_id AND c.status = 'active'
+                ORDER BY $orderExpr ASC, c.first_name ASC, c.last_name ASC, c.id ASC";
+
+        $res = $this->con->query($sql);
+        if(!$res){
+            error_log("KooBus manifest error (trip $trip_id): " . $this->con->error);
+            return false;
+        }
+        return $res->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function get_active(){
         return parent::select(parent::encode(['table'=>$this->table,'where'=>"status='active' ORDER BY started_at DESC"]));
     }

@@ -9,6 +9,7 @@ import 'package:koobus/features/driver/services/driver_service.dart';
 import 'package:koobus/models/bus_model.dart';
 import 'package:koobus/models/route_model.dart';
 import 'package:koobus/models/route_stop_model.dart';
+import 'package:koobus/models/student_manifest_entry.dart';
 import 'package:koobus/models/trip_model.dart';
 
 class FakeDriverRepository implements DriverRepository {
@@ -18,21 +19,30 @@ class FakeDriverRepository implements DriverRepository {
     this.route,
     this.bus,
     List<RouteStopModel>? stops,
+    List<StudentManifestEntry>? manifest,
     this.startError,
     this.endError,
-  })  : trips = trips ?? const [],
-        stops = stops ?? const [];
+    this.manifestError,
+    this.eventError,
+  }) : trips = trips ?? const [],
+       stops = stops ?? const [],
+       manifest = manifest ?? const [];
 
   TripModel? active;
   List<TripModel> trips;
   RouteModel? route;
   BusModel? bus;
   List<RouteStopModel> stops;
+  List<StudentManifestEntry> manifest;
   ApiException? startError;
   ApiException? endError;
+  ApiException? manifestError;
+  ApiException? eventError;
 
   int startCalls = 0;
   int endCalls = 0;
+  int manifestCalls = 0;
+  final List<Map<String, Object?>> events = [];
 
   @override
   Future<TripModel?> activeTrip(int driverId) async => active;
@@ -85,5 +95,30 @@ class FakeDriverRepository implements DriverRepository {
 
     active = null;
     trips = trips.where((trip) => trip.id != tripId).toList();
+  }
+
+  @override
+  Future<List<StudentManifestEntry>> loadManifest(int tripId) async {
+    manifestCalls++;
+    final error = manifestError;
+    if (error != null) throw error;
+    return List.of(manifest);
+  }
+
+  @override
+  Future<void> addTripEvent({
+    required int tripId,
+    required int childId,
+    required String eventType,
+    int? stopId,
+  }) async {
+    final error = eventError;
+    if (error != null) throw error;
+    events.add({
+      'trip_id': tripId,
+      'child_id': childId,
+      'event_type': eventType,
+      'stop_id': stopId,
+    });
   }
 }

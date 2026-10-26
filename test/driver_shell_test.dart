@@ -135,7 +135,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await _tapTab(tester, 'Wanafunzi');
-    expect(find.text('Orodha ya wanafunzi inakuja'), findsOneWidget);
+    expect(find.text('Hakuna wanafunzi kwenye route hii'), findsOneWidget);
 
     await _tapTab(tester, 'Ramani');
     expect(find.text('Ramani na GPS inakuja'), findsOneWidget);

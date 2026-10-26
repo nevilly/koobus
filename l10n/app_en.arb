@@ -255,9 +255,45 @@
   "driverStopsShort": "Stops",
   "driverTripTypeShort": "Type",
   "driverTripDetails": "Trip details",
-  "driverStudentsEmptyTitle": "Student list coming next",
-  "driverStudentsEmptySubtitle": "We will connect this trip's students to the manifest API. There is no sample list.",
-  "driverStudentsOrderNote": "Students will be ordered by drop-off stop: the next student off appears first.",
+  "driverStudentsEmptyTitle": "No students on this route",
+  "driverStudentsEmptySubtitle": "No child is assigned to this route yet. A school admin needs to assign students to the route and stops.",
+  "driverStudentsOrderNote": "Ordered by drop-off stop. The next student off appears first.",
+  "driverStudentsOrderMorning": "Ordered by pickup stop. The next student to board appears first.",
+  "driverStudentsOrderAfternoon": "Ordered by drop-off stop. The next student off appears first.",
+  "driverStudentsCount": "Students: {count}",
+  "@driverStudentsCount": {
+    "description": "Number of students in the trip manifest.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "driverStudentsLoading": "Loading students...",
+  "driverStudentsSwipeHint": "Swipe left or right to see all students.",
+  "driverStudentsNext": "Next",
+  "driverStudentsFirstOff": "First to get off",
+  "driverStudentsFirstOn": "First to board",
+  "driverStudentsStop": "Stop",
+  "driverStudentsClass": "Class",
+  "driverStudentsNoStop": "No stop set",
+  "driverStudentsErrorTitle": "Manifest not loaded",
+  "driverStudentsError": "Could not load the student list. Please try again.",
+  "driverAttendanceNone": "Not recorded",
+  "driverAttendanceBoarded": "Boarded",
+  "driverAttendanceAlighted": "Alighted",
+  "driverAttendanceAbsent": "Absent",
+  "driverAttendanceExcused": "Excused",
+  "driverAttendanceRecord": "Record attendance",
+  "driverAttendanceChange": "Change attendance",
+  "driverAttendanceSheetTitle": "Attendance for {name}",
+  "@driverAttendanceSheetTitle": {
+    "description": "Title of the attendance action sheet.",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "driverAttendancePendingNote": "Start the trip before recording attendance.",
+  "driverAttendanceSaved": "Attendance recorded.",
+  "driverAttendanceFailed": "Could not record attendance. Please try again.",
   "driverMapEmptyTitle": "Map and GPS coming next",
   "driverMapEmptySubtitle": "We will connect the real bus location and stops. There is no simulated GPS.",
   "driverMapNote": "The map will use real route and bus location data.",

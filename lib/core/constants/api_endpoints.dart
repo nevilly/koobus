@@ -16,9 +16,11 @@ class ApiEndpoints {
   static String activeTripByDriver(int driverId) =>
       '/trips/active_by_driver/$driverId';
   static String trip(int id) => '/trips/get/$id';
+  static String tripManifest(int id) => '/trips/manifest/$id';
   static const String tripStart = '/trips/start';
   static const String tripEnd = '/trips/end';
   static const String tripCancel = '/trips/cancel';
+  static const String tripEventAdd = '/trip_events/add';
 
   // ---- Routes / buses ----
   static String route(int id) => '/routes/get/$id';

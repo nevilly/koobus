@@ -388,7 +388,12 @@ For each endpoint:
 
 **Completion gate:** Trip state is persisted on the server and remains consistent when the app restarts. (server persistence verified by reloading the active trip; app-restart/device check pending)
 
-# PHASE 9 — REAL GPS AND LIVE TRACKING
+# PHASE 9 - REAL GPS AND LIVE TRACKING
+
+> Maendeleo (2026-10-26): UI ya dereva (shell, dashboard, sticky Start/End),
+> manifest ya wanafunzi na mahudhurio zimekamilika kama msingi. GPS halisi,
+> ramani na background tracking bado havijaanza; alama za checklist hapa chini
+> bado ni 0/28.
 
 ## 9.1 GPS acquisition
 

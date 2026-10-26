@@ -827,20 +827,164 @@ abstract class AppLocalizations {
   /// No description provided for @driverStudentsEmptyTitle.
   ///
   /// In sw, this message translates to:
-  /// **'Orodha ya wanafunzi inakuja'**
+  /// **'Hakuna wanafunzi kwenye route hii'**
   String get driverStudentsEmptyTitle;
 
   /// No description provided for @driverStudentsEmptySubtitle.
   ///
   /// In sw, this message translates to:
-  /// **'Tutaunganisha wanafunzi wa safari hii na API ya manifest. Hakuna orodha ya mfano.'**
+  /// **'Hakuna mtoto aliyepewa route hii kwa sasa. Msimamizi wa shule anahitaji kuwaweka wanafunzi kwenye route na vituo.'**
   String get driverStudentsEmptySubtitle;
 
   /// No description provided for @driverStudentsOrderNote.
   ///
   /// In sw, this message translates to:
-  /// **'Wanafunzi watapangwa kwa kituo cha kushuka: wa kwanza kushuka aonekane kwanza.'**
+  /// **'Wamepangwa kwa kituo cha kushuka. Anayeshuka kwanza yuko mbele.'**
   String get driverStudentsOrderNote;
+
+  /// No description provided for @driverStudentsOrderMorning.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wamepangwa kwa kituo cha kupanda. Anayepanda kwanza yuko mbele.'**
+  String get driverStudentsOrderMorning;
+
+  /// No description provided for @driverStudentsOrderAfternoon.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wamepangwa kwa kituo cha kushuka. Anayeshuka kwanza yuko mbele.'**
+  String get driverStudentsOrderAfternoon;
+
+  /// Idadi ya wanafunzi kwenye manifest ya safari.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wanafunzi {count}'**
+  String driverStudentsCount(int count);
+
+  /// No description provided for @driverStudentsLoading.
+  ///
+  /// In sw, this message translates to:
+  /// **'Inapakia wanafunzi...'**
+  String get driverStudentsLoading;
+
+  /// No description provided for @driverStudentsSwipeHint.
+  ///
+  /// In sw, this message translates to:
+  /// **'Sogeza kushoto au kuume kuona wanafunzi wote.'**
+  String get driverStudentsSwipeHint;
+
+  /// No description provided for @driverStudentsNext.
+  ///
+  /// In sw, this message translates to:
+  /// **'Kifuatacho'**
+  String get driverStudentsNext;
+
+  /// No description provided for @driverStudentsFirstOff.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wa kwanza kushuka'**
+  String get driverStudentsFirstOff;
+
+  /// No description provided for @driverStudentsFirstOn.
+  ///
+  /// In sw, this message translates to:
+  /// **'Wa kwanza kupanda'**
+  String get driverStudentsFirstOn;
+
+  /// No description provided for @driverStudentsStop.
+  ///
+  /// In sw, this message translates to:
+  /// **'Kituo'**
+  String get driverStudentsStop;
+
+  /// No description provided for @driverStudentsClass.
+  ///
+  /// In sw, this message translates to:
+  /// **'Darasa'**
+  String get driverStudentsClass;
+
+  /// No description provided for @driverStudentsNoStop.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hakuna kituo kilichowekwa'**
+  String get driverStudentsNoStop;
+
+  /// No description provided for @driverStudentsErrorTitle.
+  ///
+  /// In sw, this message translates to:
+  /// **'Manifest haijapakiwa'**
+  String get driverStudentsErrorTitle;
+
+  /// No description provided for @driverStudentsError.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeshindikana kupakia orodha ya wanafunzi. Jaribu tena.'**
+  String get driverStudentsError;
+
+  /// No description provided for @driverAttendanceNone.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hajarekodiwa'**
+  String get driverAttendanceNone;
+
+  /// No description provided for @driverAttendanceBoarded.
+  ///
+  /// In sw, this message translates to:
+  /// **'Amepanda'**
+  String get driverAttendanceBoarded;
+
+  /// No description provided for @driverAttendanceAlighted.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ameshuka'**
+  String get driverAttendanceAlighted;
+
+  /// No description provided for @driverAttendanceAbsent.
+  ///
+  /// In sw, this message translates to:
+  /// **'Hayupo'**
+  String get driverAttendanceAbsent;
+
+  /// No description provided for @driverAttendanceExcused.
+  ///
+  /// In sw, this message translates to:
+  /// **'Ameondolewa'**
+  String get driverAttendanceExcused;
+
+  /// No description provided for @driverAttendanceRecord.
+  ///
+  /// In sw, this message translates to:
+  /// **'Rekodi mahudhurio'**
+  String get driverAttendanceRecord;
+
+  /// No description provided for @driverAttendanceChange.
+  ///
+  /// In sw, this message translates to:
+  /// **'Badilisha mahudhurio'**
+  String get driverAttendanceChange;
+
+  /// Kichwa cha sheet ya kurekodi mahudhurio.
+  ///
+  /// In sw, this message translates to:
+  /// **'Mahudhurio ya {name}'**
+  String driverAttendanceSheetTitle(String name);
+
+  /// No description provided for @driverAttendancePendingNote.
+  ///
+  /// In sw, this message translates to:
+  /// **'Anzisha safari kwanza ili kurekodi mahudhurio.'**
+  String get driverAttendancePendingNote;
+
+  /// No description provided for @driverAttendanceSaved.
+  ///
+  /// In sw, this message translates to:
+  /// **'Mahudhurio yamerekodiwa.'**
+  String get driverAttendanceSaved;
+
+  /// No description provided for @driverAttendanceFailed.
+  ///
+  /// In sw, this message translates to:
+  /// **'Imeshindikana kurekodi mahudhurio. Jaribu tena.'**
+  String get driverAttendanceFailed;
 
   /// No description provided for @driverMapEmptyTitle.
   ///

@@ -79,6 +79,19 @@ class Tenant
         return ($r && is_object($r) && isset($r->school_id)) ? intval($r->school_id) : 0;
     }
 
+    /**
+     * Route ya kituo (route_stops.id -> route_stops.route_id).
+     * 0 = kituo hakipo.
+     */
+    public static function stopRouteId($stopId)
+    {
+        if (empty($stopId)) return 0;
+        include_once $_SERVER["DOCUMENT_ROOT"] . '/api/v1/Controller/RoutesController.php';
+        $c = new RoutesController();
+        $s = $c->get_stop($stopId);
+        return ($s && is_object($s) && isset($s->route_id)) ? intval($s->route_id) : 0;
+    }
+
     public static function busSchoolId($busId)
     {
         if (empty($busId)) return 0;

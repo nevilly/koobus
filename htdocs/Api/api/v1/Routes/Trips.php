@@ -298,6 +298,39 @@ class Trips extends TripsController
         return array('status'=>204,'payload'=>http::message(204));
     }
 
+    /**
+     * KOO_BUS_ADAPT: manifest ya wanafunzi kwa trip.
+     * URL: /api/v1/trips/manifest/{trip_id}
+     *
+     * Dereva/matron wanaona trip yao tu; school_admin wa shule moja;
+     * super_admin wote. Wazazi hawaorodheshi wanafunzi wote wa basi.
+     */
+    public function manifest($params=''){
+        if($this->clean->Method() !== "GET")
+            return array('status'=>403,'payload'=>"Unauthorized Access");
+        list($ok, $resUser) = AuthGuard::requireRole(array('driver','matron','school_admin','super_admin'));
+        if(!$ok) return $resUser;
+
+        $p = parent::decode($params);
+        $id = isset($p->page) ? $p->page : '';
+        if($id === '' || !is_numeric($id))
+            return array('status'=>400,'payload'=>"Invalid trip id");
+
+        $trip = parent::get($id);
+        if(!$trip || !is_object($trip))
+            return array('status'=>404,'payload'=>"Not found");
+        if(!$this->canViewTrip($trip, $resUser))
+            return array('status'=>403,'payload'=>"Forbidden");
+
+        $routeId = isset($trip->route_id) ? intval($trip->route_id) : 0;
+        $tripType = isset($trip->trip_type) ? $trip->trip_type : '';
+        $rows = parent::get_manifest($trip->id, $routeId, $tripType);
+        if($rows === false)
+            return array('status'=>500,'payload'=>"Failed");
+
+        return array('status'=>200,'payload'=>$rows);
+    }
+
     public function active_by_driver($params=''){
         if($this->clean->Method() !== "GET")
             return array('status'=>403,'payload'=>"Unauthorized Access");

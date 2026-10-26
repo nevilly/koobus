@@ -126,13 +126,21 @@ class Table extends  Database
             last_name varchar(50) not null,
             class_name varchar(50) null,
             route_id int(11) null,
+            pickup_stop_id int(11) null,
+            dropoff_stop_id int(11) null,
             status enum('active','inactive') default 'active',
             created_at datetime not null default current_timestamp,
             primary key(id),
             foreign key(school_id) references schools(id) on delete cascade,
-            foreign key(route_id) references routes(id) on delete set null
+            foreign key(route_id) references routes(id) on delete set null,
+            constraint fk_children_pickup_stop foreign key(pickup_stop_id) references route_stops(id) on delete set null,
+            constraint fk_children_dropoff_stop foreign key(dropoff_stop_id) references route_stops(id) on delete set null
             "
         )));
+
+        // KOO_BUS_ADAPT: DB ya zamani ilikuwa na children bila vituo vya
+        // kupanda/kushuka. Tunaongeza columns hizi kwa ALTER mara moja.
+        $this->ensureChildrenStopColumns();
 
         // parent_children (guardian links)
         parent::createTable($this->encode(array(
@@ -248,6 +256,50 @@ class Table extends  Database
         // See FUTURE_UX_IDEAS.md
 
         echo "\n KooBus tables installed/checked successfully!\n";
+    }
+
+    /**
+     * KOO_BUS_ADAPT: hakikisha children ina vituo vya kupanda/kushuka.
+     *
+     * Hii ni muhimu kwa manifest ya dereva: mtoto anapaswa kuwa na kituo
+     * halisi cha drop-off ili orodha ipangwe kwa "wa kwanza kushuka".
+     * Columns zinaongezwa kwa DB ya zamani bila kufuta data.
+     */
+    private function ensureChildrenStopColumns(){
+        $db = $this->con->query("SELECT DATABASE() AS db")->fetch_object();
+        $schema = $db ? $db->db : '';
+        $schemaEsc = $this->con->real_escape_string($schema);
+
+        foreach (array('pickup_stop_id', 'dropoff_stop_id') as $column) {
+            $col = $this->con->query("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE TABLE_SCHEMA='$schemaEsc'
+                AND TABLE_NAME='children' AND COLUMN_NAME='$column'");
+            if($col && $col->num_rows === 0){
+                $this->con->query("ALTER TABLE children ADD COLUMN $column int(11) null");
+            }
+        }
+
+        foreach (array('pickup_stop_id', 'dropoff_stop_id') as $column) {
+            $index = 'idx_children_'.$column;
+            // Foreign keys zinaweza kuwa na index ya auto (jina la column),
+            // hivyo tunaangalia index yoyote inayotumia column hii.
+            $idx = $this->con->query("SELECT INDEX_NAME FROM INFORMATION_SCHEMA.STATISTICS
+                WHERE TABLE_SCHEMA='$schemaEsc'
+                AND TABLE_NAME='children' AND COLUMN_NAME='$column'");
+            if($idx && $idx->num_rows === 0){
+                $this->con->query("ALTER TABLE children ADD INDEX $index ($column)");
+            }
+
+            $fk = 'fk_children_'.$column;
+            $constraint = $this->con->query("SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+                WHERE TABLE_SCHEMA='$schemaEsc'
+                AND TABLE_NAME='children' AND COLUMN_NAME='$column'
+                AND REFERENCED_TABLE_NAME='route_stops'");
+            if($constraint && $constraint->num_rows === 0){
+                $this->con->query("ALTER TABLE children ADD CONSTRAINT $fk
+                    FOREIGN KEY ($column) REFERENCES route_stops(id) ON DELETE SET NULL");
+            }
+        }
     }
 
     /**

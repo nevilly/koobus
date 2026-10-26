@@ -569,9 +569,45 @@
   "driverStopsShort": "Vituo",
   "driverTripTypeShort": "Aina",
   "driverTripDetails": "Taarifa za safari",
-  "driverStudentsEmptyTitle": "Orodha ya wanafunzi inakuja",
-  "driverStudentsEmptySubtitle": "Tutaunganisha wanafunzi wa safari hii na API ya manifest. Hakuna orodha ya mfano.",
-  "driverStudentsOrderNote": "Wanafunzi watapangwa kwa kituo cha kushuka: wa kwanza kushuka aonekane kwanza.",
+  "driverStudentsEmptyTitle": "Hakuna wanafunzi kwenye route hii",
+  "driverStudentsEmptySubtitle": "Hakuna mtoto aliyepewa route hii kwa sasa. Msimamizi wa shule anahitaji kuwaweka wanafunzi kwenye route na vituo.",
+  "driverStudentsOrderNote": "Wamepangwa kwa kituo cha kushuka. Anayeshuka kwanza yuko mbele.",
+  "driverStudentsOrderMorning": "Wamepangwa kwa kituo cha kupanda. Anayepanda kwanza yuko mbele.",
+  "driverStudentsOrderAfternoon": "Wamepangwa kwa kituo cha kushuka. Anayeshuka kwanza yuko mbele.",
+  "driverStudentsCount": "Wanafunzi {count}",
+  "@driverStudentsCount": {
+    "description": "Idadi ya wanafunzi kwenye manifest ya safari.",
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "driverStudentsLoading": "Inapakia wanafunzi...",
+  "driverStudentsSwipeHint": "Sogeza kushoto au kuume kuona wanafunzi wote.",
+  "driverStudentsNext": "Kifuatacho",
+  "driverStudentsFirstOff": "Wa kwanza kushuka",
+  "driverStudentsFirstOn": "Wa kwanza kupanda",
+  "driverStudentsStop": "Kituo",
+  "driverStudentsClass": "Darasa",
+  "driverStudentsNoStop": "Hakuna kituo kilichowekwa",
+  "driverStudentsErrorTitle": "Manifest haijapakiwa",
+  "driverStudentsError": "Imeshindikana kupakia orodha ya wanafunzi. Jaribu tena.",
+  "driverAttendanceNone": "Hajarekodiwa",
+  "driverAttendanceBoarded": "Amepanda",
+  "driverAttendanceAlighted": "Ameshuka",
+  "driverAttendanceAbsent": "Hayupo",
+  "driverAttendanceExcused": "Ameondolewa",
+  "driverAttendanceRecord": "Rekodi mahudhurio",
+  "driverAttendanceChange": "Badilisha mahudhurio",
+  "driverAttendanceSheetTitle": "Mahudhurio ya {name}",
+  "@driverAttendanceSheetTitle": {
+    "description": "Kichwa cha sheet ya kurekodi mahudhurio.",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "driverAttendancePendingNote": "Anzisha safari kwanza ili kurekodi mahudhurio.",
+  "driverAttendanceSaved": "Mahudhurio yamerekodiwa.",
+  "driverAttendanceFailed": "Imeshindikana kurekodi mahudhurio. Jaribu tena.",
   "driverMapEmptyTitle": "Ramani na GPS inakuja",
   "driverMapEmptySubtitle": "Tutaunganisha eneo halisi la basi na vituo. Hakuna GPS ya kufikirika.",
   "driverMapNote": "Ramani itatumia data halisi ya route na eneo la basi.",

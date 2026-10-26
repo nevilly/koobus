@@ -364,6 +364,31 @@ Format: date, decision, reason, files affected.
 - **Remaining:** app restart/device check, then change/remove the local test super_admin
   and set a strong `SECRET` plus `APP_ENV: production` for release.
 
+## 2026-10-26 - Student manifest, attendance and child stops
+
+- **Manifest ni server-side:** `GET /api/v1/trips/manifest/{trip_id}` ndiyo chanzo
+  cha orodha ya wanafunzi; app haitengenezi wanafunzi wa mfano.
+- **Mpangilio wa orodha:** safari ya asubuhi (`morning`) hupangwa kwa
+  `children.pickup_stop_id`, safari ya mchana (`afternoon`) kwa
+  `children.dropoff_stop_id`, kisha jina. Hivyo mwanafunzi anayeshuka karibuni
+  anaonekana kwanza bila app kupanga upya.
+- **Vituo vya mtoto:** `children.pickup_stop_id` na `children.dropoff_stop_id`
+  ni nullable, vina index na foreign key. Wakati wa kuongeza/kubadilisha mtoto,
+  kituo lazima kiwe cha route ya mtoto huyo; vinginevyo API inarudisha 403.
+- **Mahudhurio:** hutumia `trip_events` (`board`, `alight`, `absent`, `excused`).
+  Tukio la hivi karibuni ndilo hutawala; manifest inarudisha
+  `attendance_status` na `attendance_at`. Kituo cha tukio lazima kiwe cha route
+  ya safari.
+- **Ruhusa:** manifest na kuandika mahudhurio ni kwa `driver`, `matron`,
+  `school_admin` na `super_admin` tu. Driver huona safari zake tu; mzazi
+  anapata 403.
+- **UI:** kadi za wanafunzi ni horizontal (Bolt/Uber style), na bottom sheet ya
+  mahudhurio inaonyesha hali ya sasa. Mabadiliko haya ni msingi wa UI, si
+  alama ya checklist ya Phase 9.
+- **Uthibitisho:** `php -l` zote za faili zilizobadilika zinapita, `flutter test`
+  67/67 zinapita, na `/install` imeongeza columns/indexes/FKs kwenye database
+  iliyopo. Live manifest bado inahitaji watoto halisi kwenye route.
+
 ## Known bugs / unfinished
 
 - NDK 28.2.13676358 is **installed** (2.12 GB) and `flutter build apk --debug`

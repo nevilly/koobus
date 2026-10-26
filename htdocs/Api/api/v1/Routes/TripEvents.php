@@ -287,6 +287,20 @@ class TripEvents extends TripEventsController
             && intval($trip->route_id) !== intval($child->route_id))
             return array('status'=>403,'payload'=>"Forbidden");
 
+        // KOO_BUS_ADAPT: event_type lazima iwe halali, na stop_id (kama ipo)
+        // lazima iwe kituo cha route ya trip hii.
+        $eventType = isset($this->data->event_type) ? $this->data->event_type : '';
+        if(!in_array($eventType, array('board','alight','absent','excused'), true))
+            return array('status'=>400,'payload'=>"Invalid event_type");
+
+        if(isset($this->data->stop_id) && $this->data->stop_id !== ''){
+            if(intval($this->data->stop_id) <= 0){
+                unset($this->data->stop_id);
+            } elseif(Tenant::stopRouteId($this->data->stop_id) !== intval($trip->route_id)){
+                return array('status'=>400,'payload'=>"Stop does not belong to this trip's route");
+            }
+        }
+
         // KOO_BUS_ADAPT: recorded_by inatoka kwenye token (si kwenye body).
         // Hii inahakikisha matron anarekodiwa kwa jina lake halisi.
         $this->data->recorded_by = $user->id;

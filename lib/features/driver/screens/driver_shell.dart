@@ -12,12 +12,17 @@
 
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:koobus/controllers/auth_controller.dart';
 import 'package:koobus/core/constants/app_colors.dart';
+import 'package:koobus/core/network/api_client.dart';
 import 'package:koobus/features/driver/controllers/driver_controller.dart';
 import 'package:koobus/features/driver/screens/driver_home_screen.dart';
 import 'package:koobus/features/driver/screens/tabs/driver_map_tab.dart';
 import 'package:koobus/features/driver/screens/tabs/driver_profile_tab.dart';
 import 'package:koobus/features/driver/screens/tabs/driver_students_tab.dart';
+import 'package:koobus/features/driver/services/driver_service.dart';
 import 'package:koobus/l10n/app_localizations.dart';
 
 class DriverShell extends StatefulWidget {
@@ -33,17 +38,43 @@ class DriverShell extends StatefulWidget {
 
 class _DriverShellState extends State<DriverShell> {
   int _index = 0;
+  late final DriverController _controller;
+  late final bool _ownsController;
   late final List<Widget> _tabs;
 
   @override
   void initState() {
     super.initState();
+
+    final provided = widget.controller;
+    if (provided != null) {
+      _controller = provided;
+      _ownsController = false;
+    } else {
+      final auth = context.read<AuthController>();
+      _controller = DriverController(
+        repository: DriverService(context.read<ApiClient>()),
+        driverId: auth.userId ?? 0,
+        driverName: auth.displayName,
+      );
+      _ownsController = true;
+    }
+
+    // Controller moja inatumiwa na Nyumbani na Wanafunzi. Hivyo safari
+    // iliyopakiwa haipotei tab inapobadilishwa, na attendance inaweza
+    // kupakia manifest upya bila kuunda ombi jipya la trip.
     _tabs = [
-      DriverHomeScreen(controller: widget.controller),
-      const DriverStudentsTab(),
+      DriverHomeScreen(controller: _controller),
+      DriverStudentsTab(controller: _controller),
       const DriverMapTab(),
       const DriverProfileTab(),
     ];
+  }
+
+  @override
+  void dispose() {
+    if (_ownsController) _controller.dispose();
+    super.dispose();
   }
 
   @override

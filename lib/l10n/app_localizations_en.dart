@@ -425,15 +425,97 @@ class AppLocalizationsEn extends AppLocalizations {
   String get driverTripDetails => 'Trip details';
 
   @override
-  String get driverStudentsEmptyTitle => 'Student list coming next';
+  String get driverStudentsEmptyTitle => 'No students on this route';
 
   @override
   String get driverStudentsEmptySubtitle =>
-      'We will connect this trip\'s students to the manifest API. There is no sample list.';
+      'No child is assigned to this route yet. A school admin needs to assign students to the route and stops.';
 
   @override
   String get driverStudentsOrderNote =>
-      'Students will be ordered by drop-off stop: the next student off appears first.';
+      'Ordered by drop-off stop. The next student off appears first.';
+
+  @override
+  String get driverStudentsOrderMorning =>
+      'Ordered by pickup stop. The next student to board appears first.';
+
+  @override
+  String get driverStudentsOrderAfternoon =>
+      'Ordered by drop-off stop. The next student off appears first.';
+
+  @override
+  String driverStudentsCount(int count) {
+    return 'Students: $count';
+  }
+
+  @override
+  String get driverStudentsLoading => 'Loading students...';
+
+  @override
+  String get driverStudentsSwipeHint =>
+      'Swipe left or right to see all students.';
+
+  @override
+  String get driverStudentsNext => 'Next';
+
+  @override
+  String get driverStudentsFirstOff => 'First to get off';
+
+  @override
+  String get driverStudentsFirstOn => 'First to board';
+
+  @override
+  String get driverStudentsStop => 'Stop';
+
+  @override
+  String get driverStudentsClass => 'Class';
+
+  @override
+  String get driverStudentsNoStop => 'No stop set';
+
+  @override
+  String get driverStudentsErrorTitle => 'Manifest not loaded';
+
+  @override
+  String get driverStudentsError =>
+      'Could not load the student list. Please try again.';
+
+  @override
+  String get driverAttendanceNone => 'Not recorded';
+
+  @override
+  String get driverAttendanceBoarded => 'Boarded';
+
+  @override
+  String get driverAttendanceAlighted => 'Alighted';
+
+  @override
+  String get driverAttendanceAbsent => 'Absent';
+
+  @override
+  String get driverAttendanceExcused => 'Excused';
+
+  @override
+  String get driverAttendanceRecord => 'Record attendance';
+
+  @override
+  String get driverAttendanceChange => 'Change attendance';
+
+  @override
+  String driverAttendanceSheetTitle(String name) {
+    return 'Attendance for $name';
+  }
+
+  @override
+  String get driverAttendancePendingNote =>
+      'Start the trip before recording attendance.';
+
+  @override
+  String get driverAttendanceSaved => 'Attendance recorded.';
+
+  @override
+  String get driverAttendanceFailed =>
+      'Could not record attendance. Please try again.';
 
   @override
   String get driverMapEmptyTitle => 'Map and GPS coming next';

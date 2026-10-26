@@ -17,9 +17,14 @@ import 'package:koobus/features/driver/services/driver_service.dart';
 import 'package:koobus/models/bus_model.dart';
 import 'package:koobus/models/route_model.dart';
 import 'package:koobus/models/route_stop_model.dart';
+import 'package:koobus/models/student_manifest_entry.dart';
 import 'package:koobus/models/trip_model.dart';
 
 enum DriverViewState { loading, ready, empty, error }
+
+/// Hali ya manifest ya wanafunzi. Tofauti na `DriverViewState`, manifest
+/// inaweza kushindwa bila kuzuia dashibodi nzima kuonekana.
+enum ManifestViewState { idle, loading, ready, empty, error }
 
 class DriverController extends ChangeNotifier {
   DriverController({
@@ -45,6 +50,14 @@ class DriverController extends ChangeNotifier {
   bool _disposed = false;
   int _requestSeq = 0;
 
+  List<StudentManifestEntry> _manifest = const [];
+  ManifestViewState _manifestState = ManifestViewState.idle;
+  String? _manifestError;
+  int? _manifestStatusCode;
+  int? _markingChildId;
+  String? _attendanceError;
+  int? _attendanceStatusCode;
+
   DriverViewState get state => _state;
   TripModel? get trip => _trip;
   RouteModel? get route => _route;
@@ -53,6 +66,16 @@ class DriverController extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   int? get errorStatusCode => _errorStatusCode;
   bool get busy => _busy;
+
+  List<StudentManifestEntry> get manifest => List.unmodifiable(_manifest);
+  ManifestViewState get manifestState => _manifestState;
+  String? get manifestError => _manifestError;
+  int? get manifestStatusCode => _manifestStatusCode;
+  int? get markingChildId => _markingChildId;
+  String? get attendanceError => _attendanceError;
+  int? get attendanceStatusCode => _attendanceStatusCode;
+
+  bool isMarking(int childId) => _markingChildId == childId;
 
   bool get isAssignedToMe =>
       _trip != null && (driverId <= 0 || _trip!.driverId == driverId);
@@ -83,6 +106,12 @@ class DriverController extends ChangeNotifier {
     _setState(DriverViewState.loading);
     _errorMessage = null;
     _errorStatusCode = null;
+    _manifest = const [];
+    _manifestState = ManifestViewState.loading;
+    _manifestError = null;
+    _manifestStatusCode = null;
+    _attendanceError = null;
+    _attendanceStatusCode = null;
     _notify();
 
     try {
@@ -101,6 +130,8 @@ class DriverController extends ChangeNotifier {
         _route = null;
         _bus = null;
         _stops = const [];
+        _manifest = const [];
+        _manifestState = ManifestViewState.empty;
         _setState(DriverViewState.empty);
         return;
       }
@@ -127,16 +158,109 @@ class DriverController extends ChangeNotifier {
       _bus = results[1] as BusModel;
       _stops = (results[2] as List<RouteStopModel>);
       _setState(DriverViewState.ready);
+
+      // Manifest ni nyongeza: kama itashindwa, dashibodi inabaki kutumika
+      // na tab ya wanafunzi inaonyesha kosa lake lenyewe na Retry.
+      await _loadManifest(seq);
     } on ApiException catch (error) {
       if (seq != _requestSeq || _disposed) return;
       _errorMessage = error.message;
       _errorStatusCode = error.statusCode;
+      _manifestState = ManifestViewState.idle;
       _setState(DriverViewState.error);
     } catch (_) {
       if (seq != _requestSeq || _disposed) return;
       _errorMessage = '';
       _errorStatusCode = 0;
+      _manifestState = ManifestViewState.idle;
       _setState(DriverViewState.error);
+    }
+  }
+
+  /// Pakia manifest ya trip ya sasa (mfano baada ya kurekodi mahudhurio).
+  Future<void> loadManifest() => _loadManifest(_requestSeq);
+
+  Future<void> _loadManifest(int seq) async {
+    final trip = _trip;
+    if (trip == null) {
+      _manifest = const [];
+      _manifestState = ManifestViewState.empty;
+      _manifestError = null;
+      _manifestStatusCode = null;
+      _notify();
+      return;
+    }
+
+    _manifestState = ManifestViewState.loading;
+    _manifestError = null;
+    _manifestStatusCode = null;
+    _notify();
+
+    try {
+      final entries = await repository.loadManifest(trip.id);
+      if (seq != _requestSeq || _disposed) return;
+      _manifest = entries;
+      _manifestState = entries.isEmpty
+          ? ManifestViewState.empty
+          : ManifestViewState.ready;
+    } on ApiException catch (error) {
+      if (seq != _requestSeq || _disposed) return;
+      _manifestError = error.message;
+      _manifestStatusCode = error.statusCode;
+      _manifestState = ManifestViewState.error;
+    } catch (_) {
+      if (seq != _requestSeq || _disposed) return;
+      _manifestError = '';
+      _manifestStatusCode = 0;
+      _manifestState = ManifestViewState.error;
+    }
+    _notify();
+  }
+
+  /// Rekodi mahudhurio ya mwanafunzi kwa API, kisha pakia manifest upya.
+  Future<bool> markAttendance({
+    required int childId,
+    required TripAttendanceAction action,
+  }) async {
+    final trip = _trip;
+    if (trip == null || !trip.isActive || _markingChildId != null) {
+      return false;
+    }
+
+    StudentManifestEntry? entry;
+    for (final item in _manifest) {
+      if (item.id == childId) {
+        entry = item;
+        break;
+      }
+    }
+    if (entry == null) return false;
+
+    _markingChildId = childId;
+    _attendanceError = null;
+    _attendanceStatusCode = null;
+    _notify();
+
+    try {
+      await repository.addTripEvent(
+        tripId: trip.id,
+        childId: childId,
+        eventType: action.apiValue,
+        stopId: entry.stopIdFor(trip.tripType),
+      );
+      await _loadManifest(_requestSeq);
+      return true;
+    } on ApiException catch (error) {
+      _attendanceError = error.message;
+      _attendanceStatusCode = error.statusCode;
+      return false;
+    } catch (_) {
+      _attendanceError = '';
+      _attendanceStatusCode = 0;
+      return false;
+    } finally {
+      _markingChildId = null;
+      _notify();
     }
   }
 

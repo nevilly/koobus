@@ -425,15 +425,97 @@ class AppLocalizationsSw extends AppLocalizations {
   String get driverTripDetails => 'Taarifa za safari';
 
   @override
-  String get driverStudentsEmptyTitle => 'Orodha ya wanafunzi inakuja';
+  String get driverStudentsEmptyTitle => 'Hakuna wanafunzi kwenye route hii';
 
   @override
   String get driverStudentsEmptySubtitle =>
-      'Tutaunganisha wanafunzi wa safari hii na API ya manifest. Hakuna orodha ya mfano.';
+      'Hakuna mtoto aliyepewa route hii kwa sasa. Msimamizi wa shule anahitaji kuwaweka wanafunzi kwenye route na vituo.';
 
   @override
   String get driverStudentsOrderNote =>
-      'Wanafunzi watapangwa kwa kituo cha kushuka: wa kwanza kushuka aonekane kwanza.';
+      'Wamepangwa kwa kituo cha kushuka. Anayeshuka kwanza yuko mbele.';
+
+  @override
+  String get driverStudentsOrderMorning =>
+      'Wamepangwa kwa kituo cha kupanda. Anayepanda kwanza yuko mbele.';
+
+  @override
+  String get driverStudentsOrderAfternoon =>
+      'Wamepangwa kwa kituo cha kushuka. Anayeshuka kwanza yuko mbele.';
+
+  @override
+  String driverStudentsCount(int count) {
+    return 'Wanafunzi $count';
+  }
+
+  @override
+  String get driverStudentsLoading => 'Inapakia wanafunzi...';
+
+  @override
+  String get driverStudentsSwipeHint =>
+      'Sogeza kushoto au kuume kuona wanafunzi wote.';
+
+  @override
+  String get driverStudentsNext => 'Kifuatacho';
+
+  @override
+  String get driverStudentsFirstOff => 'Wa kwanza kushuka';
+
+  @override
+  String get driverStudentsFirstOn => 'Wa kwanza kupanda';
+
+  @override
+  String get driverStudentsStop => 'Kituo';
+
+  @override
+  String get driverStudentsClass => 'Darasa';
+
+  @override
+  String get driverStudentsNoStop => 'Hakuna kituo kilichowekwa';
+
+  @override
+  String get driverStudentsErrorTitle => 'Manifest haijapakiwa';
+
+  @override
+  String get driverStudentsError =>
+      'Imeshindikana kupakia orodha ya wanafunzi. Jaribu tena.';
+
+  @override
+  String get driverAttendanceNone => 'Hajarekodiwa';
+
+  @override
+  String get driverAttendanceBoarded => 'Amepanda';
+
+  @override
+  String get driverAttendanceAlighted => 'Ameshuka';
+
+  @override
+  String get driverAttendanceAbsent => 'Hayupo';
+
+  @override
+  String get driverAttendanceExcused => 'Ameondolewa';
+
+  @override
+  String get driverAttendanceRecord => 'Rekodi mahudhurio';
+
+  @override
+  String get driverAttendanceChange => 'Badilisha mahudhurio';
+
+  @override
+  String driverAttendanceSheetTitle(String name) {
+    return 'Mahudhurio ya $name';
+  }
+
+  @override
+  String get driverAttendancePendingNote =>
+      'Anzisha safari kwanza ili kurekodi mahudhurio.';
+
+  @override
+  String get driverAttendanceSaved => 'Mahudhurio yamerekodiwa.';
+
+  @override
+  String get driverAttendanceFailed =>
+      'Imeshindikana kurekodi mahudhurio. Jaribu tena.';
 
   @override
   String get driverMapEmptyTitle => 'Ramani na GPS inakuja';

@@ -22,5 +22,11 @@ class RoutesModule extends Database {
         $route_id = intval($route_id);
         return parent::select(parent::encode(['table'=>'route_stops','where'=>"route_id='$route_id' ORDER BY stop_order ASC, id ASC"]));
     }
+    // KOO_BUS_ADAPT: kituo kimoja (validation ya pickup/drop-off).
+    public function get_stop($id){
+        if(empty($id) || !is_numeric($id)) return false;
+        $id = intval($id);
+        return parent::select(parent::encode(['table'=>'route_stops','where'=>"id='$id'"]));
+    }
     public function delete_route($id){ if(empty($id)) return false; $id=intval($id); return parent::delete(parent::encode(['table'=>$this->table,'where'=>"id='$id'"])); }
 }

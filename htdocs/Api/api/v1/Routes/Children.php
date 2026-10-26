@@ -26,6 +26,30 @@ class Children extends ChildrenController
         return Tenant::schoolIdOfUser($user);
     }
 
+    private function stopMatchesRoute($stopId, $routeId){
+        if($stopId === null || $stopId === '') return true;
+        $stopId = intval($stopId);
+        if($stopId <= 0) return true;
+        return intval($routeId) > 0 && Tenant::stopRouteId($stopId) === intval($routeId);
+    }
+
+    /**
+     * KOO_BUS_ADAPT: pickup/drop-off lazima ziwe vituo vya route ya mtoto.
+     * `0` inaondolewa kabla ya INSERT/UPDATE ili kuepuka FK error.
+     */
+    private function validateStopIds($data, $routeId){
+        if(!is_object($data)) return true;
+        foreach (array('pickup_stop_id', 'dropoff_stop_id') as $field) {
+            if(!isset($data->$field) || $data->$field === '') continue;
+            if(intval($data->$field) <= 0){
+                unset($data->$field);
+                continue;
+            }
+            if(!$this->stopMatchesRoute($data->$field, $routeId)) return false;
+        }
+        return true;
+    }
+
     /**
      * KOO_BUS_ADAPT: chuja watoto kwa shule.
      */
@@ -198,6 +222,10 @@ class Children extends ChildrenController
                 return array('status'=>403,'payload'=>"Forbidden");
         }
 
+        $routeId = isset($this->data->route_id) ? intval($this->data->route_id) : 0;
+        if(!$this->validateStopIds($this->data, $routeId))
+            return array('status'=>400,'payload'=>"Pickup/drop-off stop must belong to the child's route");
+
         $sql = parent::add($this->encode($this->data));
         if($sql) return array('status'=>201,'payload'=>array('id'=>$sql));
         return array('status'=>500,'payload'=>"Failed");
@@ -231,6 +259,22 @@ class Children extends ChildrenController
             if(Tenant::routeSchoolId($this->data->route_id) !== $schoolId)
                 return array('status'=>403,'payload'=>"Forbidden");
         }
+
+        $routeId = (isset($this->data->route_id) && $this->data->route_id !== '')
+            ? intval($this->data->route_id)
+            : (isset($child->route_id) ? intval($child->route_id) : 0);
+        if(!$this->validateStopIds($this->data, $routeId))
+            return array('status'=>400,'payload'=>"Pickup/drop-off stop must belong to the child's route");
+
+        // Kama route_id imebadilishwa, vituo vya zamani lazima vihusiane
+        // na route mpya hata kama havijatumwa kwenye body.
+        $effectivePickup = isset($this->data->pickup_stop_id)
+            ? $this->data->pickup_stop_id : (isset($child->pickup_stop_id) ? $child->pickup_stop_id : null);
+        $effectiveDropoff = isset($this->data->dropoff_stop_id)
+            ? $this->data->dropoff_stop_id : (isset($child->dropoff_stop_id) ? $child->dropoff_stop_id : null);
+        if(!$this->stopMatchesRoute($effectivePickup, $routeId)
+            || !$this->stopMatchesRoute($effectiveDropoff, $routeId))
+            return array('status'=>400,'payload'=>"Pickup/drop-off stop must belong to the child's route");
 
         $sql = parent::update_child($this->encode($this->data));
         if($sql) return array('status'=>200,'payload'=>"Updated");
